@@ -1,16 +1,35 @@
 
 {% extends "base.html" %}
 {% block content %}
-{% for object in object_list %}
-  <div class="m-2">
-    <a href="{{object.get_absolute_url}}">{{object}}</a>
-    <small class="ml-5">
-      <a href="{% url 'KursusOrganisation_Team_delete' object.pk %}">
-        (Delete)
-      </a>
-    </small>
-  </div>
-{% endfor %}
+
+
+
+<div class="m-2">
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Kursus</th>
+      <th scope="col">Created</th>
+      <th scope="col">Updated</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for object in object_list %}
+      <tr>
+        <th scope="row">{{object.pk}}</th>
+        <td><a href="{{object.get_absolute_url}}">{{object.navn}}</a></td>
+        <td>{{object.kursus}}</td>
+        <td>{{object.date_created}}</td>
+        <td>{{object.last_updated}}</td>
+        <td><button type="button" class="btn btn-danger" href="{% url 'KursusOrganisation_Team_delete' object.pk %}" >Delete</button></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
 <div>
   <a class="btn btn-primary"
     href="{% url 'KursusOrganisation_Team_create' %}">

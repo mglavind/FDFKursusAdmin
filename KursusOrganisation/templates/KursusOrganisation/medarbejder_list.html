@@ -13,22 +13,24 @@
         <th scope="col">Actions</th>
       </tr>
     </thead>
+    <tbody>
 {% for object in object_list %}
-      <tbody>
+      <tr>
         <th scope="row">{{object.pk}}</th>
         <td><a href="{{object.get_absolute_url}}">{{object.navn}}</a></td>
         <td>{{object.user}}</td>
         <td>{{object.date_created}}</td>
         <td>{{object.last_updated}}</td>
         <td><button type="button" class="btn btn-danger" href="{% url 'KursusOrganisation_Medarbejder_delete' object.pk %}" >Delete</button></td>
-      </tbody>
-    </table>
-  </div>
+      </tr>
 {% endfor %}
+    </tbody>
+  </table>
+</div>
 <div>
   <a class="btn btn-primary"
     href="{% url 'KursusOrganisation_Medarbejder_create' %}">
-  Create a new Medarbejder
+  Ny Medarbejder
   </a>
 </div>
 {% endblock %}

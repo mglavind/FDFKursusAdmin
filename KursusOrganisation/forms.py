@@ -30,6 +30,8 @@ class KursusForm(forms.ModelForm):
 
 
 class TeamForm(forms.ModelForm):
+    medarbejder_p = forms.ModelChoiceField(queryset=None)
+    kursus = forms.ModelChoiceField(queryset=None)
     class Meta:
         model = models.Team
         fields = [
