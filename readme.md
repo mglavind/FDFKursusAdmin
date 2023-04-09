@@ -13,7 +13,11 @@ Skal du bare have installeret Django og komme igang?:
 https://docs.djangoproject.com/en/4.2/intro/install/
 
 
-### Bootstrap
+Der er også fine tutorials her:
+https://www.w3schools.com/django/index.php
+
+
+## Bootstrap
 For at gøre det let at få ting til at se nogenlunde pæne ud, har vi koblet bootstrap på, så du i alt HTML og laypout kan referere til bootstrap elementerne som du finder på dette link:
 
 
