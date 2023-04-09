@@ -1,0 +1,22 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    
+<p>
+    <a class="btn btn-light" href="{% url 'Mad_MadItem_list' %}">
+    MadItem Listing
+    </a>
+</p>
+    
+<table class="table">
+    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+    <tr><td>indhold</td><td>{{ object.indhold }}</td></tr>
+    <tr><td>er_aktiv</td><td>{{ object.er_aktiv }}</td></tr>
+    <tr><td>enhed</td><td>{{ object.enhed }}</td></tr>
+    <tr><td>created</td><td>{{ object.created }}</td></tr>
+    <tr><td>kategori</td><td>{{ object.kategori }}</td></tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+
+{% endblock %}

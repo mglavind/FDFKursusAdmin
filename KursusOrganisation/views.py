@@ -3,7 +3,6 @@ from django.urls import reverse_lazy
 from . import models
 from . import forms
 
-
 class MedarbejderListView(generic.ListView):
     model = models.Medarbejder
     form_class = forms.MedarbejderForm

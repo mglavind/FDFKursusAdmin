@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
@@ -11,8 +10,10 @@
     
 <table class="table">
     <tr><td>date_created</td><td>{{ object.date_created }}</td></tr>
-    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
     <tr><td>navn</td><td>{{ object.navn }}</td></tr>
+    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+    <tr><td>email</td><td>{{ object.medarbejder_email}}</td></tr>
+    <tr><td>telefon_nummer</td><td>{{ object.telefon_nummer }}</td></tr>
     <tr><td>user</td><td>{{ object.user }}</td></tr>
 </table>
 <a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>

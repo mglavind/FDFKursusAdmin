@@ -8,7 +8,9 @@
         <th scope="col">id</th>
         <th scope="col">Name</th>
         <th scope="col">Username</th>
-        <th scope="col">Ceated</th>
+        <th scope="col">Email</th>
+        <th scope="col">Telefon</th>
+        <th scope="col">Created</th>
         <th scope="col">Updated</th>
         <th scope="col">Actions</th>
       </tr>
@@ -19,6 +21,8 @@
         <th scope="row">{{object.pk}}</th>
         <td><a href="{{object.get_absolute_url}}">{{object.navn}}</a></td>
         <td>{{object.user}}</td>
+        <td>{{object.medarbejder_email}}</td>
+        <td>{{object.telefon_nummer}}</td>
         <td>{{object.date_created}}</td>
         <td>{{object.last_updated}}</td>
         <td><button type="button" class="btn btn-danger" href="{% url 'KursusOrganisation_Medarbejder_delete' object.pk %}" >Delete</button></td>

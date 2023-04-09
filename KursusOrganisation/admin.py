@@ -17,10 +17,11 @@ class MedarbejderAdmin(admin.ModelAdmin):
         "date_created",
         "last_updated",
         "navn",
+        "telefon_nummer",
+        "medarbejder_email",
     ]
     readonly_fields = [
         "date_created",
-        "navn",
     ]
 
 

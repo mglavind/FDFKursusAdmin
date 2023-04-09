@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class Medarbejder(models.Model):
@@ -11,6 +12,8 @@ class Medarbejder(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True)
     navn = models.CharField(max_length=30)
+    telefon_nummer = models.CharField(max_length=8)
+    medarbejder_email = models.EmailField(default="email@address.dummy")
 
     class Meta:
         pass
