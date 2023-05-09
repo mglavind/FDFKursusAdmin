@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Medarbejder(models.Model):
 
     # Relationships
-    #user = models.OneToOneField("settings.AUTH_USER_MODEL", on_delete=models.CASCADE)
+    user = models.OneToOneField("auth.User", on_delete=models.CASCADE)
 
     # Fields
     date_created = models.DateTimeField(auto_now_add=True, editable=False)

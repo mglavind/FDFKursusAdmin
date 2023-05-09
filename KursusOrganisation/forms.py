@@ -5,21 +5,19 @@ from KursusOrganisation.models import Kursus
 from . import models
 
 
-
-
 class MedarbejderForm(forms.ModelForm):
     class Meta:
         model = models.Medarbejder
         fields = [
             "navn",
-            #"user",
+            "user",
             "telefon_nummer",
             "medarbejder_email",
         ]
 
-    #def __init__(self, *args, **kwargs):
-    #    super(MedarbejderForm, self).__init__(*args, **kwargs)
-    #    self.fields["user"].queryset = User.objects.all()
+    def __init__(self, *args, **kwargs):
+        super(MedarbejderForm, self).__init__(*args, **kwargs)
+        self.fields["user"].queryset = User.objects.all()
 
 
 
