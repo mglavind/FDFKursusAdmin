@@ -19,7 +19,7 @@ https://www.w3schools.com/django/index.php
 
 ## Bootstrap
 For at gøre det let at få ting til at se nogenlunde pæne ud, har vi koblet bootstrap på, så du i alt HTML og laypout kan referere til bootstrap elementerne som du finder på dette link:
-
+ hello fra morten
 
 https://getbootstrap.com/docs/5.3/getting-started/introduction/
 
