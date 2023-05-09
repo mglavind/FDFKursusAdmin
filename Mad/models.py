@@ -2,6 +2,9 @@ from django.db import models
 from django.urls import reverse
 
 
+
+# Relationships
+
 class MadItem(models.Model):
 
     # Relationships
