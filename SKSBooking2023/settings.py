@@ -25,19 +25,17 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    'organization',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user',
+    #'user',
     'phonenumber_field',
     'bootstrap5',
     'rest_framework',
-    'KursusOrganisation',
-    'Mad',
-
 ]
 
 
@@ -124,5 +122,4 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-AUTH_USER_MODEL = "user.User"
-
+AUTH_USER_MODEL = 'organization.Volunteer'
