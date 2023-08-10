@@ -1,4 +1,4 @@
-# Nyt bookingsystem til SKS
+# Nyt bookingsystem til kurserne i FDF
 Dette er et forsøg på at lave et nyt booking system til kurserne indenfor FDF. Det er work-in-progress, så bær over med os!
 
 
