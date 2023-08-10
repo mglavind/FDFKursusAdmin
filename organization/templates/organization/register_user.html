@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="vh-100 d-flex align-items-center justify-content-center ">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto bg-secondary p-4 text-light rounded shadow-md p-5">
+                <form action="{% url 'register_user' %}" method="POST" class="p-4 rounded">
+                    {% csrf_token %}
+                    <h1 class="mb-4 text-center text-light">User Registration</h1>
+                    {{ form.as_p }}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-light btn-lg">Register</button>
+                    </div>
+                </form>
+                <div class="form-group mt-3">
+                    {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+from django.views import generic
+from django.urls import reverse_lazy
+from . import models
+from . import forms
+
+
+class TeknikBookingListView(generic.ListView):
+    model = models.TeknikBooking
+    form_class = forms.TeknikBookingForm
+
+
+class TeknikBookingCreateView(generic.CreateView):
+    model = models.TeknikBooking
+    form_class = forms.TeknikBookingForm
+
+
+class TeknikBookingDetailView(generic.DetailView):
+    model = models.TeknikBooking
+    form_class = forms.TeknikBookingForm
+
+
+class TeknikBookingUpdateView(generic.UpdateView):
+    model = models.TeknikBooking
+    form_class = forms.TeknikBookingForm
+    pk_url_kwarg = "pk"
+
+
+class TeknikBookingDeleteView(generic.DeleteView):
+    model = models.TeknikBooking
+    success_url = reverse_lazy("Teknik_TeknikBooking_list")
+
+
+class TeknikItemListView(generic.ListView):
+    model = models.TeknikItem
+    form_class = forms.TeknikItemForm
+
+
+class TeknikItemCreateView(generic.CreateView):
+    model = models.TeknikItem
+    form_class = forms.TeknikItemForm
+
+
+class TeknikItemDetailView(generic.DetailView):
+    model = models.TeknikItem
+    form_class = forms.TeknikItemForm
+
+
+class TeknikItemUpdateView(generic.UpdateView):
+    model = models.TeknikItem
+    form_class = forms.TeknikItemForm
+    pk_url_kwarg = "pk"
+
+
+class TeknikItemDeleteView(generic.DeleteView):
+    model = models.TeknikItem
+    success_url = reverse_lazy("Teknik_TeknikItem_list")
+
+
+class TeknikTypeListView(generic.ListView):
+    model = models.TeknikType
+    form_class = forms.TeknikTypeForm
+
+
+class TeknikTypeCreateView(generic.CreateView):
+    model = models.TeknikType
+    form_class = forms.TeknikTypeForm
+
+
+class TeknikTypeDetailView(generic.DetailView):
+    model = models.TeknikType
+    form_class = forms.TeknikTypeForm
+
+
+class TeknikTypeUpdateView(generic.UpdateView):
+    model = models.TeknikType
+    form_class = forms.TeknikTypeForm
+    pk_url_kwarg = "pk"
+
+
+class TeknikTypeDeleteView(generic.DeleteView):
+    model = models.TeknikType
+    success_url = reverse_lazy("Teknik_TeknikType_list")

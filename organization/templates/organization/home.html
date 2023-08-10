@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h5 class="card-header">Organization</h5>
+    <div class="card-body">
+        <button type="button" class="btn btn-secondary" href="{% url 'organization_Event_list' %}">Event Listing</button>
+        <button type="button" class="btn btn-secondary" href="{% url 'organization_Team_list' %}">Team Listing</button>
+        <button type="button" class="btn btn-secondary" href="{% url 'organization_TeamMembership_list' %}">TeamMembership Listing</button>
+        <button type="button" class="btn btn-secondary" href="{% url 'organization_EventMembership_list' %}">EventMembership Listing</button>
+        <button type="button" class="btn btn-secondary" href="{% url 'organization_Volunteer_list' %}">Volunteer Listing</button>
+    </div>
+</div>
+{% endblock %}

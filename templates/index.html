@@ -1,26 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-
-
-<div class="row">
-    <div class="col-sm-6 mb-3 mb-sm-0">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Organisation</h5>
-          <p class="card-text">Herunder ændres kurser, teams og medarbejdere</p>
-
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Køkken</h5>
-          <p class="card-text">Herunder ændres alt der relaterer sig til køkkenet</p>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
+<div class="m-2"><h4>organization</h4></div>
+<div class="m-2"><a class="btn btn-light" href="{% url 'organization_Team_list' %}">Team Listing</a></div>
+<div class="m-2"><a class="btn btn-light" href="{% url 'organization_TeamMembership_list' %}">TeamMembership Listing</a></div>
+<div class="m-2"><a class="btn btn-light" href="{% url 'organization_Event_list' %}">Event Listing</a></div>
+<div class="m-2"><a class="btn btn-light" href="{% url 'organization_EventMembership_list' %}">EventMembership Listing</a></div>
+<div class="m-2"><a class="btn btn-light" href="{% url 'organization_Volunteer_list' %}">Volunteer Listing</a></div>
 {% endblock %}

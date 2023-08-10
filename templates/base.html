@@ -1,38 +1,48 @@
-{% load static %}
-<html>
-  <head>
-    <title>DNB - Det Nye bookingsystem</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Det nye booking system</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     
-    {% block extrahead %}{% endblock %}
-  </head>
+    </head>
   <body>
-    {% block allcontent %}
+  	{% include 'navbar.html' %}
+    <br/>
+    <div class="container">
+      {% if messages %}
+        {% for message in messages %}
+          
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #e3f2fd;">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'index' %}" >SKS Bookingsystem</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-link d-flex" href="{% url 'admin:index' %}">Admin</a>
-        </div>
-      </div>
-    </nav>
+        {% endfor %}
+      {% endif %}
 
-    <div id="content" class="container">
-      <div class="card">
-        <div class="card-body">
-          <p class="card-text">{% block content %}{% endblock %}</p>
-        </div>
-      </div>
+      {% if request.user.is_authenticated %}
+      <h3>Hello, {{ user.first_name }} from team {% with volunteer_team_memberships=request.user.teammembership_set.all %}
+          {% if volunteer_team_memberships %}
+              {{ volunteer_team_memberships.first.team.name }}
+          {% endif %}
+          {% endwith %}</h3>
+      {% endif %}
+      {% block content %}
+
+      {% endblock %}
     </div>
-    
 
+    <!-- Optional JavaScript; choose one of the two! -->
 
-    {% endblock %}
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    -->
   </body>
 </html>

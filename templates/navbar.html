@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark navbar-light" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex text-light" href="{% url 'home' %}" >Bookingsystem</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarTogglerDemo02">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link d-flex text-light" href="{% url 'admin:index' %}">Admin</a>
+                </li>
+                <li class="nav-item">
+                    {% if request.user.is_authenticated %}
+                    <a class="btn btn-light me-2" href="{% url 'logout_user' %}">Logout</a>
+                    {% else %}
+                    <a class="btn btn-light me-2" href="{% url 'login_user' %}">Sign In</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

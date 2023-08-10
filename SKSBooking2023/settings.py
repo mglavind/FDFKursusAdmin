@@ -23,6 +23,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+
 # Application definition
 INSTALLED_APPS = [
     'organization',
@@ -32,10 +34,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'user',
     'phonenumber_field',
     'bootstrap5',
     'rest_framework',
+    'Teknik',
 ]
 
 
@@ -48,7 +50,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
+
 
 ROOT_URLCONF = 'SKSBooking2023.urls'
 
@@ -67,6 +71,8 @@ TEMPLATES = [
         },
     },
 ]
+
+
 
 WSGI_APPLICATION = 'SKSBooking2023.wsgi.application'
 
@@ -100,6 +106,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Set the authentication backend to use Django's default ModelBackend
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+LOGIN_URL = 'login_user'
+
+# Set the LOGIN_REDIRECT_URL to the URL where you want to redirect the user after successful login
+LOGIN_REDIRECT_URL = 'dashboard'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -123,3 +139,4 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 AUTH_USER_MODEL = 'organization.Volunteer'
+
