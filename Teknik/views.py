@@ -1,5 +1,7 @@
 from django.views import generic
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from . import models
 from . import forms
 
@@ -8,15 +10,32 @@ class TeknikBookingListView(generic.ListView):
     model = models.TeknikBooking
     form_class = forms.TeknikBookingForm
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 class TeknikBookingCreateView(generic.CreateView):
     model = models.TeknikBooking
     form_class = forms.TeknikBookingForm
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
 
 class TeknikBookingDetailView(generic.DetailView):
     model = models.TeknikBooking
     form_class = forms.TeknikBookingForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class TeknikBookingUpdateView(generic.UpdateView):
@@ -24,10 +43,23 @@ class TeknikBookingUpdateView(generic.UpdateView):
     form_class = forms.TeknikBookingForm
     pk_url_kwarg = "pk"
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
 
 class TeknikBookingDeleteView(generic.DeleteView):
     model = models.TeknikBooking
     success_url = reverse_lazy("Teknik_TeknikBooking_list")
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class TeknikItemListView(generic.ListView):

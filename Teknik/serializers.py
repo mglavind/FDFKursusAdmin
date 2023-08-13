@@ -25,12 +25,9 @@ class TeknikItemSerializer(serializers.ModelSerializer):
         model = models.TeknikItem
         fields = [
             "name",
-            "image",
             "last_updated",
             "created",
             "description",
-            "owner",
-            "type",
         ]
 
 class TeknikTypeSerializer(serializers.ModelSerializer):

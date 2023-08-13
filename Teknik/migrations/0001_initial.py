@@ -17,15 +17,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='TeknikType',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30)),
-                ('last_updated', models.DateTimeField(auto_now=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-            ],
-        ),
-        migrations.CreateModel(
             name='TeknikItem',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -42,15 +33,8 @@ class Migration(migrations.Migration):
             name='TeknikBooking',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('end', models.DateTimeField()),
-                ('start', models.DateTimeField()),
                 ('last_updated', models.DateTimeField(auto_now=True)),
-                ('status', models.CharField(max_length=30)),
-                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Teknik.teknikitem')),
-                ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='organization.team')),
-                ('team_contact', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

@@ -1,9 +1,8 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="m-2"><h4>organization</h4></div>
-<div class="m-2"><a class="btn btn-light" href="{% url 'organization_Team_list' %}">Team Listing</a></div>
-<div class="m-2"><a class="btn btn-light" href="{% url 'organization_TeamMembership_list' %}">TeamMembership Listing</a></div>
-<div class="m-2"><a class="btn btn-light" href="{% url 'organization_Event_list' %}">Event Listing</a></div>
-<div class="m-2"><a class="btn btn-light" href="{% url 'organization_EventMembership_list' %}">EventMembership Listing</a></div>
-<div class="m-2"><a class="btn btn-light" href="{% url 'organization_Volunteer_list' %}">Volunteer Listing</a></div>
+{% extends 'base.html' %}
+
+{% block app_content %}
+    {% include "Teknik/teknik_card.html" %}
+    {% include "organization/home.html" %}
+    <!-- Add more includes for other apps as needed -->
 {% endblock %}
+

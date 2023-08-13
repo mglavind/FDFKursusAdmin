@@ -1,20 +1,27 @@
 
 {% extends "base.html" %}
 {% block content %}
+<h1> List of all Teknik Items </h1>
 {% for object in object_list %}
-  <div class="m-2">
-    <a href="{{object.get_absolute_url}}">{{object}}</a>
-    <small class="ml-5">
-      <a href="{% url 'Teknik_TeknikItem_delete' object.pk %}">
-        (Delete)
-      </a>
-    </small>
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ object.pk }}" aria-expanded="true" aria-controls="collapseOne">
+          {{object.name}}
+        </button>
+      </h2>
+      <div id="collapse{{ object.pk }}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          {{ object.description }} 
+        </div>
+      </div>
+    </div>
   </div>
 {% endfor %}
 <div>
   <a class="btn btn-primary"
-    href="{% url 'Teknik_TeknikItem_create' %}">
-  Create a new TeknikItem
+    href="{% url 'Teknik_TeknikBooking_create' %}">
+  Create a new Teknik Booking
   </a>
 </div>
 {% endblock %}

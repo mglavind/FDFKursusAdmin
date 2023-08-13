@@ -1,9 +1,7 @@
 from django import forms
-from organization.models import Team
-from Teknik.models import TeknikItem
-from organization.models import Volunteer
+from organization.models import Team, TeamMembership, Volunteer
+from Teknik.models import TeknikItem, TeknikType, TeknikBooking
 from django.contrib.auth.models import Group
-from Teknik.models import TeknikType
 from . import models
 
 
@@ -12,19 +10,41 @@ class TeknikBookingForm(forms.ModelForm):
         model = models.TeknikBooking
         fields = [
             "quantity",
-            "end",
-            "start",
             "status",
             "team",
             "item",
+            "start",
+            "end",
             "team_contact",
+            "remarks",
         ]
 
-    def __init__(self, *args, **kwargs):
+    widgets = {
+        "status": forms.TextInput(attrs={"value": "Pending", "disabled": True}),
+    }
+
+    status = forms.ChoiceField(choices=models.TeknikBooking.STATUS_CHOICES, widget=forms.HiddenInput, initial='Pending')
+
+    def __init__(self, *args, user=None, **kwargs):
         super(TeknikBookingForm, self).__init__(*args, **kwargs)
         self.fields["team"].queryset = Team.objects.all()
         self.fields["item"].queryset = TeknikItem.objects.all()
         self.fields["team_contact"].queryset = Volunteer.objects.all()
+        self.fields["status"].initial = "Pending"
+        self.fields["status"].widget.attrs["readonly"] = True
+        
+        if user:
+            try:
+                team_membership = TeamMembership.objects.get(member=user)
+                self.fields["team"].initial = team_membership.team
+                self.fields["team_contact"].queryset = Volunteer.objects.filter(
+                    teammembership__team=team_membership.team
+                )
+            except TeamMembership.DoesNotExist:
+                pass
+            
+            self.fields["team_contact"].initial = user
+            self.fields["status"].initial = "Pending"
 
 
 
@@ -33,16 +53,11 @@ class TeknikItemForm(forms.ModelForm):
         model = models.TeknikItem
         fields = [
             "name",
-            "image",
             "description",
-            "owner",
-            "type",
         ]
 
     def __init__(self, *args, **kwargs):
         super(TeknikItemForm, self).__init__(*args, **kwargs)
-        self.fields["owner"].queryset = Group.objects.all()
-        self.fields["type"].queryset = TeknikType.objects.all()
 
 
 

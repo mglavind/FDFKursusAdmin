@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'rest_framework',
     'Teknik',
+    'django_bootstrap_icons'
 ]
 
 

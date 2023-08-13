@@ -3,7 +3,6 @@ from django import forms
 
 from . import models
 
-
 class TeknikBookingAdminForm(forms.ModelForm):
 
     class Meta:
@@ -14,21 +13,41 @@ class TeknikBookingAdminForm(forms.ModelForm):
 class TeknikBookingAdmin(admin.ModelAdmin):
     form = TeknikBookingAdminForm
     list_display = [
-        "quantity",
-        "created",
-        "end",
-        "start",
-        "last_updated",
+        "item",
         "status",
+        "quantity",
+        "team",
+        "team_contact",
+        "start",
+        "end",
+        "remarks",
+        "created",
+        "last_updated",
+
+
     ]
     readonly_fields = [
-        "quantity",
         "created",
-        "end",
-        "start",
         "last_updated",
-        "status",
     ]
+    actions = ["approve_bookings", "reject_bookings"]
+
+    def approve_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Approved"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) approved.")
+    approve_bookings.short_description = "Approve selected bookings"
+
+    def reject_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Rejected"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) rejected.")
+    reject_bookings.short_description = "Reject selected bookings"
+
 
 
 class TeknikItemAdminForm(forms.ModelForm):
@@ -42,17 +61,13 @@ class TeknikItemAdmin(admin.ModelAdmin):
     form = TeknikItemAdminForm
     list_display = [
         "name",
-        "image",
         "last_updated",
         "created",
         "description",
     ]
     readonly_fields = [
-        "name",
-        "image",
         "last_updated",
         "created",
-        "description",
     ]
 
 
@@ -71,7 +86,6 @@ class TeknikTypeAdmin(admin.ModelAdmin):
         "created",
     ]
     readonly_fields = [
-        "name",
         "last_updated",
         "created",
     ]

@@ -18,13 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 
 urlpatterns = [
-    path('', include('organization.urls')),
+    #path('', include('organization.urls')),
+    path('', views.index, name='index'),  # Point to the view that renders index.html
     path('admin/', admin.site.urls),
     path('organization/', include('django.contrib.auth.urls')),
     path('organization/', include('organization.urls')),
+    path('Teknik/', include('Teknik.urls')),
 ]
 
 
