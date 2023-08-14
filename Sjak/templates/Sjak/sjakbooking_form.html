@@ -4,16 +4,16 @@
 {% block content %}
     
 <p>
-    <a class="btn btn-light" href="{% url 'Teknik_TeknikBooking_list' %}">
-    TeknikBooking Listing
+    <a class="btn btn-light" href="{% url 'Sjak_SjakBooking_list' %}">
+    SjakBooking Listing
     </a>
 </p>
     
 <form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{form.errors}}
+    {% csrf_token %}
+    {{form.errors}}    
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="item">Item: </label>
+        <label class="col-sm-2 col-form-label" for="item">Sjak item: </label>
         {{ form.item }}
     </div>
     <br>
@@ -22,24 +22,11 @@
         {{ form.quantity }}
     </div>
     <br>
-
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="start">Fra: </label>
+        <label class="col-sm-2 col-form-label" for="use_date">Bookes fra: </label>
         <input class="form-control col-sm-10"
-            id="start" type="datetime-local"
-            name="start" value="{{ object.start }}">
-    </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="end">Til: </label>
-        <input class="form-control col-sm-10"
-            id="end" type="datetime-local"
-            name="end" value="{{ object.end }}">
-    </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="team">Team: </label>
-        {{ form.team }}
+            id="use_date" type="datetime-local"
+            name="use_date" value="{{ object.use_date }}">
     </div>
     <br>
     <div class="form-group row">
@@ -48,12 +35,16 @@
     </div>
     <br>
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="remarks">Bemærkninger</label>
-        <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
+        <label class="col-sm-2 col-form-label" for="team">Team: </label>
+        {{ form.team }}
     </div>
     <br>
-  <input type="submit" value="Indsend" class="btn btn-primary">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="remarks">Bemærkninger</label>
+        <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
+    </div>  
+    <br>    
+    <input type="submit" value="Insend" class="btn btn-primary">
 </form>
-
 
 {% endblock %}

@@ -1,5 +1,10 @@
 from django.urls import path, include
 from rest_framework import routers
+from organization.views import ResetPasswordView
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LoginView
+
+
 
 from . import api
 from . import views
@@ -18,13 +23,32 @@ urlpatterns = [
     path('login_user', views.login_user, name="login_user"),
     path('logout_user', views.logout_user, name='logout_user'),
     path('register_user', views.register_user, name='register_user'),
+    path('password-reset', ResetPasswordView.as_view(), name='password_reset'),
+    path('password-reset-confirm/<uidb64>/<token>/', 
+        auth_views.PasswordResetConfirmView.as_view(template_name='organization/password_reset_confirm.html'),
+        name='password_reset_confirm'),
+    path('password-reset-complete/',
+        auth_views.PasswordResetCompleteView.as_view(template_name='organization/password_reset_complete.html'),
+        name='password_reset_complete'),
     path("api/v1/", include(router.urls)),
-    path("organization/EventMembership/", views.EventMembershipListView.as_view(), name="organization_EventMembership_list"),
-    path("organization/EventMembership/create/", views.EventMembershipCreateView.as_view(), name="organization_EventMembership_create"),
-    path("organization/EventMembership/detail/<int:pk>/", views.EventMembershipDetailView.as_view(), name="organization_EventMembership_detail"),
-    path("organization/EventMembership/update/<int:pk>/", views.EventMembershipUpdateView.as_view(), name="organization_EventMembership_update"),
-    path("organization/EventMembership/delete/<int:pk>/", views.EventMembershipDeleteView.as_view(), name="organization_EventMembership_delete"),
-    path("organization/Event/", views.EventListView.as_view(), name="organization_Event_list"),
+    path("organization/EventMembership/", 
+         views.EventMembershipListView.as_view(), 
+         name="organization_EventMembership_list"),
+    path("organization/EventMembership/create/", 
+         views.EventMembershipCreateView.as_view(), 
+         name="organization_EventMembership_create"),
+    path("organization/EventMembership/detail/<int:pk>/", 
+         views.EventMembershipDetailView.as_view(), 
+         name="organization_EventMembership_detail"),
+    path("organization/EventMembership/update/<int:pk>/", 
+         views.EventMembershipUpdateView.as_view(), 
+         name="organization_EventMembership_update"),
+    path("organization/EventMembership/delete/<int:pk>/", 
+         views.EventMembershipDeleteView.as_view(), 
+         name="organization_EventMembership_delete"),
+    path("organization/Event/", 
+         views.EventListView.as_view(), 
+         name="organization_Event_list"),
     path("organization/Event/create/", views.EventCreateView.as_view(), name="organization_Event_create"),
     path("organization/Event/detail/<int:pk>/", views.EventDetailView.as_view(), name="organization_Event_detail"),
     path("organization/Event/update/<int:pk>/", views.EventUpdateView.as_view(), name="organization_Event_update"),

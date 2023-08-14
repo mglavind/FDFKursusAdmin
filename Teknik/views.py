@@ -52,6 +52,14 @@ class TeknikBookingUpdateView(generic.UpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset=queryset)
+        return obj
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        form.instance = self.get_object()  # Pre-populate the form with object's values
+        return form
 
 class TeknikBookingDeleteView(generic.DeleteView):
     model = models.TeknikBooking

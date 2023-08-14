@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% block content %}
 {% load bootstrap_icons %}
@@ -17,7 +16,6 @@
       <th scope="col">Item</th>
       <th scope="col">Antal</th>
       <th scope="col">Fra</th>
-      <th scope="col">Til</th>
       <th scope="col">Booket af</th>
       <th scope="col">Status</th>
       <th scope="col">Actions</th>
@@ -31,8 +29,7 @@
         <th scope="row">{{ object.id}}</th>
         <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
         <td>{{object.quantity}}</td>
-        <td>{{object.start}}</td>
-        <td>{{object.end}}</td>
+        <td>{{object.use_date}}</td>
         <td>{{object.team_contact}}</td>
         <td>
           {% if object.status == 'Pending' %}
@@ -50,10 +47,10 @@
           {% endif %}
       </td>
         <td>
-          <a href="{% url 'Teknik_TeknikBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+          <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
             {% bs_icon 'pencil' %}  
           </a>
-          <a href="{% url 'Teknik_TeknikBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+          <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
             {% bs_icon 'trash' %}  
           </a>
       </td>
@@ -66,8 +63,8 @@
 
 <div>
   <a class="btn btn-primary"
-    href="{% url 'Teknik_TeknikBooking_create' %}">
-  Ny teknik booking
+    href="{% url 'Sjak_SjakBooking_create' %}">
+  Ny Sjak booking
   </a>
 </div>
 {% endblock %}

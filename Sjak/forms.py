@@ -1,24 +1,21 @@
 from django import forms
-from django.forms.widgets import SelectDateWidget
+from Sjak.models import SjakItemType
 from organization.models import Team, TeamMembership, Volunteer
-from Teknik.models import TeknikItem, TeknikType, TeknikBooking
-from django.contrib.auth.models import Group
+from Sjak.models import SjakItem
 from . import models
 
-class TeknikBookingForm(forms.ModelForm):
+
+class SjakBookingForm(forms.ModelForm):
     class Meta:
-        model = models.TeknikBooking
+        model = models.SjakBooking
         fields = [
-            "quantity",
-            "team",
-            "item",
-            "start",
-            "end",
-            "team_contact",
             "remarks",
+            "quantity",
+            "use_date",
+            "item",
+            "team_contact",
+            "team",
         ]
-
-
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -28,9 +25,10 @@ class TeknikBookingForm(forms.ModelForm):
         return instance
 
     def __init__(self, *args, user=None, **kwargs):
-        super(TeknikBookingForm, self).__init__(*args, **kwargs)
+        super(SjakBookingForm, self).__init__(*args, **kwargs)
+        self.fields["item"].queryset = SjakItem.objects.all()
+        self.fields["team_contact"].queryset = Volunteer.objects.all()
         self.fields["team"].queryset = Team.objects.all()
-        self.fields["item"].queryset = TeknikItem.objects.all()
         
         if user:
             try:
@@ -43,33 +41,29 @@ class TeknikBookingForm(forms.ModelForm):
                 pass
             
             self.fields["team_contact"].initial = user
+
             
-            # Set initial values from instance
-            instance = kwargs.get('instance')
-            if instance:
-                self.fields["quantity"].initial = instance.quantity
-                self.fields["start"].initial = instance.start
-                self.fields["end"].initial = instance.end
-                # Add other fields similarly
-
-
-
-class TeknikItemForm(forms.ModelForm):
+class SjakItemForm(forms.ModelForm):
     class Meta:
-        model = models.TeknikItem
+        model = models.SjakItem
         fields = [
             "name",
             "description",
+            "type",
         ]
 
     def __init__(self, *args, **kwargs):
-        super(TeknikItemForm, self).__init__(*args, **kwargs)
+        super(SjakItemForm, self).__init__(*args, **kwargs)
+        self.fields["type"].queryset = SjakItemType.objects.all()
 
 
 
-class TeknikTypeForm(forms.ModelForm):
+
+
+
+class SjakItemTypeForm(forms.ModelForm):
     class Meta:
-        model = models.TeknikType
+        model = models.SjakItemType
         fields = [
             "name",
         ]

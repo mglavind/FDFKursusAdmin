@@ -1,20 +1,17 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegisterUserForm
-
-from django.contrib.auth.views import LoginView
-
+from django.contrib.auth.views import LoginView, PasswordResetView
 from django.contrib.auth.decorators import login_required
-
-from django.contrib.auth import get_user_model
-
 from django.views import generic
 from django.urls import reverse_lazy
+from .forms import RegisterUserForm
 from . import models
 from . import forms
-
+from .models import Team, TeamMembership
 
 User = get_user_model()
 
@@ -23,7 +20,7 @@ User = get_user_model()
 @login_required
 def home(request):
 	return render(request, 
-		'organization/home.html', {
+		'index.html', {
 		})
 
 def login_user(request):
@@ -55,6 +52,15 @@ def register_user(request):
             password = form.cleaned_data['password1']
             user = authenticate(username=username, password=password)
             login(request, user)  # Use the 'user' instance, not 'User'
+
+            # Check if the team "New users" exists
+            new_users_team = Team.objects.get(name="Unassigned users")
+
+            # Create a TeamMembership for the new user
+            TeamMembership.objects.create(team=new_users_team, member=user)
+
+            
+
             messages.success(request, "Registration Successful!")
             return redirect('home')
     else:
@@ -63,6 +69,20 @@ def register_user(request):
     return render(request, 'organization/register_user.html', {
         'form': form,
     })
+
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'organization/password_reset.html'
+    email_template_name = 'organization/password_reset_email.html'
+    subject_template_name = 'organization/password_reset_subject.txt'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('home')
+
+
+
 
 
 class EventMembershipListView(generic.ListView):

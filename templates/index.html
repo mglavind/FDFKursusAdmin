@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
 {% block app_content %}
+    {% include "organization/organization_card.html" %}
     {% include "Teknik/teknik_card.html" %}
-    {% include "organization/home.html" %}
+    {% include "Sjak/sjak_card.html" %}
+
     <!-- Add more includes for other apps as needed -->
 {% endblock %}
 
