@@ -11,7 +11,7 @@ from datetime import datetime
 from organization import models as organization_models
 from Teknik import models as Teknik_models
 from Sjak import models as Sjak_models
-
+from AktivitetsTeam import models as AktivitetsTeam_models
 
 def random_string(length=10):
     # Create a random string of length length
@@ -158,3 +158,24 @@ def create_Sjak_SjakItemType(**kwargs):
     defaults["name"] = ""
     defaults.update(**kwargs)
     return Sjak_models.SjakItemType.objects.create(**defaults)
+def create_AktivitetsTeam_AktivitetsTeamItem(**kwargs):
+    defaults = {}
+    defaults["description"] = ""
+    defaults["name"] = ""
+    defaults.update(**kwargs)
+    return AktivitetsTeam_models.AktivitetsTeamItem.objects.create(**defaults)
+def create_AktivitetsTeam_AktivitetsTeamBooking(**kwargs):
+    defaults = {}
+    defaults["location"] = ""
+    defaults["start"] = datetime.now()
+    defaults["end"] = datetime.now()
+    defaults["remarks"] = ""
+    defaults["status"] = ""
+    if "team" not in kwargs:
+        defaults["team"] = create_organization_Team()
+    if "item" not in kwargs:
+        defaults["item"] = create_AktivitetsTeam_AktivitetsTeamItem()
+    if "team_contact" not in kwargs:
+        defaults["team_contact"] = create_organization_Volunteer()
+    defaults.update(**kwargs)
+    return AktivitetsTeam_models.AktivitetsTeamBooking.objects.create(**defaults)
