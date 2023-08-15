@@ -41,4 +41,4 @@ virtualenv==20.14.1
 virtualenv-clone==0.5.7
 webencodings==0.5.1
 whitenoise==6.5
-pipen==2022.4
+pipenv==2022.4
