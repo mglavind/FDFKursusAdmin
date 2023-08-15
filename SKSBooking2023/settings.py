@@ -95,11 +95,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SKSBooking2023.wsgi.application'
 
+SCALINGO_POSTGRESQL_URL = 'postgres://sksbooking_9981:qveI-fnqiJHRAbWr26xq@sksbooking-9981.postgresql.a.osc-fr1.scalingo-dbs.com:31234/sksbooking_9981?sslmode=prefer'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 try:
-  database_url = os.environ["DATABASE_URL"]
+  database_url = os.environ["$SCALINGO_POSTGRESQL_URL"]
 except KeyError:
   database_url = "file:///{}".format(os.path.join(BASE_DIR, 'db.sqlite3'))
 

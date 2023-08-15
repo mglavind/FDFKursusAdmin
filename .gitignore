@@ -3,7 +3,3 @@ db.sqlite3
 *.pyc
 __pycache__/
 venv/
-
-venv
-*.pyc
-staticfiles
