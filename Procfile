@@ -1,1 +1,2 @@
-web: gunicorn myapp.wsgi --log-file -
+web: gunicorn mydjango.wsgi --log-file -
+postdeploy: python manage.py migrate
