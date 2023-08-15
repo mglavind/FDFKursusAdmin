@@ -23,15 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-env_allowed_hosts = []
-try:
-  env_allowed_hosts = os.environ["ALLOWED_HOSTS"].split(",")
-except KeyError:
-  pass
-
-ALLOWED_HOSTS = ["localhost"] + env_allowed_hosts
-
-
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.platformsh.site',
+]
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -95,18 +91,72 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SKSBooking2023.wsgi.application'
 
-SCALINGO_POSTGRESQL_URL = 'postgres://sksbooking_9981:qveI-fnqiJHRAbWr26xq@sksbooking-9981.postgresql.a.osc-fr1.scalingo-dbs.com:31234/sksbooking_9981?sslmode=prefer'
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-try:
-  database_url = os.environ["$SCALINGO_POSTGRESQL_URL"]
-except KeyError:
-  database_url = "file:///{}".format(os.path.join(BASE_DIR, 'db.sqlite3'))
 
-DATABASES = { 'default': dj_database_url.config() }
+#################################################################################
+# Platform.shh-specific configuration
+
+# Helper function for decoding base64-encoded JSON variables.
+def decode(variable):
+    """Decodes a Platform.sh environment variable.
+    Args:
+        variable (string):
+            Base64-encoded JSON (the content of an environment variable).
+    Returns:
+        An dict (if representing a JSON object), or a scalar type.
+    Raises:
+        JSON decoding error.
+    """
+    try:
+        if sys.version_info[1] > 5:
+            return json.loads(base64.b64decode(variable))
+        else:
+            return json.loads(base64.b64decode(variable).decode('utf-8'))
+    except json.decoder.JSONDecodeError:
+        print('Error decoding JSON, code %d', json.decoder.JSONDecodeError)
 
 
+# This variable must always match the primary database relationship name,
+#   configured in .platform.app.yaml.
+PLATFORMSH_DB_RELATIONSHIP="database"
+
+# Import some Platform.sh settings from the environment.
+# The following block is only applied within Platform.sh environments
+# That is, only when this Platform.sh variable is defined
+if (os.getenv('PLATFORM_APPLICATION_NAME') is not None):
+    DEBUG = False
+
+    # Redefine the static root based on the Platform.sh directory
+    # See https://docs.djangoproject.com/en/4.1/ref/settings/#static-root
+    if (os.getenv('PLATFORM_APP_DIR') is not None):
+        STATIC_ROOT = os.path.join(os.getenv('PLATFORM_APP_DIR'), 'static')
+
+    # PLATFORM_PROJECT_ENTROPY is unique to your project
+    # Use it to define define Django's SECRET_KEY
+    # See https://docs.djangoproject.com/en/4.1/ref/settings/#secret-key
+    if (os.getenv('PLATFORM_PROJECT_ENTROPY') is not None):
+        SECRET_KEY = os.getenv('PLATFORM_PROJECT_ENTROPY')
+
+    # Database service configuration, post-build only
+    # As services aren't available during the build
+    if (os.getenv('PLATFORM_ENVIRONMENT') is not None):
+        platformRelationships = decode(os.getenv('PLATFORM_RELATIONSHIPS'))
+        db_settings = platformRelationships[PLATFORMSH_DB_RELATIONSHIP][0]
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': db_settings['path'],
+                'USER': db_settings['username'],
+                'PASSWORD': db_settings['password'],
+                'HOST': db_settings['host'],
+                'PORT': db_settings['port'],
+            },
+            'sqlite': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            }
+        }
 
 #DATABASES = {
 #    'default': {
