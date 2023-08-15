@@ -1,0 +1,11 @@
+
+{% block app_content %}
+<div class="card">
+    <h5 class="card-header">Foto</h5>
+    <div class="card-body">
+        <a href="{% url 'Foto_FotoBooking_list' %}" class="btn btn-secondary mb-2">Jeres Foto bookinger</a>
+        <a href="{% url 'Foto_FotoItem_list' %}" class="btn btn-secondary mb-2">Foto's items</a>
+    </div>
+</div>
+<br>
+{% endblock %}

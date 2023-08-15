@@ -1,10 +1,44 @@
 {% extends 'base.html' %}
 
 {% block app_content %}
-    {% include "organization/organization_card.html" %}
-    {% include "Teknik/teknik_card.html" %}
-    {% include "Sjak/sjak_card.html" %}
-    {% include "AktivitetsTeam/aktivitetsteam_card.html" %}
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% include "organization/organization_card.html" %}
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% include "Teknik/teknik_card.html" %}
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% include "Sjak/sjak_card.html" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% include "AktivitetsTeam/aktivitetsteam_card.html" %}
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% include "Butikken/butikken_card.html" %}
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% include "Location/location_card.html" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% include "Foto/foto_card.html" %}
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            {% include "Depot/depot_card.html" %}
+        </div>
+    </div>
+
+
+
+    
+    
+    
+    
+    
 
     <!-- Add more includes for other apps as needed -->
 {% endblock %}

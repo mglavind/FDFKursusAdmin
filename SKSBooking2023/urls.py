@@ -27,9 +27,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('organization/', include('django.contrib.auth.urls')),
     path('organization/', include('organization.urls')),
+    path('Foto/', include('Foto.urls')),
     path('Teknik/', include('Teknik.urls')),
-    path('Sjak/', include('Sjak.urls')),
+    path('Butikken/', include('Butikken.urls')),
     path('AktivitetsTeam/', include('AktivitetsTeam.urls')),
+    path('Location/', include('Location.urls')),
+    path('Sjak/', include('Sjak.urls')),
+    path('Depot/', include('Depot.urls')),
+
 ]
 
 

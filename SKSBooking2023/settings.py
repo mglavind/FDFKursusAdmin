@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'Teknik',
     'Sjak',
     'AktivitetsTeam',
+    'Butikken',
+    'Foto',
+    'Location',
+    'Depot',
 ]
 
 

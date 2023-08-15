@@ -1,0 +1,66 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    
+<p>
+    <a class="btn btn-light" href="{% url 'Butikken_ButikkenBooking_list' %}">
+    ButikkenBooking Listing
+    </a>
+</p>
+    
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{form.errors}}
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="remarks">remarks: </label>
+      <input class="form-control col-sm-10"
+         id="remarks" type="text"
+         name="remarks" value="{{ object.remarks }}">
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="quantity">quantity: </label>
+      <input class="form-control col-sm-10"
+         id="quantity" type="text"
+         name="quantity" value="{{ object.quantity }}">
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="created">created: </label>
+      <input class="form-control col-sm-10"
+         id="created" type="datetime-local"
+         name="created" value="{{ object.created }}" disabled>
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="status">status: </label>
+      <input class="form-control col-sm-10"
+         id="status" type="text"
+         name="status" value="{{ object.status }}">
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="last_updated">last_updated: </label>
+      <input class="form-control col-sm-10"
+         id="last_updated" type="datetime-local"
+         name="last_updated" value="{{ object.last_updated }}" disabled>
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="start">start: </label>
+      <input class="form-control col-sm-10"
+         id="start" type="datetime-local"
+         name="start" value="{{ object.start }}">
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="team">team: </label>
+      {{ form.team }}
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="item">item: </label>
+      {{ form.item }}
+  </div>
+  <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="team_contact">team_contact: </label>
+      {{ form.team_contact }}
+  </div>
+  <input type="submit" value="Save" class="btn btn-primary">
+</form>
+
+{% endblock %}

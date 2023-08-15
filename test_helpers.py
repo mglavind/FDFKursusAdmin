@@ -12,6 +12,7 @@ from organization import models as organization_models
 from Teknik import models as Teknik_models
 from Sjak import models as Sjak_models
 from AktivitetsTeam import models as AktivitetsTeam_models
+from Butikken import models as Butikken_models
 
 def random_string(length=10):
     # Create a random string of length length
@@ -179,3 +180,31 @@ def create_AktivitetsTeam_AktivitetsTeamBooking(**kwargs):
         defaults["team_contact"] = create_organization_Volunteer()
     defaults.update(**kwargs)
     return AktivitetsTeam_models.AktivitetsTeamBooking.objects.create(**defaults)
+def create_Butikken_ButikkenItem(**kwargs):
+    defaults = {}
+    defaults["description"] = ""
+    defaults["name"] = ""
+    if "type" not in kwargs:
+        defaults["type"] = create_Butikken_ButikkenItemType()
+    defaults.update(**kwargs)
+    return Butikken_models.ButikkenItem.objects.create(**defaults)
+def create_Butikken_ButikkenBooking(**kwargs):
+    defaults = {}
+    defaults["remarks"] = ""
+    defaults["quantity"] = ""
+    defaults["status"] = ""
+    defaults["start"] = datetime.now()
+    if "team" not in kwargs:
+        defaults["team"] = create_organization_Team()
+    if "item" not in kwargs:
+        defaults["item"] = create_Butikken_ButikkenItem()
+    if "team_contact" not in kwargs:
+        defaults["team_contact"] = create_organization_Volunteer()
+    defaults.update(**kwargs)
+    return Butikken_models.ButikkenBooking.objects.create(**defaults)
+def create_Butikken_ButikkenItemType(**kwargs):
+    defaults = {}
+    defaults["name"] = ""
+    defaults["description"] = ""
+    defaults.update(**kwargs)
+    return Butikken_models.ButikkenItemType.objects.create(**defaults)
