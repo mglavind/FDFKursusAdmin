@@ -51,6 +51,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         "last_updated",
         "created",
     ]
+    list_filter = ["item", "team", "status"]
     actions = ["approve_bookings", "reject_bookings"]
 
     def approve_bookings(self, request, queryset):
