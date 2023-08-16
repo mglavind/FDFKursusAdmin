@@ -1,5 +1,7 @@
 from django.contrib import admin
+from django.http import HttpResponseRedirect, HttpResponse
 from django import forms
+import csv
 
 from . import models
 
@@ -50,7 +52,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         "created",
     ]
     list_filter = ["item", "team", "status"]
-    actions = ["approve_bookings", "reject_bookings"]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:
@@ -67,6 +69,26 @@ class SjakBookingAdmin(admin.ModelAdmin):
 
         self.message_user(request, f"{queryset.count()} booking(s) rejected.")
     reject_bookings.short_description = "Reject selected bookings"
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=sjak_bookings.csv"
+
+        writer = csv.writer(response)
+        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Use Date", "Status"])
+
+        for booking in queryset:
+            writer.writerow([
+                booking.item,
+                booking.quantity,
+                booking.team,
+                booking.team_contact,
+                booking.use_date,
+                booking.status,
+            ])
+
+        return response
+    export_to_csv.short_description = "Export selected bookings to CSV"
 
 
 class SjakItemTypeAdminForm(forms.ModelForm):
