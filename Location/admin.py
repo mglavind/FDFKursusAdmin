@@ -22,9 +22,8 @@ class LocationTypeAdmin(admin.ModelAdmin):
     readonly_fields = [
         "created",
         "last_updated",
-        "description",
-        "name",
     ]
+   
 
 
 class LocationBookingAdminForm(forms.ModelForm):
@@ -44,16 +43,31 @@ class LocationBookingAdmin(admin.ModelAdmin):
         "created",
         "primary_camp",
         "last_updated",
+        "item",
+        "team",
+        "team_contact",
     ]
     readonly_fields = [
-        "end",
-        "status",
-        "remarks",
-        "start",
         "created",
-        "primary_camp",
         "last_updated",
     ]
+    actions = ["approve_bookings", "reject_bookings"]
+
+    def approve_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Approved"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) approved.")
+    approve_bookings.short_description = "Approve selected bookings"
+
+    def reject_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Rejected"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) rejected.")
+    reject_bookings.short_description = "Reject selected bookings"
 
 
 class LocationItemAdminForm(forms.ModelForm):
@@ -73,9 +87,7 @@ class LocationItemAdmin(admin.ModelAdmin):
     ]
     readonly_fields = [
         "last_updated",
-        "name",
         "created",
-        "description",
     ]
 
 
