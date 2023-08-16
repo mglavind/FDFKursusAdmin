@@ -39,12 +39,10 @@ class SjakBookingAdmin(admin.ModelAdmin):
         "item",
         "quantity",
         "team",
-        "remarks",
         "team_contact",
         "use_date",
         "status",
         "last_updated",
-        "created",
         
     ]
     readonly_fields = [

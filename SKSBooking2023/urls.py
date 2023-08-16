@@ -39,7 +39,7 @@ urlpatterns = [
 
 
 # Configure Admin Titles
-admin.site.site_header = "Administration Page"
-admin.site.site_title = "Browser Title"
-admin.site.index_title = "Welcome To The Addmin Area..."
+admin.site.site_header = "Sletten admin"
+admin.site.site_title = "Sletten admin"
+admin.site.index_title = "Velkommen teamleder!"
 
