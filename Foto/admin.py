@@ -14,6 +14,8 @@ class FotoItemAdminForm(forms.ModelForm):
 class FotoItemAdmin(admin.ModelAdmin):
     form = FotoItemAdminForm
     list_display = [
+        "name",
+        "description",
         "last_updated",
         "created",
     ]
@@ -33,23 +35,37 @@ class FotoBookingAdminForm(forms.ModelForm):
 class FotoBookingAdmin(admin.ModelAdmin):
     form = FotoBookingAdminForm
     list_display = [
+        "item",
+        "location",
         "start",
         "end",
         "remarks",
-        "created",
-        "location",
-        "last_updated",
         "status",
+        "created",
+        "last_updated",
     ]
     readonly_fields = [
-        "start",
-        "end",
-        "remarks",
         "created",
-        "location",
         "last_updated",
-        "status",
     ]
+    actions = ["approve_bookings", "reject_bookings"]
+    list_filter = ["item", "team", "status"]
+
+    def approve_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Approved"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) approved.")
+    approve_bookings.short_description = "Approve selected bookings"
+
+    def reject_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Rejected"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) rejected.")
+    reject_bookings.short_description = "Reject selected bookings"
 
 
 admin.site.register(models.FotoItem, FotoItemAdmin)
