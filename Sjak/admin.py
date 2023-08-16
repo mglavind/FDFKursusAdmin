@@ -23,6 +23,34 @@ class SjakItemAdmin(admin.ModelAdmin):
         "created",
         "last_updated",
     ]
+    
+
+
+class SjakBookingAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.SjakBooking
+        fields = "__all__"
+
+
+class SjakBookingAdmin(admin.ModelAdmin):
+    form = SjakBookingAdminForm
+    list_display = [
+        "item",
+        "quantity",
+        "team",
+        "remarks",
+        "team_contact",
+        "use_date",
+        "status",
+        "last_updated",
+        "created",
+        
+    ]
+    readonly_fields = [
+        "last_updated",
+        "created",
+    ]
     actions = ["approve_bookings", "reject_bookings"]
 
     def approve_bookings(self, request, queryset):
@@ -40,33 +68,6 @@ class SjakItemAdmin(admin.ModelAdmin):
 
         self.message_user(request, f"{queryset.count()} booking(s) rejected.")
     reject_bookings.short_description = "Reject selected bookings"
-
-
-class SjakBookingAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = models.SjakBooking
-        fields = "__all__"
-
-
-class SjakBookingAdmin(admin.ModelAdmin):
-    form = SjakBookingAdminForm
-    list_display = [
-        "remarks",
-        "last_updated",
-        "created",
-        "status",
-        "quantity",
-        "use_date",
-        "item",
-        "team",
-        "team_contact",
-    ]
-    readonly_fields = [
-        "last_updated",
-        "created",
-        
-    ]
 
 
 class SjakItemTypeAdminForm(forms.ModelForm):
