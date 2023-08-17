@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 
 class ButikkenItem(models.Model):
@@ -24,6 +25,7 @@ class ButikkenItem(models.Model):
 
     def get_update_url(self):
         return reverse("Butikken_ButikkenItem_update", args=(self.pk,))
+    
 
 
 
@@ -34,13 +36,20 @@ class ButikkenBooking(models.Model):
     item = models.ForeignKey("Butikken.ButikkenItem", on_delete=models.CASCADE)
     team_contact = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE)
 
+
     # Fields
-    remarks = models.TextField(max_length=500)
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+
+    start = models.DateTimeField(verbose_name='Start', default=timezone.now)
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    status = models.CharField(max_length=100)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    start = models.DateTimeField()
+    remarks = models.TextField(blank=True)  # Blank allows for an empty value
 
     class Meta:
         pass

@@ -1,8 +1,6 @@
 from django import forms
-from Butikken.models import ButikkenItemType
-from organization.models import Team
-from Butikken.models import ButikkenItem
-from organization.models import Volunteer
+from Butikken.models import ButikkenItemType, ButikkenItem
+from organization.models import Team, TeamMembership, Volunteer
 from . import models
 
 
@@ -27,18 +25,44 @@ class ButikkenBookingForm(forms.ModelForm):
         fields = [
             "remarks",
             "quantity",
-            "status",
             "start",
-            "team",
             "item",
             "team_contact",
+            "team",
         ]
 
-    def __init__(self, *args, **kwargs):
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.status = "Pending"
+        if commit:
+            instance.save()
+        return instance
+
+    def __init__(self, *args, user=None, **kwargs):
         super(ButikkenBookingForm, self).__init__(*args, **kwargs)
-        self.fields["team"].queryset = Team.objects.all()
         self.fields["item"].queryset = ButikkenItem.objects.all()
         self.fields["team_contact"].queryset = Volunteer.objects.all()
+        self.fields["team"].queryset = Team.objects.all()
+        
+        if user:
+            try:
+                team_membership = TeamMembership.objects.get(member=user)
+                self.fields["team"].initial = team_membership.team
+                self.fields["team_contact"].queryset = Volunteer.objects.filter(
+                    teammembership__team=team_membership.team
+                )
+            except TeamMembership.DoesNotExist:
+                pass
+            
+            self.fields["team_contact"].initial = user
+            
+            # Set initial values from instance
+            instance = kwargs.get('instance')
+            if instance:
+                self.fields["quantity"].initial = instance.quantity
+                self.fields["start"].initial = instance.start
+
+                # Add other fields similarly
 
 
 

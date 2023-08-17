@@ -1,7 +1,6 @@
 from django import forms
-from Sjak.models import SjakItemType
+from Sjak.models import SjakItemType, SjakItem
 from organization.models import Team, TeamMembership, Volunteer
-from Sjak.models import SjakItem
 from . import models
 
 

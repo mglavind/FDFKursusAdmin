@@ -1,5 +1,8 @@
 from django.contrib import admin
+from django.http import HttpResponseRedirect, HttpResponse
 from django import forms
+import csv
+
 
 from . import models
 
@@ -20,9 +23,7 @@ class ButikkenItemAdmin(admin.ModelAdmin):
         "created",
     ]
     readonly_fields = [
-        "description",
         "last_updated",
-        "name",
         "created",
     ]
 
@@ -45,13 +46,47 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
         "start",
     ]
     readonly_fields = [
-        "remarks",
-        "quantity",
         "created",
-        "status",
         "last_updated",
-        "start",
     ]
+    list_filter = ["item", "team", "status"]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+
+    def approve_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Approved"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) approved.")
+    approve_bookings.short_description = "Approve selected bookings"
+
+    def reject_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Rejected"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) rejected.")
+    reject_bookings.short_description = "Reject selected bookings"
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=butikken_bookings.csv"
+
+        writer = csv.writer(response)
+        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "Status"])
+
+        for booking in queryset:
+            writer.writerow([
+                booking.item,
+                booking.quantity,
+                booking.team,
+                booking.team_contact,
+                booking.start,
+                booking.status,
+            ])
+
+        return response
+    export_to_csv.short_description = "Export selected bookings to CSV"
 
 
 class ButikkenItemTypeAdminForm(forms.ModelForm):
@@ -71,9 +106,7 @@ class ButikkenItemTypeAdmin(admin.ModelAdmin):
     ]
     readonly_fields = [
         "last_updated",
-        "name",
         "created",
-        "description",
     ]
 
 
