@@ -13,6 +13,7 @@ class Volunteer(AbstractUser):
     last_name = models.CharField(max_length=30)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     email = models.EmailField()
+    phone = models.CharField(max_length=30, blank=True)
 
     class Meta:
         pass

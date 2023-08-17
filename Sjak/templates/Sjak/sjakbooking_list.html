@@ -16,6 +16,7 @@
       <th scope="col">Item</th>
       <th scope="col">Antal</th>
       <th scope="col">Fra</th>
+      <th scope="col">Til</th>
       <th scope="col">Booket af</th>
       <th scope="col">Status</th>
       <th scope="col">Actions</th>
@@ -29,7 +30,8 @@
         <th scope="row">{{ object.id}}</th>
         <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
         <td>{{object.quantity}}</td>
-        <td>{{object.use_date}}</td>
+        <td>{{object.start}}</td>
+        <td>{{object.end}}</td>
         <td>{{object.team_contact}}</td>
         <td>
           {% if object.status == 'Pending' %}

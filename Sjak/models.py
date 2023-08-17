@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 import datetime
+from django.utils import timezone
 
 
 class SjakItem(models.Model):
@@ -42,7 +43,8 @@ class SjakBooking(models.Model):
     )
 
     # Fields
-    use_date = models.DateTimeField()
+    start = models.DateTimeField(verbose_name='Start', default=timezone.now)
+    end = models.DateTimeField(verbose_name='End', default=timezone.now)
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)

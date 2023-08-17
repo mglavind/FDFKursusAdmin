@@ -11,7 +11,8 @@ class SjakBookingForm(forms.ModelForm):
         fields = [
             "remarks",
             "quantity",
-            "use_date",
+            "start",
+            "end",
             "item",
             "team_contact",
             "team",
@@ -41,6 +42,14 @@ class SjakBookingForm(forms.ModelForm):
                 pass
             
             self.fields["team_contact"].initial = user
+            
+            # Set initial values from instance
+            instance = kwargs.get('instance')
+            if instance:
+                self.fields["quantity"].initial = instance.quantity
+                self.fields["start"].initial = instance.start
+                self.fields["end"].initial = instance.end
+                # Add other fields similarly
 
             
 class SjakItemForm(forms.ModelForm):

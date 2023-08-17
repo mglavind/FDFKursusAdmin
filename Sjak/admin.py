@@ -42,7 +42,8 @@ class SjakBookingAdmin(admin.ModelAdmin):
         "quantity",
         "team",
         "team_contact",
-        "use_date",
+        "start",
+        "end",
         "status",
         "last_updated",
         
@@ -75,7 +76,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         response["Content-Disposition"] = "attachment; filename=sjak_bookings.csv"
 
         writer = csv.writer(response)
-        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Use Date", "Status"])
+        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "End", "Status"])
 
         for booking in queryset:
             writer.writerow([
@@ -83,7 +84,8 @@ class SjakBookingAdmin(admin.ModelAdmin):
                 booking.quantity,
                 booking.team,
                 booking.team_contact,
-                booking.use_date,
+                booking.start,
+                booking.end,
                 booking.status,
             ])
 

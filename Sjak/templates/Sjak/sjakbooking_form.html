@@ -23,12 +23,23 @@
     </div>
     <br>
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="use_date">Bookes fra: </label>
-        <input class="form-control col-sm-10"
-            id="use_date" type="datetime-local"
-            name="use_date" value="{{ object.use_date }}">
+        <label class="col-sm-2 col-form-label" for="start">Bookes fra: </label>
+        <div class="input-group col-sm-10">
+            <input class="form-control" id="start" type="datetime-local" name="start" value="{{ object.start }}">
+            <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
+        </div>
     </div>
     <br>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="end">Bookes til: </label>
+        <div class="input-group mb-3">
+            <input class="form-control" id="end" type="datetime-local" name="end" value="{{ object.end }}">
+            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursus slut</button>
+        </div>
+    </div>
+    <br>
+      
+
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="team_contact">Kontaktperson: </label>
         {{ form.team_contact }}
@@ -47,4 +58,23 @@
     <input type="submit" value="Insend" class="btn btn-primary">
 </form>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const setPredefinedStartButton = document.getElementById("set-predefined-start");
+        const setPredefinedEndButton = document.getElementById("set-predefined-end");
+        const startField = document.getElementById("start");
+        const endField = document.getElementById("end");
+
+        setPredefinedStartButton.addEventListener("click", function () {
+            startField.value = "2023-10-14T08:00"; // Replace with your predefined value for start
+        });
+
+        setPredefinedEndButton.addEventListener("click", function () {
+            endField.value = "2023-10-21T16:00"; // Replace with your predefined value for end
+        });
+    });
+</script>
+
+
 {% endblock %}
+

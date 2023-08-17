@@ -4,6 +4,8 @@
 {% block content %}
 
 <div>
+    <p> Du kan evt eksportere en .csv fil med Volunteers først, for at se hvordan filen du uploader skal se ud </p> <br>
+    <p> Men ellers er reglerne at hver linje har: fornavn, efternavn, brugernavn, email, telefon nummer</p> <br>
    <form action="." method="POST" enctype="multipart/form-data"> 
     {{ form.as_p}}
     {% csrf_token %}

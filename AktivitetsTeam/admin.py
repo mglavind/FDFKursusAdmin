@@ -20,10 +20,8 @@ class AktivitetsTeamItemAdmin(admin.ModelAdmin):
         "name",
     ]
     readonly_fields = [
-        "description",
         "created",
         "last_updated",
-        "name",
     ]
 
 
@@ -48,11 +46,6 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
     readonly_fields = [
         "created",
         "last_updated",
-        "location",
-        "start",
-        "end",
-        "remarks",
-        "status",
     ]
 
 

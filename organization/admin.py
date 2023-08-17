@@ -117,6 +117,7 @@ class VolunteerAdmin(admin.ModelAdmin):
     form = VolunteerAdminForm
     list_display = [
         "email",
+        "phone",
         "first_name",
         "last_name",
         "created",
@@ -133,10 +134,10 @@ class VolunteerAdmin(admin.ModelAdmin):
             response['Content-Disposition'] = 'attachment; filename="volunteers.csv"'
 
             writer = csv.writer(response)
-            writer.writerow(['First Name', 'Last Name', 'Username', 'Email'])
+            writer.writerow(['First Name', 'Last Name', 'Username', 'Email', 'Phone'])
 
             for volunteer in queryset:
-                writer.writerow([volunteer.first_name, volunteer.last_name, volunteer.username, volunteer.email])
+                writer.writerow([volunteer.first_name, volunteer.last_name, volunteer.username, volunteer.email, volunteer.phone])
             return response
     export_to_csv.short_description = "Export selected volunteers to CSV"
     
@@ -163,6 +164,7 @@ class VolunteerAdmin(admin.ModelAdmin):
                     "last_name": fields[1],
                     "username": fields[2],
                     "email": fields[3],
+                    "phone": fields[4],
                 }
                 
                 # Generate a random password (you can customize the length and characters)
