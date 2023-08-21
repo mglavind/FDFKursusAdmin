@@ -38,8 +38,8 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
         "created",
         "last_updated",
         "location",
-        "start",
-        "end",
+        "start_date",
+        "end_date",
         "remarks",
         "status",
     ]

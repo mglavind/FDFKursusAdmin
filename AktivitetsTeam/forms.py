@@ -1,4 +1,6 @@
 from django import forms
+from django.core.validators import MaxValueValidator
+from django.utils import timezone
 from organization.models import Team, TeamMembership
 from AktivitetsTeam.models import AktivitetsTeamItem
 from organization.models import Volunteer
@@ -15,19 +17,32 @@ class AktivitetsTeamItemForm(forms.ModelForm):
 
 
 class AktivitetsTeamBookingForm(forms.ModelForm):
+    start_date = forms.DateField(
+        label="Start Date",
+        initial=timezone.now().date(),
+        widget=forms.DateInput(attrs={"type": "date"}),
+        validators=[MaxValueValidator(timezone.now().date())],
+    )
+    start_time = forms.TimeField(
+        label="Start Time",
+        initial=timezone.now().time(),
+        widget=forms.TimeInput(attrs={"type": "time"}),
+    )
     class Meta:
         model = models.AktivitetsTeamBooking
         fields = [
-            "location",
-            "start",
-            "end",
             "remarks",
-            "status",
-            "team",
+            "location",
             "item",
             "team_contact",
+            "team",
+            "start_date",  # Add these fields to the list
+            "start_time",  # Add these fields to the list
+            "end_date",    # Add these fields to the list
+            "end_time",    # Add these fields to the list
         ]
-    
+
+
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.status = "Pending"
@@ -37,8 +52,9 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
 
     def __init__(self, *args, user=None, **kwargs):
         super(AktivitetsTeamBookingForm, self).__init__(*args, **kwargs)
-        self.fields["team"].queryset = Team.objects.all()
         self.fields["item"].queryset = AktivitetsTeamItem.objects.all()
+        self.fields["team_contact"].queryset = Volunteer.objects.all()
+        self.fields["team"].queryset = Team.objects.all()
         
         if user:
             try:
@@ -49,16 +65,23 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
                 )
             except TeamMembership.DoesNotExist:
                 pass
-            
+
             self.fields["team_contact"].initial = user
-            
-            # Set initial values from instance
+
             instance = kwargs.get('instance')
             if instance:
-                self.fields["quantity"].initial = instance.quantity
-                self.fields["start"].initial = instance.start
-                self.fields["end"].initial = instance.end
-                # Add other fields similarly
+                self.fields["start_date"] = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+                self.fields["start_time"] = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+                self.fields["end_date"] = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+                self.fields["end_time"] = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
 
+        else:
+            self.fields["start_date"] = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+            self.fields["start_time"] = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+            self.fields["end_date"] = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+            self.fields["end_time"] = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
 
+        if instance:
+            self.fields["remarks"].initial = instance.remarks
+            self.fields["location"].initial = instance.location
 

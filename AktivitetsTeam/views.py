@@ -2,6 +2,7 @@ from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.db.models import F
 from . import models
 from . import forms
 
@@ -35,10 +36,14 @@ class AktivitetsTeamItemDeleteView(generic.DeleteView):
 class AktivitetsTeamBookingListView(generic.ListView):
     model = models.AktivitetsTeamBooking
     form_class = forms.AktivitetsTeamBookingForm
+    template_name = 'aktivitetsteambooking_list.html.html' 
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        return models.AktivitetsTeamBooking.objects.order_by(F('start_date'))
 
 
 class AktivitetsTeamBookingCreateView(generic.CreateView):
@@ -78,13 +83,17 @@ class AktivitetsTeamBookingUpdateView(generic.UpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
-    def get_object(self, queryset=None):
-        obj = super().get_object(queryset=queryset)
-        return obj
-
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
         form.instance = self.get_object()  # Pre-populate the form with object's values
+        
+        # Add the following lines to ensure related fields are initialized
+        form.fields["team"].initial = form.instance.team
+        form.fields["item"].initial = form.instance.item
+        form.fields["team_contact"].initial = form.instance.team_contact
+        
+        return form
+
 
 
 class AktivitetsTeamBookingDeleteView(generic.DeleteView):

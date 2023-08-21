@@ -1,38 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 {% load bootstrap_icons %}
+<h5> Herunder kan du se alle gruppers aktivitetsteam bookinger </h5>
 <br>
-{% if request.user.is_authenticated %}
-      <h5>Booking oversigt for team: {% with volunteer_team_memberships=request.user.teammembership_set.all %}
-          {% if volunteer_team_memberships %}
-              {{ volunteer_team_memberships.first.team.name }}
-          {% endif %}
-          {% endwith %}</h5>
-  {% endif %}
 <table class="table">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Item</th>
-      <th scope="col">Location</th>
+      <th scope="col">Aktivitet</th>
+      <th scope="col">Placering</th>
       <th scope="col">Fra</th>
       <th scope="col">Til</th>
-      <th scope="col">Booket af</th>
+      <th scope="col">Kontaktperson</th>
+      <th scope="col">Gruppe</th>
       <th scope="col">Status</th>
-      <th scope="col">Actions</th>
+      <th scope="col">Handlinger</th>
     </tr>
   </thead>
   <tbody>
     {% for object in object_list %}
-    {% with booking_team_membership=object.team.teammembership_set.first %}
-    {% if booking_team_membership.member == request.user %}
       <tr>
         <th scope="row">{{ object.id}}</th>
-        <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
+        <td><a href="{{object.get_absolute_url}}">{{object.item}}</a></td>
         <td>{{object.location}}</td>
-        <td>{{object.start}}</td>
-        <td>{{object.end}}</td>
+        <td>{{object.start_date}}</td>
+        <td>{{object.end_date}}</td>
         <td>{{object.team_contact}}</td>
+        <td>{{ object.team.name }}</td>
         <td>
           {% if object.status == 'Pending' %}
               <span class="badge bg-warning text-dark">
@@ -52,13 +46,14 @@
           <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
             {% bs_icon 'pencil' %}  
           </a>
+          <!--
           <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
             {% bs_icon 'trash' %}  
           </a>
+          -->
+          
       </td>
       </tr>
-      {% endif %}
-      {% endwith %}
     {% endfor %}
   </tbody>
 </table>
