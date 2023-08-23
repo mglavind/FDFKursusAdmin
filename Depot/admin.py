@@ -14,16 +14,14 @@ class DepotItemAdminForm(forms.ModelForm):
 class DepotItemAdmin(admin.ModelAdmin):
     form = DepotItemAdminForm
     list_display = [
+        "name",
+        "description",
         "created",
         "last_updated",
-        "description",
-        "name",
     ]
     readonly_fields = [
-        "created",
         "last_updated",
         "description",
-        "name",
     ]
 
 
@@ -37,18 +35,15 @@ class DepotLocationAdminForm(forms.ModelForm):
 class DepotLocationAdmin(admin.ModelAdmin):
     form = DepotLocationAdminForm
     list_display = [
-        "address",
         "name",
+        "description",
+        "address",
         "created",
         "last_updated",
-        "description",
     ]
     readonly_fields = [
-        "address",
-        "name",
         "created",
         "last_updated",
-        "description",
     ]
 
 
@@ -62,22 +57,20 @@ class DepotBookingAdminForm(forms.ModelForm):
 class DepotBookingAdmin(admin.ModelAdmin):
     form = DepotBookingAdminForm
     list_display = [
+        "item",
+        "quantity",
+        "team",
+        "team_contact",
         "remarks",
+        "start",
         "end",
+        "status",
         "last_updated",
         "created",
-        "start",
-        "status",
-        "quantity",
     ]
     readonly_fields = [
-        "remarks",
-        "end",
         "last_updated",
         "created",
-        "start",
-        "status",
-        "quantity",
     ]
 
 
@@ -97,10 +90,8 @@ class DepotBoxAdmin(admin.ModelAdmin):
         "description",
     ]
     readonly_fields = [
-        "name",
         "created",
         "last_updated",
-        "description",
     ]
 
 

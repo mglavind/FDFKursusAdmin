@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth import authenticate, login, logout, get_user_model
@@ -47,7 +46,12 @@ def register_user(request):
     if request.method == "POST":
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            user = form.save()  # Save the user instance
+            # Set is_active to False for the newly registered user
+            User = get_user_model()  # Get the custom user model
+            user = User.objects.get(username=user.username)
+            user.is_active = False
+            user.save()
+
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             user = authenticate(username=username, password=password)

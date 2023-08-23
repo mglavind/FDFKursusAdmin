@@ -39,9 +39,9 @@ class TeamMembershipForm(forms.ModelForm):
     class Meta:
         model = models.TeamMembership
         fields = [
-            "role",
-            "team",
             "member",
+            "team",
+            "role",
         ]
 
     def __init__(self, *args, **kwargs):

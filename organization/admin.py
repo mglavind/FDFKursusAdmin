@@ -1,7 +1,10 @@
 from typing import List
 from django.contrib import admin, messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group, User
 from django.urls import path
 from django.shortcuts import render
+from organization.models import Team, TeamMembership
 from django.http import HttpResponseRedirect, HttpResponse
 from django import forms
 from django.urls.resolvers import URLPattern
@@ -178,7 +181,22 @@ class VolunteerAdmin(admin.ModelAdmin):
                 form = VolunteerAdminForm(form_data)
 
                 if form.is_valid():
-                    form.save()
+                     # Save the volunteer instance
+                    volunteer = form.save()
+
+                     # Activate the user
+                    User = get_user_model()  # Get the custom user model
+                    user = User.objects.get(username=volunteer.username)
+                    user.is_active = True
+                    user.save()
+
+                    # Create TeamMembership for the "Unassigned" team
+                    unassigned_team = Team.objects.get(name="Unassigned users")
+                    team_membership = TeamMembership.objects.create(team=unassigned_team, member=volunteer)
+
+                    # Assign "Medarbejder" auth group
+                    medarbejder_group, _ = Group.objects.get_or_create(name="Medarbejder")
+                    volunteer.groups.add(medarbejder_group)
                 else:
                     error_messages = []
                     for field, errors in form.errors.items():

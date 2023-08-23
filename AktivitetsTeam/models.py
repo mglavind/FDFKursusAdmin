@@ -53,6 +53,7 @@ class AktivitetsTeamBooking(models.Model):
     end_time = models.TimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
+    remarks_internal = models.TextField(blank=True, max_length=500)  # Set an appropriate max length
 
     class Meta:
         pass

@@ -35,13 +35,16 @@ class AktivitetsTeamBookingAdminForm(forms.ModelForm):
 class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
     form = AktivitetsTeamBookingAdminForm
     list_display = [
-        "created",
+        "item",
+        "team",
+        "team_contact",
+        "status",
         "last_updated",
-        "location",
         "start_date",
         "end_date",
         "remarks",
-        "status",
+        "location",
+        "remarks_internal",
     ]
     readonly_fields = [
         "created",

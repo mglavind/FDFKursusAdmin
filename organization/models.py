@@ -12,7 +12,7 @@ class Volunteer(AbstractUser):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_name = models.CharField(max_length=30)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     phone = models.CharField(max_length=30, blank=True)
 
     class Meta:
@@ -60,7 +60,7 @@ class TeamMembership(models.Model):
     # Fields
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    role = models.CharField(max_length=30)
+    role = models.CharField(max_length=30, blank=True)
 
     class Meta:
         pass

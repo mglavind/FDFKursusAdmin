@@ -9,7 +9,7 @@ class ButikkenItem(models.Model):
     type = models.ForeignKey("Butikken.ButikkenItemType", on_delete=models.CASCADE)
 
     # Fields
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     name = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -71,7 +71,7 @@ class ButikkenItemType(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     name = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True)
 
     class Meta:
         pass
