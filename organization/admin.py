@@ -119,10 +119,11 @@ class CsvImportForm(forms.Form):
 class VolunteerAdmin(admin.ModelAdmin):
     form = VolunteerAdminForm
     list_display = [
-        "email",
-        "phone",
         "first_name",
         "last_name",
+        "username",
+        "email",
+        "phone",
         "created",
         "last_updated",
     ]

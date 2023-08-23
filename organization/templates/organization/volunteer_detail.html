@@ -1,22 +1,24 @@
-
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    
-<p>
-    <a class="btn btn-light" href="{% url 'organization_Volunteer_list' %}">
-    Volunteer Listing
-    </a>
-</p>
-    
+
 <table class="table">
-    <tr><td>first_name</td><td>{{ object.first_name }}</td></tr>
-    <tr><td>created</td><td>{{ object.created }}</td></tr>
-    <tr><td>first_name</td><td>{{ object.first_name }}</td></tr>
-    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
-    <tr><td>email</td><td>{{ object.email }}</td></tr>
-    <tr><td>phone</td><td>{{ object.phone }}</td></tr>
+    <tr><td>Fornavn</td><td>{{ object.first_name }}</td></tr>
+    <tr><td>Efternavn</td><td>{{ object.last_name }}</td></tr>
+    <tr><td>E-mail</td><td>{{ object.email }}</td></tr>
+    <tr><td>Telefon</td><td>{{ object.phone }}</td></tr>
+    <tr><td>Oprættet</td><td>{{ object.created }}</td></tr>
+    <tr><td>Sidst opdateret</td><td>{{ object.last_updated }}</td></tr>
+    <tr><td>Medlem af følgende teams:</td>
+        <td>
+            <ul>
+                {% for team_membership in object.teammembership_set.all %}
+                    <li>{{ team_membership.team.name }}</li>
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
 </table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Rediger</a>
 
 {% endblock %}

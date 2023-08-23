@@ -50,6 +50,7 @@ class SjakBooking(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     remarks = models.TextField(blank=True)  # Blank allows for an empty value
+    remarks_internal = models.TextField(blank=True)  # Blank allows for an empty value
 
     class Meta:
         pass

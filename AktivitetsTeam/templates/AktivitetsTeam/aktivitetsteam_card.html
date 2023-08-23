@@ -1,11 +1,14 @@
 
 {% block app_content %}
-<div class="card">
-    <h5 class="card-header">AktivitetsTeam</h5>
-    <div class="card-body">
-        <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}" class="btn btn-secondary mb-2">Jeres AktivitetsTeam bookinger</a>
-        <a href="{% url 'AktivitetsTeam_AktivitetsTeamItem_list' %}" class="btn btn-secondary mb-2">AktivitetsTeam's items</a>
+<div class="col">
+    <div class="card h-100">
+        <h5 class="card-header">AktivitetsTeam</h5>
+        <div class="card-body">
+            <div class="d-grid gap-2">
+            <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}" class="btn btn-secondary">Alle aktivitets bookinger</a>
+            <a href="{% url 'AktivitetsTeam_AktivitetsTeamItem_list' %}" class="btn btn-secondary">Aktivitets katalog</a>
+            </div>
+        </div>
     </div>
 </div>
-<br>
 {% endblock %}

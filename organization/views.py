@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth import authenticate, login, logout, get_user_model
@@ -24,7 +26,7 @@ def home(request):
 
 def login_user(request):
     if request.method == "POST":
-        username = request.POST['username']
+        username = request.POST['username'].lower()  # Convert to lowercase
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
@@ -46,24 +48,23 @@ def register_user(request):
     if request.method == "POST":
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            # Set is_active to False for the newly registered user
-            User = get_user_model()  # Get the custom user model
-            user = User.objects.get(username=user.username)
-            user.is_active = False
-            user.save()
-
-            username = form.cleaned_data['username']
+            new_username = form.cleaned_data['username'].lower()  # Convert to lowercase
             password = form.cleaned_data['password1']
-            user = authenticate(username=username, password=password)
-            login(request, user)  # Use the 'user' instance, not 'User'
 
-            # Check if the team "New users" exists
-            new_users_team = Team.objects.get(name="Unassigned users")
-
-            # Create a TeamMembership for the new user
-            TeamMembership.objects.create(team=new_users_team, member=user)
-
+            User = get_user_model()  # Get the custom user model
             
+            # Create a new user instance and set is_active to False
+            new_user = User.objects.create_user(username=new_username, password=password, is_active=False)
+
+            # Check if the team "Unassigned users" exists
+            try:
+                new_users_team = Team.objects.get(name="Unassigned users")
+            except Team.DoesNotExist:
+                # Handle the case when the team doesn't exist
+                pass
+            else:
+                # Create a TeamMembership for the new user
+                TeamMembership.objects.create(team=new_users_team, member=new_user)
 
             messages.success(request, "Registration Successful!")
             return redirect('home')
@@ -73,6 +74,7 @@ def register_user(request):
     return render(request, 'organization/register_user.html', {
         'form': form,
     })
+
 
 
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
@@ -206,12 +208,26 @@ class VolunteerCreateView(generic.CreateView):
 class VolunteerDetailView(generic.DetailView):
     model = models.Volunteer
     form_class = forms.VolunteerForm
+    success_url = reverse_lazy("organization_Volunteer_detail")
 
 
-class VolunteerUpdateView(generic.UpdateView):
+class VolunteerUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Volunteer
     form_class = forms.VolunteerForm
     pk_url_kwarg = "pk"
+    
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(pk=self.request.user.pk)  # Filter by logged-in user's pk
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        if obj != self.request.user:  # Make sure the user is editing their own profile
+            raise Http404
+
+        return super().dispatch(request, *args, **kwargs)
 
 
 class VolunteerDeleteView(generic.DeleteView):

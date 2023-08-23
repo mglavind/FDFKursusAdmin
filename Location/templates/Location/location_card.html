@@ -1,11 +1,14 @@
 
 {% block app_content %}
-<div class="card">
-    <h5 class="card-header">Location</h5>
-    <div class="card-body">
-        <a href="{% url 'Location_LocationBooking_list' %}" class="btn btn-secondary mb-2">Jeres Location bookinger</a>
-        <a href="{% url 'Location_LocationItem_list' %}" class="btn btn-secondary mb-2">Location's items</a>
+<div class="col">
+    <div class="card h-100">
+        <h5 class="card-header">Områder</h5>
+        <div class="card-body">
+            <div class="d-grid gap-2">
+            <a href="{% url 'Location_LocationBooking_list' %}" class="btn btn-secondary">Jeres område bookinger</a>
+            <a href="{% url 'Location_LocationItem_list' %}" class="btn btn-secondary">Område liste</a>
+            </div>
+        </div>
     </div>
 </div>
-<br>
 {% endblock %}

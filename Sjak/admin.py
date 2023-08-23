@@ -46,6 +46,8 @@ class SjakBookingAdmin(admin.ModelAdmin):
         "end",
         "status",
         "last_updated",
+        "remarks",
+        "remarks_internal",
         
     ]
     readonly_fields = [

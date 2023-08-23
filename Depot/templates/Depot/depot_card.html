@@ -1,11 +1,16 @@
 
 {% block app_content %}
-<div class="card">
-    <h5 class="card-header">Depot</h5>
-    <div class="card-body">
-        <a href="{% url 'Depot_DepotBooking_list' %}" class="btn btn-secondary mb-2">Jeres Depot bookinger</a>
-        <a href="{% url 'Depot_DepotItem_list' %}" class="btn btn-secondary mb-2">Depot's items</a>
+<div class="col">
+    <div class="card h-100">
+        <h5 class="card-header">Depot Æblegården</h5>
+        <div class="card-body">
+            <div class="d-grid gap-2">
+                <a href="{% url 'Depot_DepotBooking_list' %}" class="btn btn-secondary mb-2">Jeres Depot bookinger</a>
+                <a href="{% url 'Depot_DepotItem_list' %}" class="btn btn-secondary mb-2">Depot's items</a>
+            </div>
+        </div>
     </div>
 </div>
-<br>
+
+
 {% endblock %}

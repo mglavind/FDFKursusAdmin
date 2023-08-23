@@ -25,14 +25,6 @@
         {% endfor %}
       {% endif %}
 
-      {% if request.user.is_authenticated %}
-      <h3>Hello, {{ user.first_name }} from team {% with volunteer_team_memberships=request.user.teammembership_set.all %}
-          {% if volunteer_team_memberships %}
-              {{ volunteer_team_memberships.first.team.name }}
-          {% endif %}
-          {% endwith %}</h3>
-      {% endif %}
-      
 
       {% block app_content %}
       <!-- here comes the app_card for each app! -->

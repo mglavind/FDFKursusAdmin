@@ -24,6 +24,9 @@ class TeknikBooking(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     remarks = models.TextField(blank=True)  # Blank allows for an empty value
+    remarks_internal = models.TextField(blank=True)  # Blank allows for an empty value
+    assistance_needed = models.BooleanField(default=False, blank=True)
+    delivery_needed = models.BooleanField(default=False, blank=True)
 
 
 

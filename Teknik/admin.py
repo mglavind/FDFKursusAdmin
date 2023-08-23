@@ -21,8 +21,12 @@ class TeknikBookingAdmin(admin.ModelAdmin):
         "start",
         "end",
         "remarks",
+        "remarks_internal",
         "created",
         "last_updated",
+        "assistance_needed",
+        "delivery_needed",
+
 
 
     ]

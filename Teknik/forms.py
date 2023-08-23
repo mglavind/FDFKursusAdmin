@@ -16,6 +16,8 @@ class TeknikBookingForm(forms.ModelForm):
             "end",
             "team_contact",
             "remarks",
+            "delivery_needed",
+            "assistance_needed",
         ]
 
 
