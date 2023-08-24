@@ -1,20 +1,28 @@
-
 {% extends "base.html" %}
 {% block content %}
-{% for object in object_list %}
-  <div class="m-2">
-    <a href="{{object.get_absolute_url}}">{{object}}</a>
-    <small class="ml-5">
-      <a href="{% url 'organization_Volunteer_delete' object.pk %}">
-        (Delete)
-      </a>
-    </small>
-  </div>
-{% endfor %}
-<div>
-  <a class="btn btn-primary"
-    href="{% url 'organization_Volunteer_create' %}">
-  Create a new Volunteer
-  </a>
-</div>
+{% load bootstrap_icons %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Gruppe</th>
+      <th scope="col">Fornavn</th>
+      <th scope="col">Efternavn</th>
+      <th scope="col">Telefon</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for volunteer in volunteer_list %}
+      <tr>
+        <td>{{ volunteer.team_name }}</td>
+        <td>{{ volunteer.first_name }}</td>
+        <td>{{ volunteer.last_name }}</td>
+        <td>{{ volunteer.phone }}</td>
+        <td>{{ volunteer.email }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endblock %}
