@@ -35,6 +35,7 @@ urlpatterns = [
     path('Location/', include('Location.urls')),
     path('Sjak/', include('Sjak.urls')),
     path('Depot/', include('Depot.urls')),
+    path('SOS/', include('SOS.urls')),
 
 ]
 

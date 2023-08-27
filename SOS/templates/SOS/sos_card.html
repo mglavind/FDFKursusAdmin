@@ -1,0 +1,16 @@
+
+{% block app_content %}
+<div class="col">
+    <div class="card h-100">
+        <h5 class="card-header">SOS</h5>
+        <div class="card-body">
+            <div class="d-grid gap-2">
+            <a href="{% url 'SOS_SOSBooking_list' %}" class="btn btn-secondary">Jeres SOS bookinger</a>
+            <a href="{% url 'SOS_SOSItem_list' %}" class="btn btn-secondary ">SOS's sager</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

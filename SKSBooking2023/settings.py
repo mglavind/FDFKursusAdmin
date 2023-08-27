@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'Foto',
     'Location',
     'Depot',
+    'SOS',
 ]
 
 
