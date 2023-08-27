@@ -43,11 +43,11 @@
         <td>Status</td>
         <td>
             {% if object.status == 'Pending' %}
-                <button class="btn btn-warning btn-sm" disabled>{{ object.status }}</button>
+                <button class="btn btn-warning btn-sm" disabled>Afventer</button>
             {% elif object.status == 'Approved' %}
-                <button class="btn btn-success btn-sm" disabled>{{ object.status }}</button>
+                <button class="btn btn-success btn-sm" disabled>Godkendt</button>
             {% elif object.status == 'Rejected' %}
-                <button class="btn btn-danger btn-sm" disabled>{{ object.status }}</button>
+                <button class="btn btn-danger btn-sm" disabled>Afvist</button>
             {% endif %}
         </td>
     </tr>
