@@ -4,6 +4,9 @@ from organization.models import Team
 from Depot.models import DepotItem
 from organization.models import Volunteer
 from Depot.models import DepotLocation
+from organization.models import Team, TeamMembership
+from django.core.validators import MaxValueValidator
+from django.utils import timezone
 from . import models
 
 
@@ -35,23 +38,43 @@ class DepotLocationForm(forms.ModelForm):
 class DepotBookingForm(forms.ModelForm):
     class Meta:
         model = models.DepotBooking
+        exclude = ['status']
         fields = [
             "remarks",
             "end",
             "start",
-            "status",
             "quantity",
             "team",
             "item",
             "team_contact",
         ]
 
-    def __init__(self, *args, **kwargs):
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.status = "Pending"
+        if commit:
+            instance.save()
+        return instance
+
+    def __init__(self, *args, user=None, **kwargs):
         super(DepotBookingForm, self).__init__(*args, **kwargs)
-        self.fields["team"].queryset = Team.objects.all()
         self.fields["item"].queryset = DepotItem.objects.all()
         self.fields["team_contact"].queryset = Volunteer.objects.all()
+        self.fields["team"].queryset = Team.objects.all()
+        
+        if user:
+            try:
+                team_membership = TeamMembership.objects.get(member=user)
+                self.fields["team"].initial = team_membership.team
+                self.fields["team_contact"].queryset = Volunteer.objects.filter(
+                    teammembership__team=team_membership.team
+                )
+            except TeamMembership.DoesNotExist:
+                pass
 
+            self.fields["team_contact"].initial = user
+
+    
 
 
 class DepotBoxForm(forms.ModelForm):

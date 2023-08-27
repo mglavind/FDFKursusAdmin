@@ -57,13 +57,21 @@ class DepotBooking(models.Model):
     item = models.ForeignKey("Depot.DepotItem", on_delete=models.CASCADE)
     team_contact = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE)
 
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    )
+
     # Fields
-    remarks = models.TextField(max_length=500)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+
+    # Fields
+    remarks = models.TextField(max_length=500, blank=True)
     end = models.DateTimeField()
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     start = models.DateTimeField()
-    status = models.CharField(max_length=100)
     quantity = models.BigIntegerField()
 
     class Meta:

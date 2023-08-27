@@ -1,5 +1,8 @@
 from django.views import generic
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.db.models import F
 from . import models
 from . import forms
 
@@ -69,6 +72,15 @@ class DepotBookingListView(generic.ListView):
 class DepotBookingCreateView(generic.CreateView):
     model = models.DepotBooking
     form_class = forms.DepotBookingForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 
 class DepotBookingDetailView(generic.DetailView):
