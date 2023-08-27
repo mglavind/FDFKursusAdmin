@@ -7,6 +7,11 @@ from . import forms
 class DepotItemListView(generic.ListView):
     model = models.DepotItem
     form_class = forms.DepotItemForm
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        queryset = models.DepotItem.objects.all().order_by('name')  # Order by the 'name' field
+        return queryset
 
 
 class DepotItemCreateView(generic.CreateView):

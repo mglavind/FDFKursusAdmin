@@ -1,23 +1,20 @@
-
-
 {% extends "base.html" %}
 {% block content %}
-<h1> List of all Foto Items </h1>
-{% for object in object_list %}
-  <div class="accordion" id="accordionExample">
+<div class="accordion accordion-flush" id="accordionFlushExample">
+  {% for object in object_list %}
     <div class="accordion-item">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ object.pk }}" aria-expanded="true" aria-controls="collapseOne">
-          {{object.name}}
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ object.pk }}" aria-expanded="false" aria-controls="collapse{{ object.pk }}">
+          {{ object.name }}
         </button>
       </h2>
-      <div id="collapse{{ object.pk }}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div id="collapse{{ object.pk }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
         <div class="accordion-body">
           {{ object.description }} 
         </div>
       </div>
     </div>
-  </div>
-{% endfor %}
+  {% endfor %}
+</div>
 <br>
 {% endblock %}

@@ -9,6 +9,11 @@ from django.utils.decorators import method_decorator
 class ButikkenItemListView(generic.ListView):
     model = models.ButikkenItem
     form_class = forms.ButikkenItemForm
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        queryset = models.ButikkenItem.objects.all().order_by('name')  # Order by the 'name' field
+        return queryset
 
 
 class ButikkenItemCreateView(generic.CreateView):

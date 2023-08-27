@@ -73,6 +73,11 @@ class SOSBookingDeleteView(generic.DeleteView):
 class SOSItemListView(generic.ListView):
     model = models.SOSItem
     form_class = forms.SOSItemForm
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        queryset = models.SOSItem.objects.all().order_by('name')  # Order by the 'name' field
+        return queryset
 
 
 class SOSItemCreateView(generic.CreateView):

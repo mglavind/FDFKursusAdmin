@@ -10,6 +10,11 @@ from . import forms
 class AktivitetsTeamItemListView(generic.ListView):
     model = models.AktivitetsTeamItem
     form_class = forms.AktivitetsTeamItemForm
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        queryset = models.AktivitetsTeamItem.objects.all().order_by('name')  # Order by the 'name' field
+        return queryset
 
 
 class AktivitetsTeamItemCreateView(generic.CreateView):

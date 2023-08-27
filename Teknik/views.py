@@ -73,6 +73,11 @@ class TeknikBookingDeleteView(generic.DeleteView):
 class TeknikItemListView(generic.ListView):
     model = models.TeknikItem
     form_class = forms.TeknikItemForm
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        queryset = models.TeknikItem.objects.all().order_by('name')  # Order by the 'name' field
+        return queryset
 
 
 class TeknikItemCreateView(generic.CreateView):

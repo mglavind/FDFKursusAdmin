@@ -7,6 +7,11 @@ from . import forms
 class FotoItemListView(generic.ListView):
     model = models.FotoItem
     form_class = forms.FotoItemForm
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        queryset = models.FotoItem.objects.all().order_by('name')  # Order by the 'name' field
+        return queryset
 
 
 class FotoItemCreateView(generic.CreateView):

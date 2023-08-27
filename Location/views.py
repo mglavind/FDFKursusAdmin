@@ -59,6 +59,11 @@ class LocationBookingDeleteView(generic.DeleteView):
 class LocationItemListView(generic.ListView):
     model = models.LocationItem
     form_class = forms.LocationItemForm
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        queryset = models.LocationItem.objects.all().order_by('name')  # Order by the 'name' field
+        return queryset
 
 
 class LocationItemCreateView(generic.CreateView):

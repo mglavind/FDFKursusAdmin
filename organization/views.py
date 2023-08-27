@@ -206,7 +206,7 @@ class VolunteerListView(generic.ListView):
         queryset = models.Volunteer.objects.annotate(team_name=F('teammembership__team__name'))
 
         # Sort volunteers based on the team name
-        volunteers_sorted = queryset.order_by('team_name')
+        volunteers_sorted = queryset.order_by('first_name')
 
         return volunteers_sorted.values('team_name', 'first_name', 'last_name', 'phone', 'email')
 
