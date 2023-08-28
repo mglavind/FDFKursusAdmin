@@ -8,6 +8,10 @@ from organization.models import Team, TeamMembership
 from django.http import HttpResponseRedirect, HttpResponse
 from django import forms
 from django.urls.resolvers import URLPattern
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 from .models import Volunteer
 import random
 from datetime import datetime
@@ -131,7 +135,7 @@ class VolunteerAdmin(admin.ModelAdmin):
         "created",
         "last_updated",
     ]
-    actions = ["export_to_csv"]
+    actions = ["export_to_csv", "send_email_action"]
 
     def export_to_csv(modeladmin, request, queryset):
             response = HttpResponse(content_type='text/csv')
@@ -208,6 +212,22 @@ class VolunteerAdmin(admin.ModelAdmin):
         form = CsvImportForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
+    
+    
+    def send_email_action(self, request, queryset):
+        email_template = "organization/reset_password_guide_email.html"
+
+        for volunteer in queryset:
+            subject = "Velkommen til Seniorkursus Slettens booking system"
+            context = {'volunteer': volunteer}
+            message = render_to_string(email_template, context)
+            plain_message = strip_tags(message)
+
+            send_mail(subject, plain_message, 'seniorkursussletten@gmail.com', [volunteer.email], html_message=message)
+        
+        self.message_user(request, f"Emails sent to {queryset.count()} volunteers.")
+    send_email_action.short_description = "Send hjælp til at komme igang email til volunteers"
+
     
         
         
