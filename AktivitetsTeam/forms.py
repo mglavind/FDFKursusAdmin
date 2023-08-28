@@ -21,7 +21,6 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
         label="Start Date",
         initial=timezone.now().date(),
         widget=forms.DateInput(attrs={"type": "date"}),
-        validators=[MaxValueValidator(timezone.now().date())],
     )
     start_time = forms.TimeField(
         label="Start Time",
