@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'bootstrap5',
     'django_bootstrap_icons',
+    'django_admin_listfilter_dropdown',
     'rest_framework',
     'Teknik',
     'Sjak',

@@ -14,8 +14,10 @@ class DepotItemForm(forms.ModelForm):
     class Meta:
         model = models.DepotItem
         fields = [
-            "description",
             "name",
+            "description",
+            "unit",
+            "quantity_lager",
             "box",
         ]
 

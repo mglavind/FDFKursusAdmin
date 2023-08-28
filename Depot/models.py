@@ -5,13 +5,15 @@ from django.urls import reverse
 class DepotItem(models.Model):
 
     # Relationships
-    box = models.ForeignKey("Depot.DepotBox", on_delete=models.CASCADE)
+    box = models.TextField(max_length=500)
 
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True)
     name = models.CharField(max_length=100)
+    unit = models.CharField(max_length=100, blank=True)
+    quantity_lager = models.CharField(max_length=100, blank=True)
 
     class Meta:
         pass

@@ -6,12 +6,14 @@ from django.utils import timezone
 class ButikkenItem(models.Model):
 
     # Relationships
-    type = models.ForeignKey("Butikken.ButikkenItemType", on_delete=models.CASCADE)
+    type = models.CharField(max_length=100)
 
     # Fields
     description = models.TextField(max_length=500, blank=True)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     name = models.CharField(max_length=100)
+    content_normal = models.CharField(max_length=100, blank=True)
+    content_unit = models.CharField(max_length=100, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
 
     class Meta:

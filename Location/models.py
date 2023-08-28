@@ -57,13 +57,13 @@ class LocationBooking(models.Model):
 class LocationItem(models.Model):
 
     # Relationships
-    type = models.ForeignKey("Location.LocationType", on_delete=models.CASCADE)
+    type = models.CharField(max_length=200, blank=True)
 
     # Fields
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True)
 
     class Meta:
         pass

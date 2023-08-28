@@ -7,11 +7,12 @@ from django.utils import timezone
 class SjakItem(models.Model):
 
     # Relationships
-    type = models.ForeignKey("Sjak.SjakItemType", on_delete=models.CASCADE)
+    type = models.CharField(max_length=100, blank=True)
 
     # Fields
     name = models.CharField(max_length=100)
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True)
+    quantity_lager = models.CharField(max_length=100, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 

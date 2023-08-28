@@ -11,6 +11,8 @@ class ButikkenItemForm(forms.ModelForm):
             "description",
             "name",
             "type",
+            "content_normal",
+            "content_unit",
         ]
 
     def __init__(self, *args, **kwargs):

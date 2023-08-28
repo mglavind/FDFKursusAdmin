@@ -7,6 +7,7 @@ from django.contrib import admin, messages
 from django.urls import path
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
+from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 from .models import TeknikItem
 import csv
 
@@ -40,7 +41,12 @@ class TeknikBookingAdmin(admin.ModelAdmin):
         "created",
         "last_updated",
     ]
-    actions = ["approve_bookings", "reject_bookings"]
+    list_filter = (
+        ('status', ChoiceDropdownFilter),
+        ('item', RelatedDropdownFilter),
+        ('team', RelatedDropdownFilter),
+    )
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:
@@ -57,6 +63,42 @@ class TeknikBookingAdmin(admin.ModelAdmin):
 
         self.message_user(request, f"{queryset.count()} booking(s) rejected.")
     reject_bookings.short_description = "Reject selected bookings"
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=Teknik_bookings.csv"
+
+        writer = csv.writer(response)
+        writer.writerow(["Item", 
+                         "Quantity", 
+                         "Team", 
+                         "Team Contact", 
+                         "Start", 
+                         "End", 
+                         "Status", 
+                         "Remarks", 
+                         "Internal remarks",
+                         "assistance needed",
+                         "Delivery needed"
+                         ])
+
+        for booking in queryset:
+            writer.writerow([
+                booking.item,
+                booking.quantity,
+                booking.team,
+                booking.team_contact,
+                booking.start,
+                booking.end,
+                booking.status,
+                booking.remarks,
+                booking.remarks_internal,
+                booking.assistance_needed,
+                booking.delivery_needed,
+            ])
+
+        return response
+    export_to_csv.short_description = "Export selected bookings to CSV"
 
 
 
@@ -129,6 +171,7 @@ class TeknikItemAdmin(admin.ModelAdmin):
         form = CsvImportForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
+    
 
     
 
