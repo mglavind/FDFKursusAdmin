@@ -24,9 +24,10 @@
     </tr>
   </thead>
   <tbody>
-    {% for object in object_list %}
-    {% with booking_team_membership=object.team.teammembership_set.first %}
-    {% if booking_team_membership.member == request.user %}
+    {% with user_team_membership=request.user.teammembership_set.first %}
+    {% if user_team_membership %}
+      {% for object in object_list %}
+        {% if user_team_membership.team.name and object.team == user_team_membership.team %}
       <tr>
         <th scope="row">{{ object.id}}</th>
         <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
@@ -59,8 +60,9 @@
       </td>
       </tr>
       {% endif %}
-      {% endwith %}
-    {% endfor %}
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
   </tbody>
 </table>
 

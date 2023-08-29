@@ -23,43 +23,50 @@
     </tr>
   </thead>
   <tbody>
-    {% for object in object_list %}
-    {% with booking_team_membership=object.team.teammembership_set.first %}
-    {% if booking_team_membership.member == request.user %}
-      <tr>
-        <th scope="row">{{ object.id}}</th>
-        <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
-        <td>{{object.quantity}}</td>
-        <td>{{object.start}}</td>
-        <td>{{object.end}}</td>
-        <td>{{object.team_contact}}</td>
-        <td>
-          {% if object.status == 'Pending' %}
-              <span class="badge bg-warning text-dark">
-                  <small>Afventer</small>
-              </span>
-          {% elif object.status == 'Approved' %}
-              <span class="badge bg-success">
-                  <small>Godkendt</small>
-              </span>
-          {% elif object.status == 'Rejected' %}
-              <span class="badge bg-danger">
-                  <small>Afvist</small>
-              </span>
+  {% with user_team_membership=request.user.teammembership_set.first %}
+    {% if user_team_membership %}
+      {% for object in object_list %}
+        {% if user_team_membership.team.name and object.team == user_team_membership.team %}
+          <tr>
+            <th scope="row">{{ object.id}}</th>
+            <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
+            <td>{{object.quantity}}</td>
+            <td>{{object.start}}</td>
+            <td>{{object.end}}</td>
+            <td>{{object.team_contact}}</td>
+            <td>
+              {% if object.status == 'Pending' %}
+                  <span class="badge bg-warning text-dark">
+                      <small>Afventer</small>
+                  </span>
+              {% elif object.status == 'Approved' %}
+                  <span class="badge bg-success">
+                      <small>Godkendt</small>
+                  </span>
+              {% elif object.status == 'Rejected' %}
+                  <span class="badge bg-danger">
+                      <small>Afvist</small>
+                  </span>
+              {% endif %}
+            </td>
+              <td>
+                <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+                  {% bs_icon 'pencil' %}  
+                </a>
+                <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                  {% bs_icon 'trash' %}  
+                </a>
+            </td>
+          </tr>
           {% endif %}
-      </td>
-        <td>
-          <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
-            {% bs_icon 'pencil' %}  
-          </a>
-          <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-            {% bs_icon 'trash' %}  
-          </a>
-      </td>
-      </tr>
-      {% endif %}
-      {% endwith %}
-    {% endfor %}
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+
+    
+
+    
   </tbody>
 </table>
 

@@ -1,10 +1,11 @@
 from django import forms
-from organization.models import Volunteer
-from Location.models import LocationItem
 from organization.models import Team
-from Location.models import LocationType
+from Location.models import LocationItem
+from organization.models import Volunteer
+from organization.models import Team, TeamMembership
+from django.core.validators import MaxValueValidator
+from django.utils import timezone
 from . import models
-
 
 class LocationTypeForm(forms.ModelForm):
     class Meta:
@@ -20,7 +21,6 @@ class LocationBookingForm(forms.ModelForm):
         model = models.LocationBooking
         fields = [
             "end",
-            "status",
             "remarks",
             "start",
             "primary_camp",
@@ -29,11 +29,29 @@ class LocationBookingForm(forms.ModelForm):
             "team",
         ]
 
-    def __init__(self, *args, **kwargs):
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.status = "Pending"
+        if commit:
+            instance.save()
+        return instance
+
+    def __init__(self, *args, user=None, **kwargs):
         super(LocationBookingForm, self).__init__(*args, **kwargs)
-        self.fields["team_contact"].queryset = Volunteer.objects.all()
         self.fields["item"].queryset = LocationItem.objects.all()
+        self.fields["team_contact"].queryset = Volunteer.objects.all()
         self.fields["team"].queryset = Team.objects.all()
+        print(user) 
+        if user:
+            try:
+                team_membership = TeamMembership.objects.get(member=user)
+                self.fields["team"].initial = team_membership.team
+                self.fields["team_contact"].initial = user
+                self.fields["team_contact"].queryset = Volunteer.objects.filter(
+                    teammembership__team=team_membership.team
+                )
+            except TeamMembership.DoesNotExist:
+                pass
 
 
 

@@ -5,6 +5,8 @@ from django.utils.decorators import method_decorator
 from . import models
 from . import forms
 
+
+
 class SjakBookingListView(generic.ListView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
@@ -12,6 +14,7 @@ class SjakBookingListView(generic.ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+    
 
 
 class SjakBookingCreateView(generic.CreateView):

@@ -1,72 +1,102 @@
-
 {% extends "base.html" %}
 {% load static %}
+{% load bootstrap_icons %}
 {% block content %}
-    
 <p>
     <a class="btn btn-light" href="{% url 'Location_LocationBooking_list' %}">
-    LocationBooking Listing
+        {% bs_icon 'caret-left' %}  Tilbage
     </a>
 </p>
     
 <form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{form.errors}}
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="end">end: </label>
-      <input class="form-control col-sm-10"
-         id="end" type="datetime-local"
-         name="end" value="{{ object.end }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="status">status: </label>
-      <input class="form-control col-sm-10"
-         id="status" type="text"
-         name="status" value="{{ object.status }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="remarks">remarks: </label>
-      <input class="form-control col-sm-10"
-         id="remarks" type="text"
-         name="remarks" value="{{ object.remarks }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="start">start: </label>
-      <input class="form-control col-sm-10"
-         id="start" type="datetime-local"
-         name="start" value="{{ object.start }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="created">created: </label>
-      <input class="form-control col-sm-10"
-         id="created" type="datetime-local"
-         name="created" value="{{ object.created }}" disabled>
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="primary_camp">primary_camp: </label>
-      <input class="form-control col-sm-10"
-         id="primary_camp" type="text"
-         name="primary_camp" value="{{ object.primary_camp }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="last_updated">last_updated: </label>
-      <input class="form-control col-sm-10"
-         id="last_updated" type="datetime-local"
-         name="last_updated" value="{{ object.last_updated }}" disabled>
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="team_contact">team_contact: </label>
-      {{ form.team_contact }}
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="item">item: </label>
-      {{ form.item }}
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="team">team: </label>
-      {{ form.team }}
-  </div>
-  <input type="submit" value="Save" class="btn btn-primary">
+    {% csrf_token %}
+    {{ form.errors }}    
+
+    <div class="mb-3">
+        <label class="form-label" for="item">Område:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'geo' %}  </span>
+            {{ form.item }}
+        </div>
+    </div>
+
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        
+        {% bs_icon 'exclamation-triangle-fill' %}
+        <div>
+           OBS! dato skal tastes ind hver gang - sorry!
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="start">Bookes fra: </label>
+        <div class="input-group col-sm-10">
+            <input class="form-control" id="start" type="datetime-local" name="start" value="{{ object.start }}">
+            <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
+        </div>
+    </div>
+    <br>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="end">Bookes til: </label>
+        <div class="input-group mb-3">
+            <input class="form-control" id="end" type="datetime-local" name="end" value="{{ object.end }}">
+            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursus slut</button>
+        </div>
+    </div>
+
+    <div class="form-group row mb-2">
+        <div class="col-sm-2 col-form-label">Primær lejrplads?</div>
+        <div class="col-sm-10">
+            <div class="form-check">
+                {{ form.primary_camp }}
+                <label class="form-check-label" for="{{ form.primary_camp.id_for_label }}">Det er vores primære lejrplads hele kurset</label>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="mb-3">
+        <label class="form-label" for="team_contact">Kontaktperson:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'person-vcard' %}  </span>
+            {{ form.team_contact }}
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label" for="team">Team:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'people' %}  </span>
+            {{ form.team }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="remarks">Bemærkninger:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'chat-left-text' %}  </span>
+            <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
+        </div>
+    </div>
+
+    <input type="submit" value="Insend" class="btn btn-primary">
 </form>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const setPredefinedStartButton = document.getElementById("set-predefined-start");
+        const setPredefinedEndButton = document.getElementById("set-predefined-end");
+        const startField = document.getElementById("start");
+        const endField = document.getElementById("end");
+
+        setPredefinedStartButton.addEventListener("click", function () {
+            startField.value = "2023-10-14T08:00"; // Replace with your predefined value for start
+        });
+
+        setPredefinedEndButton.addEventListener("click", function () {
+            endField.value = "2023-10-21T16:00"; // Replace with your predefined value for end
+        });
+    });
+</script>
 {% endblock %}

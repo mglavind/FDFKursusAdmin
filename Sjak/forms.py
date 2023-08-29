@@ -1,6 +1,8 @@
 from django import forms
-from Sjak.models import SjakItemType, SjakItem
+from django.forms.widgets import SelectDateWidget
 from organization.models import Team, TeamMembership, Volunteer
+from Sjak.models import SjakItem, SjakBooking
+from django.contrib.auth.models import Group
 from . import models
 
 
@@ -47,7 +49,7 @@ class SjakBookingForm(forms.ModelForm):
             if instance:
                 self.fields["quantity"].initial = instance.quantity
                 self.fields["start"].initial = instance.start
-                self.fields["end"].initial = instance.end
+
                 # Add other fields similarly
 
             

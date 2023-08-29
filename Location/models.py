@@ -31,13 +31,19 @@ class LocationBooking(models.Model):
     item = models.ForeignKey("Location.LocationItem", on_delete=models.CASCADE)
     team = models.ForeignKey("organization.Team", on_delete=models.CASCADE)
 
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    )
+
     # Fields
     end = models.DateTimeField()
-    status = models.CharField(max_length=30)
-    remarks = models.TextField(max_length=500)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+    remarks = models.TextField(blank=True)  # Blank allows for an empty value
     start = models.DateTimeField()
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    primary_camp = models.BooleanField()
+    primary_camp = models.BooleanField(default=False, blank=True)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
@@ -51,6 +57,15 @@ class LocationBooking(models.Model):
 
     def get_update_url(self):
         return reverse("Location_LocationBooking_update", args=(self.pk,))
+    def approve_bookings(self, request, queryset):
+        queryset.update(status="Approved")
+
+    approve_bookings.short_description = "Approve selected bookings"
+
+    def reject_bookings(self, request, queryset):
+        queryset.update(status="Rejected")
+
+    reject_bookings.short_description = "Rejected selected bookings"
 
 
 
