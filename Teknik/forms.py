@@ -31,8 +31,8 @@ class TeknikBookingForm(forms.ModelForm):
 
     def __init__(self, *args, user=None, **kwargs):
         super(TeknikBookingForm, self).__init__(*args, **kwargs)
-        self.fields["team"].queryset = Team.objects.all()
-        self.fields["item"].queryset = TeknikItem.objects.all()
+        self.fields["team"].queryset = Team.objects.all().order_by("name")
+        self.fields["item"].queryset = TeknikItem.objects.all().order_by("name")
         
         if user:
             try:

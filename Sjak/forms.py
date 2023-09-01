@@ -28,9 +28,9 @@ class SjakBookingForm(forms.ModelForm):
 
     def __init__(self, *args, user=None, **kwargs):
         super(SjakBookingForm, self).__init__(*args, **kwargs)
-        self.fields["item"].queryset = SjakItem.objects.all()
-        self.fields["team_contact"].queryset = Volunteer.objects.all()
-        self.fields["team"].queryset = Team.objects.all()
+        self.fields["item"].queryset = SjakItem.objects.all().order_by("name")
+        self.fields["team_contact"].queryset = Volunteer.objects.all().order_by("first_name")
+        self.fields["team"].queryset = Team.objects.all().order_by("name")
         
         if user:
             try:
