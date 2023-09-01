@@ -9,14 +9,25 @@
     </a>
 </p>
     
+
+<div class="alert alert-warning" role="alert">
+    <h5> Deltagere og mængder </h5>
+    <p> Når i laver en booking, skal i booke opskriften til <span class="badge bg-secondary">2 personer</span>. Køkkenet ganger jeres bestilling op senere. </p>
+    <p> Er jeres booking ikke afhængig af deltagerantal? Så skriv det i bemærkninger </p>
+</div>
+
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.errors}}    
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="item">Butikken item: </label>
+        <label class="col-sm-2 col-form-label" id="id_item" for="item">Butikken item: </label>
         {{ form.item }}
     </div>
     <br>
+    <div class="alert alert-warning" role="alert">
+        <p> Husk at tjekke enhederne og standard mængder i butikkens lager liste </p>
+    </div>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="{{ form.quantity.id_for_label }}">Mængde</label>
         {{ form.quantity }}
@@ -29,6 +40,7 @@
             <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
         </div>
     </div>
+
     <br>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="team_contact">Kontaktperson: </label>
@@ -55,6 +67,14 @@
 
         setPredefinedStartButton.addEventListener("click", function () {
             startField.value = "2023-10-14T08:00"; // Replace with your predefined value for start
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const setItemDetails = document.getElementById("set-item-details");
+        const ItemField = document.getElementById("item");
+
+        setPredefinedStartButton.addEventListener("click", function () {
+            ItemField.value = "test"; // Replace with your predefined value for start
         });
     });
 </script>

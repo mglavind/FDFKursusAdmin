@@ -5,6 +5,7 @@ from django import forms
 from django.urls.resolvers import URLPattern
 from django.contrib import admin, messages
 from django.urls import path
+from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import SOSItem
@@ -40,7 +41,12 @@ class SOSBookingAdmin(admin.ModelAdmin):
         "created",
         "last_updated",
     ]
-    actions = ["approve_bookings", "reject_bookings"]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    list_filter = (
+        ('status', ChoiceDropdownFilter),
+        ('item', RelatedDropdownFilter),
+        ('team', RelatedDropdownFilter),
+    )
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:
@@ -57,6 +63,27 @@ class SOSBookingAdmin(admin.ModelAdmin):
 
         self.message_user(request, f"{queryset.count()} booking(s) rejected.")
     reject_bookings.short_description = "Reject selected bookings"
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=sos_bookings.csv"
+
+        writer = csv.writer(response)
+        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "End", "Status"])
+
+        for booking in queryset:
+            writer.writerow([
+                booking.item,
+                booking.quantity,
+                booking.team,
+                booking.team_contact,
+                booking.start,
+                booking.end,
+                booking.status,
+            ])
+
+        return response
+    export_to_csv.short_description = "Export selected bookings to CSV"
 
 
 
