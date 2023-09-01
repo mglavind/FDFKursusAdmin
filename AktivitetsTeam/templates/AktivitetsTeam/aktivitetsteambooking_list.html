@@ -50,11 +50,17 @@
           <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
             {% bs_icon 'pencil' %}  
           </a>
-          <!--
-          <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-            {% bs_icon 'trash' %}  
-          </a>
-          -->
+          {% with user_team_membership=request.user.teammembership_set.first %}
+            {% if user_team_membership %}
+                {% if user_team_membership.team.name and object.team == user_team_membership.team %}
+          
+                <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                  {% bs_icon 'trash' %}  
+                </a>
+          
+                {% endif %}
+            {% endif %}
+          {% endwith %}
           
       </td>
       </tr>
