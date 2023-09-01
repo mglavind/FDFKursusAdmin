@@ -37,6 +37,7 @@ class SjakItemAdmin(admin.ModelAdmin):
         "created",
         "last_updated",
     ]
+    search_fields = ['name', 'description'] 
     
     def get_urls(self) -> List[URLPattern]:
             urls = super().get_urls()
@@ -124,6 +125,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         ('team', RelatedDropdownFilter),
     )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    search_fields = ['item', 'team','team_contact'] 
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:

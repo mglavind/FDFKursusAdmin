@@ -1,20 +1,33 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="accordion accordion-flush" id="accordionFlushExample">
-  {% for object in object_list %}
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ object.pk }}" aria-expanded="false" aria-controls="collapse{{ object.pk }}">
-          {{ object.name }}
-        </button>
-      </h2>
-      <div id="collapse{{ object.pk }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">
-          {{ object.description }} 
-        </div>
-      </div>
-    </div>
-  {% endfor %}
-</div>
+{% load bootstrap_icons %}
+<table class="table" id="volunteer-table">
+  <thead>
+    <tr>
+      <th scope="col">
+          Navn
+      </th>
+      <th scope="col">Beskrivelse</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for object in object_list %}
+      <tr>
+        <td>{{ object.name }}</td>
+        <td>{{ object.description }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 <br>
+
+
 {% endblock %}
+
+
+
+
+
+
+

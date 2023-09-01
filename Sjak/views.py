@@ -69,6 +69,7 @@ class SjakItemListView(generic.ListView):
     model = models.SjakItem
     form_class = forms.SjakItemForm
     context_object_name = 'object_list'
+    ordering = ['name']
 
     def get_queryset(self):
         queryset = models.SjakItem.objects.all().order_by('name')  # Order by the 'name' field

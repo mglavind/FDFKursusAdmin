@@ -67,6 +67,7 @@ class LocationBookingAdmin(admin.ModelAdmin):
         ('team', RelatedDropdownFilter),
     )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    search_fields = ['item', 'team','team_contact'] 
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:
@@ -127,6 +128,7 @@ class LocationItemAdmin(admin.ModelAdmin):
         "last_updated",
         "created",
     ]
+    search_fields = ['name', 'description'] 
     def get_urls(self) -> List[URLPattern]:
         urls = super().get_urls()
         new_urls = [path('upload-csv/', self.upload_csv),]

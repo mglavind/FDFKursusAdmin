@@ -14,10 +14,24 @@ class ButikkenItemListView(ListView):
     model = models.ButikkenItem
     form_class = forms.ButikkenItemForm
     context_object_name = 'object_list'
+    ordering = ['name']
 
     def get_queryset(self):
         queryset = models.ButikkenItem.objects.all().order_by('name')  # Order by the 'name' field
         return queryset
+    
+    def sort_items(request):
+        sort_by = request.GET.get('sort', 'default')  # Default sorting option
+
+        if sort_by == 'name':
+            object_list = models.ButikkenItem.objects.all().order_by('name')
+        else:
+            object_list = models.ButikkenItem.objects.all()
+
+        context = {
+            'object_list': object_list,
+        }
+        return render(request, 'your_template.html', context)
 
 
 class ButikkenItemCreateView(CreateView):

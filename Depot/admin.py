@@ -39,6 +39,7 @@ class DepotItemAdmin(admin.ModelAdmin):
         "last_updated",
         "description",
     ]
+    search_fields = ['name', 'description'] 
     def get_urls(self) -> List[URLPattern]:
         urls = super().get_urls()
         new_urls = [path('upload-csv/', self.upload_csv),]
@@ -147,6 +148,7 @@ class DepotBookingAdmin(admin.ModelAdmin):
         ('team', RelatedDropdownFilter),
     )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    search_fields = ['item', 'team','team_contact'] 
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:
