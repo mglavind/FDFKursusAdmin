@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    
+<p>
+    <a class="btn btn-light" href="{% url 'Butikken_MealBooking_list' %}">
+    Jeres måltidsbestilling
+    </a>
+</p>
+    
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{form.errors}}
+
+  <h2> Mandag </h2>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="monday_breakfast">Morgenmad </label>
+        {{ form.monday_breakfast }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="monday_lunch">Middag: </label>
+        {{ form.monday_lunch }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="monday_dinner">Aften: </label>
+        {{ form.monday_dinner }}
+    </div>
+
+    <br>
+    <h2> Tirsdag </h2>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="tuesday_breakfast">Morgen: </label>
+        {{ form.tuesday_breakfast }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="tuesday_lunch">Middag: </label>
+        {{ form.tuesday_lunch }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="tuesday_dinner">Aften: </label>
+        {{ form.tuesday_dinner }}
+    </div>
+
+    <br>
+    <h2> Onsdag </h2>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="wednesday_breakfast">Morgen: </label>
+        {{ form.wednesday_breakfast }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="wednesday_lunch">Middag: </label>
+        {{ form.wednesday_lunch }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="wednesday_dinner">Aften: </label>
+        {{ form.wednesday_dinner }}
+    </div>
+
+    <br>
+    <h2> Torsdag </h2>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="thursday_breakfast">Morgen: </label>
+        {{ form.thursday_breakfast }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="thursday_lunch">Middag: </label>
+        {{ form.thursday_lunch }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="thursday_dinner">Aften: </label>
+        {{ form.thursday_dinner }}
+    </div>
+
+    <br>
+    <h2> Fredag </h2>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="friday_breakfast">Morgen: </label>
+        {{ form.friday_breakfast }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="friday_lunch">Middag: </label>
+        {{ form.friday_lunch }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="friday_dinner">Aften: </label>
+        {{ form.friday_dinner }}
+    </div>
+
+    <br>
+    <h2> Team </h2>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="team_contact">Kontaktperson: </label>
+        {{ form.team_contact }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="team">Team: </label>
+        {{ form.team }}
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="created">Oprættet: </label>
+        <input class="form-control col-sm-10"
+        id="created" type="datetime-local"
+        name="created" value="{{ object.created }}" disabled>
+    </div>
+    <br>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="last_updated">Sidst opdateret: </label>
+        <input class="form-control col-sm-10"
+        id="last_updated" type="datetime-local"
+        name="last_updated" value="{{ object.last_updated }}" disabled>
+    </div>
+    <br>
+  <input type="submit" value="Gem" class="btn btn-primary">
+</form>
+
+{% endblock %}

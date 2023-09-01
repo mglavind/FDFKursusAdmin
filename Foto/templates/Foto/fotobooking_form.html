@@ -1,72 +1,92 @@
-
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
     
 <p>
     <a class="btn btn-light" href="{% url 'Foto_FotoBooking_list' %}">
-    FotoBooking Listing
+    Tilbage til liste
     </a>
 </p>
     
 <form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{form.errors}}
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="start">start: </label>
-      <input class="form-control col-sm-10"
-         id="start" type="datetime-local"
-         name="start" value="{{ object.start }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="end">end: </label>
-      <input class="form-control col-sm-10"
-         id="end" type="datetime-local"
-         name="end" value="{{ object.end }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="remarks">remarks: </label>
-      <input class="form-control col-sm-10"
-         id="remarks" type="text"
-         name="remarks" value="{{ object.remarks }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="created">created: </label>
-      <input class="form-control col-sm-10"
-         id="created" type="datetime-local"
-         name="created" value="{{ object.created }}" disabled>
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="location">location: </label>
-      <input class="form-control col-sm-10"
-         id="location" type="text"
-         name="location" value="{{ object.location }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="last_updated">last_updated: </label>
-      <input class="form-control col-sm-10"
-         id="last_updated" type="datetime-local"
-         name="last_updated" value="{{ object.last_updated }}" disabled>
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="status">status: </label>
-      <input class="form-control col-sm-10"
-         id="status" type="text"
-         name="status" value="{{ object.status }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="team">team: </label>
-      {{ form.team }}
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="item">item: </label>
-      {{ form.item }}
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="team_contact">team_contact: </label>
-      {{ form.team_contact }}
-  </div>
-  <input type="submit" value="Save" class="btn btn-primary">
+    {% csrf_token %}
+    {{ form.errors }}
+    <div class="form-group row mb-2">
+        <label class="col-sm-2 col-form-label" for="item">Aktivitet:</label>
+        <div class="col-sm-10">
+            {{ form.item }}
+        </div>
+    </div>
+
+    <div class="form-group row mb-2">
+        <label class="col-sm-2 col-form-label" for="{{ form.location.id_for_label }}">Placering:</label>
+        <div class="col-sm-10">
+            {{ form.location}}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="start">Bookes fra: </label>
+        <div class="input-group col-sm-10">
+            <input class="form-control" id="start" type="datetime-local" name="start" value="{{ object.start }}">
+            <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="end">Bookes til: </label>
+        <div class="input-group mb-3">
+            <input class="form-control" id="end" type="datetime-local" name="end" value="{{ object.end }}">
+            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursus slut</button>
+        </div>
+    </div>
+      
+
+    <div class="form-group row mb-2">
+        <label class="col-sm-2 col-form-label" for="team">Team:</label>
+        <div class="col-sm-10">
+            {{ form.team }}
+        </div>
+    </div>
+
+    <div class="form-group row mb-2">
+        <label class="col-sm-2 col-form-label" for="team_contact">Kontaktperson:</label>
+        <div class="col-sm-10">
+            {{ form.team_contact }}
+        </div>
+    </div>
+
+
+    <div class="form-group row mb-2">
+        <label class="col-sm-2 col-form-label" for="remarks">Bemærkninger:</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-10 offset-sm-2">
+            <input type="submit" value="Indsend" class="btn btn-primary">
+        </div>
+    </div>
 </form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const setPredefinedStartButton = document.getElementById("set-predefined-start");
+        const setPredefinedEndButton = document.getElementById("set-predefined-end");
+        const startField = document.getElementById("start");
+        const endField = document.getElementById("end");
+
+        setPredefinedStartButton.addEventListener("click", function () {
+            startField.value = "2023-10-14T08:00"; // Replace with your predefined value for start
+        });
+
+        setPredefinedEndButton.addEventListener("click", function () {
+            endField.value = "2023-10-21T16:00"; // Replace with your predefined value for end
+        });
+    });
+</script>
+
 
 {% endblock %}

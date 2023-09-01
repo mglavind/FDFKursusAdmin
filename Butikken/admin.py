@@ -1,16 +1,13 @@
-from django.contrib import admin
 from django import forms
 from typing import List
-from django import forms
 from django.urls.resolvers import URLPattern
 from django.contrib import admin, messages
 from django.urls import path
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
-from .models import ButikkenItem
+from .models import ButikkenItem, MealBooking, Day, Meal, Recipe, Option
 import csv
-
 
 
 from . import models
@@ -181,6 +178,135 @@ class ButikkenItemTypeAdmin(admin.ModelAdmin):
     ]
 
 
+
+class DayAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Day
+        fields = "__all__"
+
+
+class DayAdmin(admin.ModelAdmin):
+    form = DayAdminForm
+    list_display = [
+        "name",
+        "last_updated",
+        "created",
+        "date",
+    ]
+    readonly_fields = [
+        "name",
+        "last_updated",
+        "created",
+        "date",
+    ]
+
+
+class RecipeAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Recipe
+        fields = "__all__"
+
+
+class RecipeAdmin(admin.ModelAdmin):
+    form = RecipeAdminForm
+    list_display = [
+        "last_updated",
+        "name",
+        "description",
+        "created",
+    ]
+    readonly_fields = [
+        "last_updated",
+        "name",
+        "description",
+        "created",
+    ]
+
+class MealAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Meal
+        fields = "__all__"
+
+
+class MealAdmin(admin.ModelAdmin):
+    form = MealAdminForm
+    list_display = [
+        "created",
+        "type",
+        "last_updated",
+    ]
+    readonly_fields = [
+        "created",
+        "type",
+        "last_updated",
+    ]
+
+
+class OptionAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Option
+        fields = "__all__"
+
+
+class OptionAdmin(admin.ModelAdmin):
+    form = OptionAdminForm
+    list_display = [
+        "created",
+        "last_updated",
+    ]
+    readonly_fields = [
+        "created",
+        "last_updated",
+    ]
+class MealBookingAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.MealBooking
+        fields = "__all__"
+
+
+class MealBookingAdmin(admin.ModelAdmin):
+    form = MealBookingAdminForm
+    list_display = [
+        "monday_breakfast",
+        "monday_lunch",
+        "monday_dinner",
+
+        "tuesday_breakfast",
+        "tuesday_lunch",
+        "tuesday_dinner",
+
+        "wednesday_breakfast",
+        "wednesday_lunch",
+        "wednesday_dinner",
+
+        "thursday_breakfast",
+        "thursday_lunch",
+        "thursday_dinner",
+
+        "friday_breakfast",
+        "friday_lunch",
+        "friday_dinner",
+
+        "last_updated",
+        "created",
+        "status",
+    ]
+    readonly_fields = [
+        "last_updated",
+        "created",
+    ]
+
+
+admin.site.register(models.Day, DayAdmin)
+admin.site.register(models.Recipe, RecipeAdmin)
+admin.site.register(models.ButikkenItemType, ButikkenItemTypeAdmin)
+admin.site.register(models.Meal, MealAdmin)
+admin.site.register(models.Option, OptionAdmin)
 admin.site.register(models.ButikkenItem, ButikkenItemAdmin)
 admin.site.register(models.ButikkenBooking, ButikkenBookingAdmin)
-admin.site.register(models.ButikkenItemType, ButikkenItemTypeAdmin)
+admin.site.register(models.MealBooking, MealBookingAdmin)

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    
+<p>
+    <a class="btn btn-light" href="{% url 'Butikken_MealBooking_list' %}">
+    Jeres måltids bestillinger
+    </a>
+</p>
+    
+<table class="table">
+    <tr><td>Kontaktperson</td><td>{{ object.team_contact }}</td></tr>
+    <tr><td>Team</td><td>{{ object.team }}</td></tr>
+
+    <tr><td>Mandag - Morgen</td><td>{{ object.monday_breakfast }}</td></tr>
+    <tr><td>Mandag - Middag</td><td>{{ object.monday_lunch }}</td></tr>
+    <tr><td>Mandag - Aften</td><td>{{ object.monday_dinner }}</td></tr>
+
+    <tr><td>Tirsdag - Morgen</td><td>{{ object.tuesday_breakfast }}</td></tr>
+    <tr><td>Tirsdag - Middag</td><td>{{ object.tuesday_lunch }}</td></tr>
+    <tr><td>Tirsdag - Aften</td><td>{{ object.tuesday_dinner }}</td></tr>
+
+    <tr><td>Onsdag - Morgen</td><td>{{ object.wednesday_breakfast }}</td></tr>
+    <tr><td>Onsdag - Middag</td><td>{{ object.wednesday_lunch }}</td></tr>
+    <tr><td>Onsdag - Aften</td><td>{{ object.wednesday_dinner }}</td></tr>
+
+    <tr><td>Torsdag - Morgen</td><td>{{ object.thursday_breakfast }}</td></tr>
+    <tr><td>Torsdag - Middag</td><td>{{ object.thursday_lunch }}</td></tr>
+    <tr><td>Torsdag - Aften</td><td>{{ object.thursday_dinner }}</td></tr>
+
+    <tr><td>Fredag - Morgen</td><td>{{ object.friday_breakfast }}</td></tr>
+    <tr><td>Fredag - Middag</td><td>{{ object.friday_lunch }}</td></tr>
+    <tr><td>Fredag - Aften</td><td>{{ object.friday_dinner }}</td></tr>
+    <tr>
+        <td>Status</td>
+        <td>
+            {% if object.status == 'Pending' %}
+                <button class="btn btn-warning btn-sm" disabled>Afventer</button>
+            {% elif object.status == 'Approved' %}
+                <button class="btn btn-success btn-sm" disabled>Godkendt</button>
+            {% elif object.status == 'Rejected' %}
+                <button class="btn btn-danger btn-sm" disabled>Afvist</button>
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr><td>Oprættet</td><td>{{ object.created }}</td></tr>
+    <tr><td>Sidst opdateret</td><td>{{ object.last_updated }}</td></tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Rediger</a>
+
+{% endblock %}

@@ -23,7 +23,6 @@ class FotoBookingForm(forms.ModelForm):
             "end",
             "remarks",
             "location",
-            "status",
             "team",
             "item",
             "team_contact",
