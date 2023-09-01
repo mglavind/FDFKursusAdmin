@@ -10,7 +10,7 @@ from django.core.validators import MaxValueValidator
 class AktivitetsTeamItem(models.Model):
 
     # Fields
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=2000)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     name = models.CharField(max_length=100)
