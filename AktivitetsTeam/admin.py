@@ -14,10 +14,10 @@ class AktivitetsTeamItemAdminForm(forms.ModelForm):
 class AktivitetsTeamItemAdmin(admin.ModelAdmin):
     form = AktivitetsTeamItemAdminForm
     list_display = [
+        "name",
         "description",
         "created",
         "last_updated",
-        "name",
     ]
     readonly_fields = [
         "created",
@@ -39,12 +39,12 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
         "team",
         "team_contact",
         "status",
-        "last_updated",
         "start_date",
         "end_date",
         "remarks",
         "location",
         "remarks_internal",
+        "last_updated",
     ]
     readonly_fields = [
         "created",

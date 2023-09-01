@@ -9,8 +9,10 @@
       <th scope="col">#</th>
       <th scope="col">Aktivitet</th>
       <th scope="col">Placering</th>
-      <th scope="col">Fra</th>
-      <th scope="col">Til</th>
+      <th scope="col">Fra dato</th>
+      <th scope="col">Fra tid</th>
+      <th scope="col">Til dato</th>
+      <th scope="col">Til tid</th>
       <th scope="col">Kontaktperson</th>
       <th scope="col">Gruppe</th>
       <th scope="col">Status</th>
@@ -24,7 +26,9 @@
         <td><a href="{{object.get_absolute_url}}">{{object.item}}</a></td>
         <td>{{object.location}}</td>
         <td>{{object.start_date}}</td>
+        <td>{{object.start_time}}</td>
         <td>{{object.end_date}}</td>
+        <td>{{object.end_time}}</td>
         <td>{{object.team_contact}}</td>
         <td>{{ object.team.name }}</td>
         <td>
