@@ -20,7 +20,7 @@
       {% for object in object_list %}
         <tr>
           <th scope="row">{{ object.id}}</th>
-          <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
+          <td>{{object.item}}</a>  </td>
           <td>{{object.start}}</td>
           <td>{{object.end}}</td>
           <td>{{object.team_contact}}</td>
@@ -40,12 +40,13 @@
             {% endif %}
         </td>
           <td>
-            <a href="{% url 'Location_LocationBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
-              {% bs_icon 'pencil' %}  
-            </a>
+            
             {% with user_team_membership=request.user.teammembership_set.first %}
             {% if user_team_membership %}
                 {% if user_team_membership.team.name and object.team == user_team_membership.team %}
+                <a href="{% url 'Location_LocationBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+                  {% bs_icon 'pencil' %}  
+                </a>
           
                 <a href="{% url 'Location_LocationBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
                   {% bs_icon 'trash' %}  

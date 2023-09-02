@@ -68,6 +68,9 @@ class DepotBookingListView(generic.ListView):
     model = models.DepotBooking
     form_class = forms.DepotBookingForm
 
+    def get_queryset(self):
+        return models.DepotBooking.objects.order_by(F('item'),F('start') )
+
 
 class DepotBookingCreateView(generic.CreateView):
     model = models.DepotBooking
