@@ -48,7 +48,7 @@ class AktivitetsTeamBookingListView(generic.ListView):
         return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
-        return models.AktivitetsTeamBooking.objects.order_by(F('start_date'))
+        return models.AktivitetsTeamBooking.objects.order_by(F('item'),F('start_date') )
 
 
 class AktivitetsTeamBookingCreateView(generic.CreateView):

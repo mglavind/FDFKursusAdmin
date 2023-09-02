@@ -8,7 +8,6 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Aktivitet</th>
-      <th scope="col">Placering</th>
       <th scope="col">Fra dato</th>
       <th scope="col">Fra tid</th>
       <th scope="col">Til dato</th>
@@ -24,7 +23,6 @@
       <tr>
         <th scope="row">{{ object.id}}</th>
         <td><a href="{{object.get_absolute_url}}">{{object.item}}</a></td>
-        <td>{{object.location}}</td>
         <td>{{object.start_date}}</td>
         <td>{{object.start_time}}</td>
         <td>{{object.end_date}}</td>
