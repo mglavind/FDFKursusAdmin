@@ -2,13 +2,8 @@
 {% block content %}
 {% load bootstrap_icons %}
 <br>
-{% if request.user.is_authenticated %}
-      <h5>Bestillings oversigt for team: {% with volunteer_team_memberships=request.user.teammembership_set.all %}
-          {% if volunteer_team_memberships %}
-              {{ volunteer_team_memberships.first.team.name }}
-          {% endif %}
-          {% endwith %}</h5>
-  {% endif %}
+      <h5>Bestillings oversigt for alle teams: </h5>
+
 <table class="table">
   <thead>
     <tr>
@@ -22,10 +17,7 @@
     </tr>
   </thead>
   <tbody>
-  {% with user_team_membership=request.user.teammembership_set.first %}
-    {% if user_team_membership %}
       {% for object in object_list %}
-        {% if user_team_membership.team.name and object.team == user_team_membership.team %}
         <tr>
           <th scope="row">{{ object.id}}</th>
           <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
@@ -51,15 +43,20 @@
             <a href="{% url 'Location_LocationBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
               {% bs_icon 'pencil' %}  
             </a>
-            <a href="{% url 'Location_LocationBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-              {% bs_icon 'trash' %}  
-            </a>
+            {% with user_team_membership=request.user.teammembership_set.first %}
+            {% if user_team_membership %}
+                {% if user_team_membership.team.name and object.team == user_team_membership.team %}
+          
+                <a href="{% url 'Location_LocationBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                  {% bs_icon 'trash' %}  
+                </a>
+          
+                {% endif %}
+            {% endif %}
+          {% endwith %}
         </td>
         </tr>
-        {% endif %}
         {% endfor %}
-      {% endif %}
-    {% endwith %}
   </tbody>
 </table>
 
@@ -69,4 +66,6 @@
   Ny område bestilling
   </a>
 </div>
+
+
 {% endblock %}
