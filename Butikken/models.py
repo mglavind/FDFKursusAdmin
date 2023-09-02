@@ -255,9 +255,8 @@ class MealBooking(models.Model):
         ('Står selv for forplejning', 'Står selv for forplejning'),
     )
     WEDNESDAY_DINNER_CHOICES   = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Vælg fra liste', 'Vælg fra liste'),
         ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-        ('Dinner trans', 'Dinner trans'),
         ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
         ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
         ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
@@ -309,16 +308,7 @@ class MealBooking(models.Model):
         ('Står selv for forplejning', 'Står selv for forplejning'),
     )
     FRIDAY_DINNER_CHOICES   = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-        ('Dinner trans', 'Dinner trans'),
-        ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-        ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-        ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-        ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-        ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-        ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
+        ('Fællesforplejning', 'Fællesforplejning'), 
     )
     friday_breakfast = models.CharField(max_length=200, choices=FRIDAY_BREAKFAST_CHOICES, default="none")
     friday_lunch = models.CharField(max_length=200, choices=FRIDAY_LUNCH_CHOICES, default="none")
