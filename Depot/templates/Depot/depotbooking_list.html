@@ -3,13 +3,7 @@
 {% block content %}
 {% load bootstrap_icons %}
 <br>
-{% if request.user.is_authenticated %}
-      <h5>Booking oversigt for team: {% with volunteer_team_memberships=request.user.teammembership_set.all %}
-          {% if volunteer_team_memberships %}
-              {{ volunteer_team_memberships.first.team.name }}
-          {% endif %}
-          {% endwith %}</h5>
-  {% endif %}
+      <h5>Depotets booking oversigt for alle teams: </h5>
 <table class="table">
   <thead>
     <tr>
