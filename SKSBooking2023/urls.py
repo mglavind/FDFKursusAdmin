@@ -36,6 +36,7 @@ urlpatterns = [
     path('Sjak/', include('Sjak.urls')),
     path('Depot/', include('Depot.urls')),
     path('SOS/', include('SOS.urls')),
+    path('Support/', include('Support.urls')),
 
 ]
 

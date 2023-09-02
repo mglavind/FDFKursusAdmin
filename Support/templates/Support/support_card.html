@@ -1,0 +1,15 @@
+
+{% block app_content %}
+<div class="col">
+    <div class="card h-100">
+        <h5 class="card-header">Support</h5>
+        <div class="card-body">
+            <div class="d-grid gap-2">
+            <a class="btn btn-secondary " href="{% url 'Support_SupportBooking_list' %}">Jeres Support Bookinger</a>
+            <a class="btn btn-secondary " href="{% url 'Support_SupportItem_list' %}">Support's sager</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
