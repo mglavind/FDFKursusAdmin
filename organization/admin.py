@@ -140,6 +140,7 @@ class VolunteerAdmin(admin.ModelAdmin):
     def export_to_csv(modeladmin, request, queryset):
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="volunteers.csv"'
+            response.write(u'\ufeff'.encode('utf8'))
 
             writer = csv.writer(response)
             writer.writerow(['First Name', 'Last Name', 'Username', 'Email', 'Phone'])

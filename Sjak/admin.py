@@ -125,7 +125,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         ('team', RelatedDropdownFilter),
     )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
-    search_fields = ['item', 'team','team_contact'] 
+    search_fields = ['item__name', 'team__name'] 
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:
@@ -146,8 +146,9 @@ class SjakBookingAdmin(admin.ModelAdmin):
     def export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=sjak_bookings.csv"
-
+        response.write(u'\ufeff'.encode('utf8'))
         writer = csv.writer(response)
+        
         writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "End", "Status"])
 
         for booking in queryset:

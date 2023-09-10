@@ -139,6 +139,7 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
     def export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=butikken_bookings.csv"
+        response.write(u'\ufeff'.encode('utf8'))
 
         writer = csv.writer(response)
         writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "Status"])

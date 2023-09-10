@@ -67,19 +67,24 @@ class SOSBookingAdmin(admin.ModelAdmin):
     def export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=sos_bookings.csv"
+        response.write(u'\ufeff'.encode('utf8'))
 
         writer = csv.writer(response)
-        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "End", "Status"])
+        writer.writerow(["Item", "Quantity","Remarks","Internal remarks", "Team", "Team Contact", "Start", "End", "Status", "Delivery needed", "Assistance needed"])
 
         for booking in queryset:
             writer.writerow([
                 booking.item,
                 booking.quantity,
+                booking.remarks,
+                booking.remarks_internal,
                 booking.team,
                 booking.team_contact,
                 booking.start,
                 booking.end,
                 booking.status,
+                booking.delivery_needed,
+                booking.assistance_needed,
             ])
 
         return response
