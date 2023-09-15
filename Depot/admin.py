@@ -148,7 +148,7 @@ class DepotBookingAdmin(admin.ModelAdmin):
         ('team', RelatedDropdownFilter),
     )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
-    search_fields = ['item', 'team','team_contact'] 
+    search_fields = ['item__name', 'team__name','team_contact__name'] 
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:
