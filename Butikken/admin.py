@@ -137,19 +137,27 @@ class ButikkenBookingAdminForm(forms.ModelForm):
 class ButikkenBookingAdmin(admin.ModelAdmin):
     form = ButikkenBookingAdminForm
     list_display = [
+        "item",
+        "team",
+        "team_contact",
         "remarks",
         "quantity",
-        "created",
-        "status",
-        "last_updated",
         "start",
+        "status",
+        "created",
+        "last_updated",
     ]
     readonly_fields = [
         "created",
         "last_updated",
     ]
-    list_filter = ["item", "team", "status"]
+    list_filter = (
+        ('status', ChoiceDropdownFilter),
+        ('item', RelatedDropdownFilter),
+        ('team', RelatedDropdownFilter),
+    )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    search_fields = ['item__name', 'team__name'] 
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:
@@ -173,7 +181,7 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
         response.write(u'\ufeff'.encode('utf8'))
 
         writer = csv.writer(response)
-        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "Status"])
+        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "Status","Remarks","last updated"])
 
         for booking in queryset:
             writer.writerow([
@@ -183,6 +191,8 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
                 booking.team_contact,
                 booking.start,
                 booking.status,
+                booking.remarks,
+                booking.last_updated
             ])
 
         return response
