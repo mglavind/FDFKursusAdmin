@@ -191,12 +191,14 @@ class MealBooking(models.Model):
 
     # Fields
     MONDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Vælg fra liste', 'Vælg fra liste'), 
+        ('Spiser inde ', 'Spiser inde '),
         ('Morgenmadspakke', 'Morgenmadspakke'),
         ('Står selv for forplejning', 'Står selv for forplejning'),
     )
     MONDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Vælg fra liste', 'Vælg fra liste'), 
+        ('Spiser inde ', 'Spiser inde '),
         ('Frokostpakke', 'Frokostpakke'),
         ('Står selv for forplejning', 'Står selv for forplejning'),
     )

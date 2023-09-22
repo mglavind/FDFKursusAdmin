@@ -37,7 +37,7 @@ class ButikkenItemAdmin(admin.ModelAdmin):
         "last_updated",
         "created",
     ]
-    
+    actions = ["export_to_csv"]
     def get_urls(self) -> List[URLPattern]:
         urls = super().get_urls()
         new_urls = [path('upload-csv/', self.upload_csv),]
@@ -91,6 +91,37 @@ class ButikkenItemAdmin(admin.ModelAdmin):
         form = CsvImportForm()
         data = {"form": form}
         return render(request, "admin/csv_upload.html", data)
+    
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=meal_items.csv"
+        response.write(u'\ufeff'.encode('utf8'))
+
+        writer = csv.writer(response)
+        writer.writerow([
+            "name",
+            "type",
+            "content_normal",
+            "content_unit",
+            "description",
+        ])
+
+        for item in queryset:
+            writer.writerow([
+                item.name,
+                item.type,
+                item.content_normal,
+                item.content_unit,
+                item.description,
+            ])
+
+        return response
+    export_to_csv.short_description = "Export selected bookings to CSV"
+    
+
+
+
 
 
 
@@ -273,6 +304,7 @@ class MealBookingAdminForm(forms.ModelForm):
 class MealBookingAdmin(admin.ModelAdmin):
     form = MealBookingAdminForm
     list_display = [
+        "team",
         "monday_breakfast",
         "monday_lunch",
         "monday_dinner",
@@ -301,6 +333,88 @@ class MealBookingAdmin(admin.ModelAdmin):
         "last_updated",
         "created",
     ]
+    list_filter = ["team", "status"]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+
+    def approve_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Approved"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) approved.")
+    approve_bookings.short_description = "Approve selected bookings"
+
+    def reject_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Rejected"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) rejected.")
+    reject_bookings.short_description = "Reject selected bookings"
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=meal_bookings.csv"
+        response.write(u'\ufeff'.encode('utf8'))
+
+        writer = csv.writer(response)
+        writer.writerow([
+            "team",
+            "monday_breakfast",
+            "monday_lunch",
+            "monday_dinner",
+
+            "tuesday_breakfast",
+            "tuesday_lunch",
+            "tuesday_dinner",
+
+            "wednesday_breakfast",
+            "wednesday_lunch",
+            "wednesday_dinner",
+
+            "thursday_breakfast",
+            "thursday_lunch",
+            "thursday_dinner",
+
+            "friday_breakfast",
+            "friday_lunch",
+            "friday_dinner",
+
+            "last_updated",
+            "created",
+            "status",
+        ])
+
+        for booking in queryset:
+            writer.writerow([
+                booking.team,
+                booking.monday_breakfast,
+                booking.monday_lunch,
+                booking.monday_dinner,
+
+                booking.tuesday_breakfast,
+                booking.tuesday_lunch,
+                booking.tuesday_dinner,
+
+                booking.wednesday_breakfast,
+                booking.wednesday_lunch,
+                booking.wednesday_dinner,
+
+                booking.thursday_breakfast,
+                booking.thursday_lunch,
+                booking.thursday_dinner,
+
+                booking.friday_breakfast,
+                booking.friday_lunch,
+                booking.friday_dinner,
+
+                booking.last_updated,
+                booking.created,
+                booking.status,
+            ])
+
+        return response
+    export_to_csv.short_description = "Export selected bookings to CSV"
 
 
 admin.site.register(models.Day, DayAdmin)
