@@ -146,7 +146,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         "formatted_start_date",
         "formatted_end_date",
         "status",
-        "last_updated",
+        "formatted_last_updated",
         "remarks",
         "remarks_internal",
         
