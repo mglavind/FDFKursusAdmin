@@ -9,6 +9,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 from .models import SjakItem
+from django.utils import formats
 import csv
 
 
@@ -99,16 +100,51 @@ class SjakBookingAdminForm(forms.ModelForm):
         model = models.SjakBooking
         fields = "__all__"
 
+    
+
 
 class SjakBookingAdmin(admin.ModelAdmin):
     form = SjakBookingAdminForm
+    list_max_show_all = 500  # Set the maximum number of items per page to 100
+    list_per_page = 25  # Set the default number of items per page to 25
+    # ...
+
+
+    def formatted_team_contact(self, obj):
+        return obj.team_contact.first_name
+
+    formatted_team_contact.short_description = "Team Contact"
+
+    def formatted_start_date(self, obj):
+        formatted_date = obj.start.strftime("%d/%m")  # Format as DD/MM
+        formatted_time = obj.start.strftime("%H:%M")  # Format as HH:MM
+        return f"{formatted_date} - {formatted_time}"
+
+    def formatted_end_date(self, obj):
+        formatted_date = obj.end.strftime("%d/%m")  # Format as DD/MM
+        formatted_time = obj.end.strftime("%H:%M")  # Format as HH:MM
+        return f"{formatted_date} - {formatted_time}"
+
+    formatted_start_date.short_description = "Start Date"
+    formatted_end_date.short_description = "End Date"
+
+
+    def formatted_last_updated(self, obj):
+        formatted_date = obj.last_updated.strftime("%d/%m")  # Format as DD/MM
+        formatted_time = obj.last_updated.strftime("%H:%M")  # Format as HH:MM
+        return f"{formatted_date} - {formatted_time}"
+
+    formatted_last_updated.short_description = "Last Updated"
+
+
+
     list_display = [
         "item",
         "quantity",
         "team",
-        "team_contact",
-        "start",
-        "end",
+        "formatted_team_contact",
+        "formatted_start_date",
+        "formatted_end_date",
         "status",
         "last_updated",
         "remarks",

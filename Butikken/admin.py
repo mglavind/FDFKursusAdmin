@@ -136,16 +136,48 @@ class ButikkenBookingAdminForm(forms.ModelForm):
 
 class ButikkenBookingAdmin(admin.ModelAdmin):
     form = ButikkenBookingAdminForm
+    list_max_show_all = 500  # Set the maximum number of items per page to 100
+    list_per_page = 25  # Set the default number of items per page to 25
+    # ...
+
+
+    def formatted_team_contact(self, obj):
+        return obj.team_contact.first_name
+
+    formatted_team_contact.short_description = "Team Contact"
+
+    def formatted_start_date(self, obj):
+        formatted_date = obj.start.strftime("%d/%m")  # Format as DD/MM
+        formatted_time = obj.start.strftime("%H:%M")  # Format as HH:MM
+        return f"{formatted_date} - {formatted_time}"
+
+    def formatted_end_date(self, obj):
+        formatted_date = obj.end.strftime("%d/%m")  # Format as DD/MM
+        formatted_time = obj.end.strftime("%H:%M")  # Format as HH:MM
+        return f"{formatted_date} - {formatted_time}"
+
+    formatted_start_date.short_description = "Start Date"
+    formatted_end_date.short_description = "End Date"
+
+
+    def formatted_last_updated(self, obj):
+        formatted_date = obj.last_updated.strftime("%d/%m")  # Format as DD/MM
+        formatted_time = obj.last_updated.strftime("%H:%M")  # Format as HH:MM
+        return f"{formatted_date} - {formatted_time}"
+
+    formatted_last_updated.short_description = "Last Updated"
+
+
     list_display = [
         "item",
         "team",
-        "team_contact",
+        "formatted_team_contact",
         "remarks",
         "quantity",
-        "start",
+        "formatted_start_date",
         "status",
         "created",
-        "last_updated",
+        "formatted_last_updated",
     ]
     readonly_fields = [
         "created",

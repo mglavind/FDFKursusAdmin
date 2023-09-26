@@ -32,6 +32,7 @@ class ButikkenItem(models.Model):
 
 
 class ButikkenBooking(models.Model):
+    
 
     # Relationships
     team = models.ForeignKey("organization.Team", on_delete=models.CASCADE)
