@@ -139,9 +139,8 @@ LOGIN_REDIRECT_URL = '/'  # Change the URL to '/' for root URL redirection
 LANGUAGE_CODE = 'da-dk'
 
 TIME_ZONE = 'Europe/Copenhagen'
-
+USE_L10N = True
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
