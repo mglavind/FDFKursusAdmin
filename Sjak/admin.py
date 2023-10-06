@@ -143,12 +143,13 @@ class SjakBookingAdmin(admin.ModelAdmin):
         "quantity",
         "team",
         "formatted_team_contact",
-        "formatted_start_date",
-        "formatted_end_date",
+        "start",
+        "end",
         "status",
         "formatted_last_updated",
         "remarks",
         "remarks_internal",
+        "status_internal",
         
     ]
     readonly_fields = [
@@ -159,6 +160,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         ('status', ChoiceDropdownFilter),
         ('item', RelatedDropdownFilter),
         ('team', RelatedDropdownFilter),
+        ('status_internal', ChoiceDropdownFilter),
     )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
     search_fields = ['item__name', 'team__name'] 
@@ -185,7 +187,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         response.write(u'\ufeff'.encode('utf8'))
         writer = csv.writer(response)
         
-        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "End", "Status"])
+        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "End", "Status", "Status internal"])
 
         for booking in queryset:
             writer.writerow([
@@ -196,6 +198,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
                 booking.start,
                 booking.end,
                 booking.status,
+                booking.status_internal,
             ])
 
         return response

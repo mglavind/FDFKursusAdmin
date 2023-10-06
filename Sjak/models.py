@@ -42,6 +42,12 @@ class SjakBooking(models.Model):
         ('Approved', 'Approved'),
         ('Rejected', 'Rejected'),
     )
+    INTERNAL_STATUS_CHOICES = (
+        ('Afventer', 'Afventer'),
+        ('Igang', 'Igang'),
+        ('Klar', 'Klar'),
+        ('Afsluttet', 'Afsluttet'),
+    )
 
     # Fields
     start = models.DateTimeField(verbose_name='Start', default=timezone.now)
@@ -52,6 +58,7 @@ class SjakBooking(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     remarks = models.TextField(blank=True)  # Blank allows for an empty value
     remarks_internal = models.TextField(blank=True)  # Blank allows for an empty value
+    status_internal = models.CharField(max_length=10, choices=INTERNAL_STATUS_CHOICES, default='Afventer')
 
     class Meta:
         pass
