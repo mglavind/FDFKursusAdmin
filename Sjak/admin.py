@@ -146,6 +146,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         "start",
         "end",
         "status",
+        "status_internal",
         "formatted_last_updated",
         "remarks",
         "remarks_internal",
@@ -162,7 +163,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         ('team', RelatedDropdownFilter),
         ('status_internal', ChoiceDropdownFilter),
     )
-    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv", "internal_status_afventer", "internal_status_igang","internal_status_klar","internal_status_afsluttet"]
     search_fields = ['item__name', 'team__name'] 
 
     def approve_bookings(self, request, queryset):
@@ -180,6 +181,43 @@ class SjakBookingAdmin(admin.ModelAdmin):
 
         self.message_user(request, f"{queryset.count()} booking(s) rejected.")
     reject_bookings.short_description = "Reject selected bookings"
+
+
+    def internal_status_klar(self, request, queryset):
+        for booking in queryset:
+            booking.status_internal = "Klar"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) klar.")
+    internal_status_klar.short_description = "Intern status: Klar"
+
+    def internal_status_igang(self, request, queryset):
+        for booking in queryset:
+            booking.status_internal = "Igang"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) Igang.")
+    internal_status_igang.short_description = "Intern status: Igang"
+
+    def internal_status_afsluttet(self, request, queryset):
+        for booking in queryset:
+            booking.status_internal = "Afsluttet"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) Afsluttet.")
+    internal_status_afsluttet.short_description = "Intern status: Afsluttet"
+
+    def internal_status_afventer(self, request, queryset):
+        for booking in queryset:
+            booking.status_internal = "Afventer"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) Afventer.")
+    internal_status_afventer.short_description = "Intern status: Afventer"
+
+
+
+
 
     def export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
