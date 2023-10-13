@@ -45,6 +45,7 @@ class ButikkenBooking(models.Model):
         ('Pending', 'Pending'),
         ('Approved', 'Approved'),
         ('Rejected', 'Rejected'),
+        ('Udleveret', 'Udleveret'),
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
 

@@ -188,7 +188,7 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
         ('item', RelatedDropdownFilter),
         ('team', RelatedDropdownFilter),
     )
-    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    actions = ["approve_bookings", "reject_bookings", "udlever_bookings", "export_to_csv"]
     search_fields = ['item__name', 'team__name'] 
 
     def approve_bookings(self, request, queryset):
@@ -206,6 +206,14 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
 
         self.message_user(request, f"{queryset.count()} booking(s) rejected.")
     reject_bookings.short_description = "Reject selected bookings"
+
+    def udlever_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Udleveret"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) udleveret.")
+    udlever_bookings.short_description = "Booking udleveret"
 
     def export_to_csv(self, request, queryset):
         response = HttpResponse(content_type="text/csv")
