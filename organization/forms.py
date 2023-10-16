@@ -85,3 +85,18 @@ class VolunteerForm(forms.ModelForm):
             "email",
             "phone",
         ]
+
+
+class KeyForm(forms.ModelForm):
+    class Meta:
+        model = models.Key
+        fields = [
+            "description",
+            "name",
+            "number",
+            "current_user",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(KeyForm, self).__init__(*args, **kwargs)
+        self.fields["current_user"].queryset = User.objects.all()

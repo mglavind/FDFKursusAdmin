@@ -232,6 +232,24 @@ class VolunteerAdmin(admin.ModelAdmin):
     
         
         
+class KeyAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Key
+        fields = "__all__"
+
+
+class KeyAdmin(admin.ModelAdmin):
+    form = KeyAdminForm
+    list_display = [
+        "number",
+        "name",
+        "current_user",
+        "description",
+    ]
+    readonly_fields = [
+        "last_updated",
+    ]
 
 
 admin.site.register(models.Team, TeamAdmin)
@@ -239,3 +257,4 @@ admin.site.register(models.TeamMembership, TeamMembershipAdmin)
 admin.site.register(models.Event, EventAdmin)
 admin.site.register(models.EventMembership, EventMembershipAdmin)
 admin.site.register(models.Volunteer, VolunteerAdmin)
+admin.site.register(models.Key, KeyAdmin)

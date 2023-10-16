@@ -244,3 +244,29 @@ class VolunteerUpdateView(LoginRequiredMixin, generic.UpdateView):
 class VolunteerDeleteView(generic.DeleteView):
     model = models.Volunteer
     success_url = reverse_lazy("organization_Volunteer_list")
+
+
+class KeyListView(generic.ListView):
+    model = models.Key
+    form_class = forms.KeyForm
+
+
+class KeyCreateView(generic.CreateView):
+    model = models.Key
+    form_class = forms.KeyForm
+
+
+class KeyDetailView(generic.DetailView):
+    model = models.Key
+    form_class = forms.KeyForm
+
+
+class KeyUpdateView(generic.UpdateView):
+    model = models.Key
+    form_class = forms.KeyForm
+    pk_url_kwarg = "pk"
+
+
+class KeyDeleteView(generic.DeleteView):
+    model = models.Key
+    success_url = reverse_lazy("organization_Key_list")

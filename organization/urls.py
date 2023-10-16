@@ -68,5 +68,11 @@ urlpatterns = [
     path("organization/Volunteer/detail/<int:pk>/", views.VolunteerDetailView.as_view(), name="organization_Volunteer_detail"),
     path("organization/Volunteer/update/<int:pk>/", views.VolunteerUpdateView.as_view(), name="organization_Volunteer_update"),
     path("organization/Volunteer/delete/<int:pk>/", views.VolunteerDeleteView.as_view(), name="organization_Volunteer_delete"),
+    path("organization/Key/", views.KeyListView.as_view(), name="organization_Key_list"),
+    path("organization/Key/create/", views.KeyCreateView.as_view(), name="organization_Key_create"),
+    path("organization/Key/detail/<int:pk>/", views.KeyDetailView.as_view(), name="organization_Key_detail"),
+    path("organization/Key/update/<int:pk>/", views.KeyUpdateView.as_view(), name="organization_Key_update"),
+    path("organization/Key/delete/<int:pk>/", views.KeyDeleteView.as_view(), name="organization_Key_delete"),
+    
 
 ]
