@@ -6,6 +6,7 @@ from django.utils import formats
 import csv
 
 from . import models
+from .models import AktivitetsTeamBooking
 
 
 class AktivitetsTeamItemAdminForm(forms.ModelForm):
@@ -35,6 +36,8 @@ class AktivitetsTeamBookingAdminForm(forms.ModelForm):
         model = models.AktivitetsTeamBooking
         fields = "__all__"
 
+class AssignedInline(admin.TabularInline):
+        model = AktivitetsTeamBooking.assigned_aktivitetsteam.through
 
 class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
     form = AktivitetsTeamBookingAdminForm
@@ -89,9 +92,16 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
         ('status', ChoiceDropdownFilter),
         ('item', RelatedDropdownFilter),
         ('team', RelatedDropdownFilter),
+        ('assigned_aktivitetsteam', RelatedDropdownFilter)
     )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
     search_fields = ['item__name', 'team__name'] 
+
+    inlines = [
+        AssignedInline,
+    ]
+    exclude = ["members"]
+    
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:

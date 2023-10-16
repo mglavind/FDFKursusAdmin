@@ -6,6 +6,8 @@ from AktivitetsTeam.models import AktivitetsTeamItem
 from organization.models import Volunteer
 from . import models
 
+from organization.models import Team
+
 
 class AktivitetsTeamItemForm(forms.ModelForm):
     class Meta:
@@ -27,19 +29,18 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
         initial=timezone.now().time(),
         widget=forms.TimeInput(attrs={"type": "time"}),
     )
+    
+
+    my_specific_team = Team.objects.get(id=8)
+    assigned_aktivitetsteam = forms.ModelMultipleChoiceField(
+        queryset=Volunteer.objects.filter(teammembership__team=my_specific_team),
+        widget=forms.CheckboxSelectMultiple,
+    )
+
     class Meta:
         model = models.AktivitetsTeamBooking
-        fields = [
-            "remarks",
-            "location",
-            "item",
-            "team_contact",
-            "team",
-            "start_date",  # Add these fields to the list
-            "start_time",  # Add these fields to the list
-            "end_date",    # Add these fields to the list
-            "end_time",    # Add these fields to the list
-        ]
+        fields = '__all__' 
+ 
 
 
     def save(self, commit=True):
@@ -48,6 +49,8 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+    
+    
 
     def __init__(self, *args, user=None, **kwargs):
         super(AktivitetsTeamBookingForm, self).__init__(*args, **kwargs)
