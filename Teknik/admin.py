@@ -110,12 +110,17 @@ class TeknikBookingAdmin(admin.ModelAdmin):
 
         def convert_to_ical(booking):
             ical_event = Event()
-            summary = f"{booking.item} - {booking.team}"
+            summary = f"{booking.item} - {booking.team} - {booking.team_contact}"
             ical_event.add('summary', summary)
             ical_event.add('dtstart', booking.start)
             ical_event.add('dtend', booking.end)
             ical_event.add('description', booking.remarks)
             # Add more properties as needed
+
+            # Add the team_contact name in the "description" field
+            description_with_contact = f"Kontaktperson: {booking.team_contact}\n{booking.remarks}"
+            ical_event.add('description', description_with_contact)
+
             return ical_event
 
         for booking in queryset:
