@@ -10,6 +10,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 from .models import TeknikItem
 import csv
+from django.http import HttpResponse
+from icalendar import Calendar, Event
+from django.urls import reverse
 
 from . import models
 
@@ -46,7 +49,7 @@ class TeknikBookingAdmin(admin.ModelAdmin):
         ('item', RelatedDropdownFilter),
         ('team', RelatedDropdownFilter),
     )
-    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv", 'export_selected_to_ical']
     search_fields = ['item', 'team','team_contact'] 
 
     def approve_bookings(self, request, queryset):
@@ -101,6 +104,30 @@ class TeknikBookingAdmin(admin.ModelAdmin):
 
         return response
     export_to_csv.short_description = "Export selected bookings to CSV"
+    
+    def export_selected_to_ical(self, request, queryset):
+        calendar = Calendar()
+
+        def convert_to_ical(booking):
+            ical_event = Event()
+            summary = f"{booking.item} - {booking.team}"
+            ical_event.add('summary', summary)
+            ical_event.add('dtstart', booking.start)
+            ical_event.add('dtend', booking.end)
+            ical_event.add('description', booking.remarks)
+            # Add more properties as needed
+            return ical_event
+
+        for booking in queryset:
+            ical_event = convert_to_ical(booking)
+            calendar.add_component(ical_event)
+
+        response = HttpResponse(calendar.to_ical(), content_type='text/calendar')
+        response['Content-Disposition'] = 'attachment; filename="bookings.ics"'
+
+        return response
+
+    export_selected_to_ical.short_description = "Export selected bookings to iCal"
 
 
 
