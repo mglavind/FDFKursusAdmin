@@ -32,6 +32,7 @@ class TeamForm(forms.ModelForm):
         fields = [
             "name",
             "short_name",
+           # "events",
         ]
 
 
@@ -55,9 +56,17 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = models.Event
         fields = [
-            "end_date",
             "name",
+            "is_active",
             "start_date",
+            "end_date",
+            "deadline_sjak",
+            "deadline_teknik",
+            "deadline_mad",
+            "deadline_aktivitetsteam",
+            "deadline_foto",
+            "deadline_lokaler",
+            "deadline_sos",
         ]
 
 
@@ -66,13 +75,26 @@ class EventMembershipForm(forms.ModelForm):
         model = models.EventMembership
         fields = [
             "event",
-            "member",
+            "volunteer",
         ]
 
     def __init__(self, *args, **kwargs):
         super(EventMembershipForm, self).__init__(*args, **kwargs)
         self.fields["event"].queryset = Event.objects.all()
-        self.fields["member"].queryset = Volunteer.objects.all()
+        self.fields["volunteer"].queryset = Volunteer.objects.all()
+
+class TeamEventMembershipForm(forms.ModelForm):
+    class Meta:
+        model = models.TeamEventMembership
+        fields = [
+            "event",
+            "team",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(TeamEventMembershipForm, self).__init__(*args, **kwargs)
+        self.fields["event"].queryset = Event.objects.all()
+        self.fields["team"].queryset = Team.objects.all()
 
 
 

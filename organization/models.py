@@ -4,6 +4,45 @@ from django.utils import timezone
 from django.urls import reverse
 
 
+
+
+
+
+
+
+class Event(models.Model):
+
+    # Fields
+    name = models.CharField(max_length=30)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    is_active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    deadline_sjak = models.DateField()
+    deadline_teknik = models.DateField()
+    deadline_mad = models.DateField()
+    deadline_aktivitetsteam = models.DateField()
+    deadline_foto = models.DateField()
+    deadline_lokaler = models.DateField()
+    deadline_sos = models.DateField()
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return str(self.name)
+
+    def get_absolute_url(self):
+        return reverse("organization_Event_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("organization_Event_update", args=(self.pk,))
+
+
+
+
+    
 class Volunteer(AbstractUser):
 
     # Fields
@@ -14,6 +53,7 @@ class Volunteer(AbstractUser):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=30, blank=True)
+    events = models.ManyToManyField(Event, through='EventMembership')
 
     class Meta:
         pass
@@ -26,6 +66,30 @@ class Volunteer(AbstractUser):
 
     def get_update_url(self):
         return reverse("organization_Volunteer_update", args=(self.pk,))
+    
+
+class EventMembership(models.Model):
+
+    # Relationships
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
+
+    # Fields
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return str(self.pk)
+
+    def get_absolute_url(self):
+        return reverse("organization_EventMembership_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("organization_EventMembership_update", args=(self.pk,))
+    
 
 
 
@@ -33,9 +97,12 @@ class Team(models.Model):
 
     # Fields
     name = models.CharField(max_length=30)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    short_name = models.CharField(max_length=30)
+    short_name = models.CharField(max_length=30)   
+    events = models.ManyToManyField(Event, through='TeamEventMembership') 
     created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+
 
     class Meta:
         pass
@@ -49,6 +116,28 @@ class Team(models.Model):
     def get_update_url(self):
         return reverse("organization_Team_update", args=(self.short_name,))
 
+
+class TeamEventMembership(models.Model):
+
+    # Relationships
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+
+    # Fields
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return str(self.pk)
+
+    def get_absolute_url(self):
+        return reverse("organization_TeamEventMembership_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("organization_TeamEventMembership_update", args=(self.pk,))
 
 
 class TeamMembership(models.Model):
@@ -74,52 +163,6 @@ class TeamMembership(models.Model):
     def get_update_url(self):
         return reverse("organization_TeamMembership_update", args=(self.pk,))
 
-
-
-class Event(models.Model):
-
-    # Fields
-    end_date = models.DateField()
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    name = models.CharField(max_length=30)
-    start_date = models.DateField()
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-
-    class Meta:
-        pass
-
-    def __str__(self):
-        return str(self.name)
-
-    def get_absolute_url(self):
-        return reverse("organization_Event_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("organization_Event_update", args=(self.pk,))
-
-
-
-class EventMembership(models.Model):
-
-    # Relationships
-    event = models.ForeignKey("organization.Event", on_delete=models.CASCADE)
-    member = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE)
-
-    # Fields
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-
-    class Meta:
-        pass
-
-    def __str__(self):
-        return str(self.pk)
-
-    def get_absolute_url(self):
-        return reverse("organization_EventMembership_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("organization_EventMembership_update", args=(self.pk,))
 
 
 

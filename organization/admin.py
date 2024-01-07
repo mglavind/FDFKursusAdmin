@@ -1,16 +1,20 @@
 from typing import List
 from django.contrib import admin, messages
+from django.utils.translation import ngettext
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, User
 from django.urls import path
 from django.shortcuts import render
-from organization.models import Team, TeamMembership
+from organization.models import Team, TeamMembership, TeamEventMembership, EventMembership, Event
+from django.db.models import Min
+from datetime import date
 from django.http import HttpResponseRedirect, HttpResponse
 from django import forms
 from django.urls.resolvers import URLPattern
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+
 
 from .models import Volunteer
 import random
@@ -27,18 +31,27 @@ class TeamAdminForm(forms.ModelForm):
         fields = "__all__"
 
 
+
+class TeamEventMembershipInline(admin.TabularInline):
+    model = TeamEventMembership
+    extra = 1
+
 class TeamAdmin(admin.ModelAdmin):
     form = TeamAdminForm
+    #inlines = [TeamEventMembershipInline]
     list_display = [
         "name",
-        "last_updated",
         "short_name",
+    #    "display_events",
+        "last_updated",
         "created",
     ]
     readonly_fields = [
         "last_updated",
         "created",
     ]
+    #def display_events(self, obj):
+    #    return ", ".join([event.name for event in obj.events.all()])
 
 
 class TeamMembershipAdminForm(forms.ModelForm):
@@ -65,6 +78,8 @@ class TeamMembershipAdmin(admin.ModelAdmin):
     ]
 
 
+
+
 class EventAdminForm(forms.ModelForm):
 
     class Meta:
@@ -75,13 +90,16 @@ class EventAdminForm(forms.ModelForm):
 class EventAdmin(admin.ModelAdmin):
     form = EventAdminForm
     list_display = [
+        "id",
         "name",
         "start_date",
-        "end_date",
+        "end_date",  
+        "is_active",  
         "last_updated",
         "created",
     ]
     readonly_fields = [
+        "id",
         "last_updated",
         "created",
     ]
@@ -97,7 +115,7 @@ class EventMembershipAdminForm(forms.ModelForm):
 class EventMembershipAdmin(admin.ModelAdmin):
     form = EventMembershipAdminForm
     list_display = [
-        "member",
+        "volunteer",
         "event",
         "last_updated",
         "created",
@@ -106,6 +124,27 @@ class EventMembershipAdmin(admin.ModelAdmin):
         "last_updated",
         "created",
     ]
+
+
+class TeamEventMembershipAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.TeamEventMembership
+        fields = "__all__"
+
+
+class TeamEventMembershipAdmin(admin.ModelAdmin):
+    form = TeamEventMembershipAdminForm
+    list_display = [
+        "team",
+        "last_updated",
+        "created",
+    ]
+    readonly_fields = [
+        "last_updated",
+        "created",
+    ]
+
 
 
 class VolunteerAdminForm(forms.ModelForm):
@@ -118,25 +157,36 @@ class CsvImportForm(forms.Form):
     csv_upload = forms.FileField()
 
 
+class EventMembershipInline(admin.TabularInline):
+    model = EventMembership
+    extra = 1
+
+
 
 
 class VolunteerAdmin(admin.ModelAdmin):
     form = VolunteerAdminForm
+    inlines = [EventMembershipInline]
     list_display = [
         "first_name",
         "last_name",
         "username",
         "email",
         "phone",
+        "display_events",
         "created",
         "last_updated",
+        "is_active",
     ]
     readonly_fields = [
         "created",
         "last_updated",
     ]
-    actions = ["export_to_csv", "send_email_action"]
+    actions = ["export_to_csv", "send_email_action", "deactivate_volunteers", "activate_volunteers", "create_event_membership"]
 
+    def display_events(self, obj):
+        return ", ".join([event.name for event in obj.events.all()])
+    
     def export_to_csv(modeladmin, request, queryset):
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="volunteers.csv"'
@@ -229,6 +279,56 @@ class VolunteerAdmin(admin.ModelAdmin):
         self.message_user(request, f"Emails sent to {queryset.count()} volunteers.")
     send_email_action.short_description = "Send hjælp til at komme igang email til volunteers"
 
+    def deactivate_volunteers(self, request, queryset):
+        count = queryset.count()
+        for volunteer in queryset:
+            volunteer.is_active = False
+            volunteer.save()
+
+        self.message_user(
+            request,
+            ngettext(
+                '%d volunteer was successfully deactivated.',
+                '%d volunteers were successfully deactivated.',
+                count,
+            ) % count,
+            messages.SUCCESS,
+        )
+
+    deactivate_volunteers.short_description = "Deactivate selected volunteers"
+
+    def activate_volunteers(self, request, queryset):
+        count = queryset.count()
+        for volunteer in queryset:
+            volunteer.is_active = True
+            volunteer.save()
+
+        self.message_user(
+            request,
+            ngettext(
+                '%d volunteer was successfully activated.',
+                '%d volunteers were successfully activated.',
+                count,
+            ) % count,
+            messages.SUCCESS,
+        )
+
+    activate_volunteers.short_description = "Activate selected volunteers"
+
+    def create_event_membership(modeladmin, request, queryset):
+        # Get the next upcoming event
+        next_event = Event.objects.filter(start_date__gte=date.today()).order_by('start_date').first()
+
+        # Create EventMembership for selected volunteers with the next upcoming event
+        for volunteer in queryset:
+            EventMembership.objects.create(volunteer=volunteer, event=next_event)
+
+        modeladmin.message_user(request, f'Event Memberships created for selected volunteers with the next upcoming event: {next_event}', level='success')
+
+    create_event_membership.short_description = "Add selected to the next event"
+
+
+
     
         
         
@@ -258,3 +358,4 @@ admin.site.register(models.Event, EventAdmin)
 admin.site.register(models.EventMembership, EventMembershipAdmin)
 admin.site.register(models.Volunteer, VolunteerAdmin)
 admin.site.register(models.Key, KeyAdmin)
+admin.site.register(models.TeamEventMembership, TeamEventMembershipAdmin)

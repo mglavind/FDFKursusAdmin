@@ -37,6 +37,7 @@ urlpatterns = [
     path('Depot/', include('Depot.urls')),
     path('SOS/', include('SOS.urls')),
     path('Support/', include('Support.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
 
 ]
 

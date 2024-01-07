@@ -3,6 +3,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db.models import F
+from datetime import datetime
+
 from . import models
 from . import forms
 
@@ -10,6 +12,37 @@ from . import forms
 class LocationTypeListView(generic.ListView):
     model = models.LocationType
     form_class = forms.LocationTypeForm
+    template_name = 'locationbooking_list.html'  # replace with your actual template name
+    context_object_name = 'context'  # this will be used in the template to access the context
+
+    def get_queryset(self):
+        kursus_start = datetime(2023, 10, 16)  # replace with your actual start datetime
+        kursus_end = datetime(2023, 10, 20)  # replace with your actual end datetime
+        duration_hours = (kursus_end - kursus_start).total_seconds() / 3600
+        test = "test"
+
+
+        object_list = models.LocationBooking.objects.order_by('item')
+        # Format the start and end times for each booking
+        for booking in object_list:
+            booking.start = booking.start.strftime("%Y-%m-%DT%H:%M:%S")
+            booking.end = booking.end.strftime("%Y-%m-%DT%H:%M:%S")
+        
+
+        context = {
+            'kursus_start': kursus_start,
+            'kursus_end': kursus_end,
+            'duration_hours': duration_hours,
+            'object_list': object_list,
+            'test' : test,
+        }
+        print(list(object_list))
+        for booking in object_list:
+            print(booking)  #
+
+        return context
+
+
 
 
 class LocationTypeCreateView(generic.CreateView):
