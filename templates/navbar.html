@@ -2,6 +2,8 @@
     <div class="container-fluid">
         <a class="navbar-brand d-flex text-light" href="{% url 'index' %}">Bookingsystem</a>
         <div class="justify-content-end" >
+
+            {% if user.is_authenticated %}
             <div class="dropdown">
                 <a class="nav-link d-flex align-items-center text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {% load bootstrap_icons %}
@@ -20,6 +22,7 @@
                     {% endif %}
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </nav>
