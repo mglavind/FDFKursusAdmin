@@ -1,14 +1,21 @@
 
 {% block app_content %}
-<div class="col">
-    <div class="card h-100">
-        <h5 class="card-header">Teknik</h5>
-        <div class="card-body">
-            <div class="d-grid gap-2">
-            <a href="{% url 'Teknik_TeknikBooking_list' %}" class="btn btn-secondary ">Jeres teknik bookinger</a>
-            <a href="{% url 'Teknik_TeknikItem_list' %}" class="btn btn-secondary ">Teknik's ting</a>
-            </div>
-        </div>
+
+<li class="mb-1">
+    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#teknik-collapse" aria-expanded="false">
+        Teknik
+    </button>
+
+    <div class="collapse" id="teknik-collapse">
+        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li>
+                <a href="{% url 'Teknik_TeknikBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
+            </li>
+            <li>
+                <a href="{% url 'Teknik_TeknikItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ting</a>
+            </li>
+        </ul>
     </div>
-</div>
+</li>
+
 {% endblock %}

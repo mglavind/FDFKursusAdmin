@@ -1,67 +1,91 @@
 
 {% extends "base.html" %}
 {% load static %}
+{% load bootstrap_icons %}
 {% block content %}
-    
+
+
 <p>
     <a class="btn btn-light" href="{% url 'Sjak_SjakBooking_list' %}">
-    SjakBooking Listing
+        {% bs_icon 'caret-left' %}  Tilbage
     </a>
 </p>
-    
-<div class="alert alert-warning d-flex align-items-center" role="alert">
-    <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-    <div>
-      Booking deadline er overskredet - tag kontakt til Sjak hvis du skal sikre dig at nå i mål med din booking
-    </div>
-  </div>
   
+
+
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{form.errors}}    
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="item">Sjak item: </label>
-        {{ form.item }}
+    {{form.errors}}   
+    
+
+    <div class="mb-3">
+        <label class="form-label" for="item">Sjak item:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'rocket-takeoff' %}  </span>
+            {{ form.item }}
+        </div>
     </div>
+
+
+
+
     <br>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="{{ form.quantity.id_for_label }}">Antal </label>
         {{ form.quantity }}
     </div>
     <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="start">Bookes fra: </label>
-        <div class="input-group col-sm-10">
-            <input class="form-control" id="start" type="datetime-local" name="start" value="{{ object.start }}">
+
+
+    <div class="mb-3">
+        <label class="form-label" for="start">Bookes fra:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'calendar' %}  </span>
+            <input class="form-control" id="start" type="date" name="start" value="{{ object.start }}">
             <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
         </div>
     </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="end">Bookes til: </label>
-        <div class="input-group mb-3">
-            <input class="form-control" id="end" type="datetime-local" name="end" value="{{ object.end }}">
-            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursus slut</button>
+
+    
+    <div class="mb-3">
+        <label class="form-label" for="end">Bookes til:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'calendar' %}  </span>
+            <input class="form-control" id="end" type="date" name="end" value="{{ object.end }}">
+            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursusslut</button>
         </div>
     </div>
     <br>
       
 
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="team_contact">Kontaktperson: </label>
-        {{ form.team_contact }}
+    <div class="mb-3">
+        <label class="form-label" for="team_contact">Kontaktperson:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'person-vcard' %}  </span>
+            {{ form.team_contact }}
+        </div>
     </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="team">Team: </label>
-        {{ form.team }}
+
+  <div class="mb-3">
+        <label class="form-label" for="team">Team:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'people' %}  </span>
+            {{ form.team }}
+        </div>
     </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="remarks">Bemærkninger</label>
-        <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
-    </div>  
-    <br>    
+
+
+
+  <div class="mb-3">
+        <label class="form-label" for="remarks">Bemærkninger:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'chat-left-text' %}  </span>
+            <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
+        </div>
+    </div>
+
+
     <input type="submit" value="Insend" class="btn btn-primary">
 </form>
 
@@ -73,11 +97,11 @@
         const endField = document.getElementById("end");
 
         setPredefinedStartButton.addEventListener("click", function () {
-            startField.value = "2023-10-14T08:00"; // Replace with your predefined value for start
+            startField.value = user.events.first.start_date ; // Replace with your predefined value for start
         });
 
         setPredefinedEndButton.addEventListener("click", function () {
-            endField.value = "2023-10-21T16:00"; // Replace with your predefined value for end
+            endField.value = user.events.first.end_date ; // Replace with your predefined value for end
         });
     });
 </script>

@@ -1,15 +1,21 @@
 
 
 {% block app_content %}
-<div class="col">
-    <div class="card h-100">
-        <h5 class="card-header">Organisation</h5>
-        <div class="card-body">
-            <div class="d-grid gap-2">
-            <a href="{% url 'organization_Volunteer_list' %}" class="btn btn-secondary">Medarbejder liste</a>
-            <a href="{% url 'organization_Key_list' %}" class="btn btn-secondary">Nøgleoversigt</a>
-            </div>
-        </div>
+<li class="mb-1">
+    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#organization-collapse" aria-expanded="false">
+        Organisation
+    </button>
+
+    <div class="collapse" id="organization-collapse">
+        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li>
+                <a href="{% url 'organization_Volunteer_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Medarbejdere</a>
+            </li>
+            <li>
+                <a href="{% url 'organization_Key_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Nøgler</a>
+            </li>
+        </ul>
     </div>
-</div>
+</li>
+
 {% endblock %}

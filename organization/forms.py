@@ -122,3 +122,18 @@ class KeyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(KeyForm, self).__init__(*args, **kwargs)
         self.fields["current_user"].queryset = User.objects.all()
+
+
+class TodoForm(forms.ModelForm):
+    class Meta:
+        model = models.Todo
+        fields = ('description', 'is_completed')
+
+class TodoForm(forms.ModelForm):
+    class Meta:
+        model = models.Todo
+        fields = ('description', 'is_completed')
+
+    def __init__(self, *args, **kwargs):
+        super(TodoForm, self).__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs['placeholder'] = 'Skriv todo her'

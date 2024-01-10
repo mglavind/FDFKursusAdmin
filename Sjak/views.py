@@ -1,20 +1,43 @@
 from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.utils.decorators import method_decorator
+
+from django.contrib import messages
 from . import models
 from . import forms
-
-
+from organization.models import EventMembership, Event
+from django.utils import timezone
+from django.shortcuts import render, redirect
 
 class SjakBookingListView(generic.ListView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
+    template_name = 'Sjak/SjakBooking_list.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
-    
+
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            user = self.request.user
+
+            # Check the user's Event Memberships
+            event_memberships = user.eventmembership_set.all()
+            print("User's Event Memberships:", event_memberships)
+
+            # Filter events by user and is_active
+            active_events = user.events.filter(is_active=True)
+            print("Active Events:", active_events)
+
+            context['active_events'] = active_events
+            return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
 
 
 class SjakBookingCreateView(generic.CreateView):
@@ -29,6 +52,24 @@ class SjakBookingCreateView(generic.CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+
+    def form_valid(self, form):
+        user = self.request.user
+
+        # Check if the user has an active event membership
+        event_membership = EventMembership.objects.filter(
+            member=user,
+            event__start_date__gt=timezone.now(),
+            event__is_active=True
+        ).first()
+
+        if not event_membership:
+            messages.error(self.request, "You don't have an active event membership.")
+            return redirect('your_redirect_url')
+        
+        form.instance.event = event_membership.event
+        return super().form_valid(form)
+
 
 
 class SjakBookingDetailView(generic.DetailView):
@@ -54,6 +95,21 @@ class SjakBookingUpdateView(generic.UpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def form_valid(self, form):
+        form.instance.event = self.request.user.event_set.filter(is_active=True).first()  # Set the active event based on the user
+        return super().form_valid(form)
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        form.instance = self.get_object()  # Pre-populate the form with object's values
+        
+        # Add the following lines to ensure related fields are initialized
+        form.fields["team"].initial = form.instance.team
+        form.fields["item"].initial = form.instance.item
+        form.fields["team_contact"].initial = form.instance.team_contact
+        
+        return form
+
 
 class SjakBookingDeleteView(generic.DeleteView):
     model = models.SjakBooking
@@ -74,6 +130,7 @@ class SjakItemListView(generic.ListView):
     def get_queryset(self):
         queryset = models.SjakItem.objects.all().order_by('name')  # Order by the 'name' field
         return queryset
+    
 
 
 class SjakItemCreateView(generic.CreateView):

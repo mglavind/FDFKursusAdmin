@@ -1,14 +1,23 @@
-
 {% block app_content %}
-<div class="col">
-    <div class="card h-100">
-        <h5 class="card-header">AktivitetsTeam</h5>
-        <div class="card-body">
-            <div class="d-grid gap-2">
-            <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}" class="btn btn-secondary">Alle aktivitets bookinger</a>
-            <a href="{% url 'AktivitetsTeam_AktivitetsTeamItem_list' %}" class="btn btn-secondary">Aktivitets katalog</a>
-            </div>
-        </div>
+
+<li class="mb-1">
+    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#Aktivitet-collapse" aria-expanded="false">
+        Aktivitets teamet
+    </button>
+
+    <div class="collapse" id="Aktivitet-collapse">
+        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li>
+                <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Alle bookinger</a>
+            </li>
+            <li>
+                <a href="{% url 'AktivitetsTeam_AktivitetsTeamItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Katalog</a>
+            </li>
+            <li>
+                <a href="{% url 'AktivitetsTeam_AktivitetsTeamItem_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Booking</a>
+            </li>
+        </ul>
     </div>
-</div>
+</li>
+
 {% endblock %}

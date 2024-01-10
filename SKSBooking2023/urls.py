@@ -38,6 +38,9 @@ urlpatterns = [
     path('SOS/', include('SOS.urls')),
     path('Support/', include('Support.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
+    path('submit-todo', views.submit_todo, name='submit-todo'),
+    path('complete-todo/<int:pk>/', views.complete_todo, name='complete-todo'),
+    path('delete-todo/<int:pk>/', views.delete_todo, name='delete-todo'),
 
 ]
 

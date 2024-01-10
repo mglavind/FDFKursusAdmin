@@ -352,6 +352,12 @@ class KeyAdmin(admin.ModelAdmin):
     ]
 
 
+
+class TodoAdmin(admin.ModelAdmin):
+    list_display = ['description', 'is_completed', 'user']
+
+
+
 admin.site.register(models.Team, TeamAdmin)
 admin.site.register(models.TeamMembership, TeamMembershipAdmin)
 admin.site.register(models.Event, EventAdmin)
@@ -359,3 +365,4 @@ admin.site.register(models.EventMembership, EventMembershipAdmin)
 admin.site.register(models.Volunteer, VolunteerAdmin)
 admin.site.register(models.Key, KeyAdmin)
 admin.site.register(models.TeamEventMembership, TeamEventMembershipAdmin)
+admin.site.register(models.Todo, TodoAdmin)

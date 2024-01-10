@@ -21,9 +21,7 @@ User = get_user_model()
 
 @login_required
 def home(request):
-	return render(request, 
-		'index.html', {
-		})
+    return render(request, 'index.html')
 
 def login_user(request):
     if request.method == "POST":

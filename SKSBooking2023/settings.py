@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django_bootstrap_icons',
     'django_admin_listfilter_dropdown',
     'rest_framework',
+    'widget_tweaks',
+    'template_partials',
     'Teknik',
     'Sjak',
     'AktivitetsTeam',
@@ -160,6 +162,8 @@ USE_TZ = True
 # This setting tells Django at which URL static files are going to be served to the user.
 # Here, they well be accessible at your-domain.onrender.com/static/...
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Following settings only make sense on production and may break development environments.
 if not DEBUG:

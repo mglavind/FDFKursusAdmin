@@ -1,18 +1,30 @@
 
 {% block app_content %}
-<div class="col">
-    <div class="card h-100">
-        <h5 class="card-header">Køkken</h5>
-        <div class="card-body">
-            <div class="d-grid gap-2">
-            <a href="{% url 'Butikken_ButikkenBooking_list' %}" class="btn btn-secondary">Jeres madvare bookinger</a>
-            <a href="{% url 'Butikken_ButikkenItem_list' %}" class="btn btn-secondary">Køkkenets madvarer</a>
-            <a href="{% url 'Butikken_MealBooking_list' %}" class="btn btn-secondary">Jeres måltids booking</a>
-            </div>
-        </div>
+<li class="mb-1">
+    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#food-collapse" aria-expanded="false">
+        Butikken
+    </button>
+
+    <div class="collapse" id="food-collapse">
+        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li>
+                <a href="{% url 'Butikken_ButikkenBooking_list' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Vare bestillinger</a>
+            </li>
+            <li>
+                <a href="{% url 'Butikken_ButikkenItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Tilgængelige varer</a>
+            </li>
+            <li>
+                <a href="{% url 'Butikken_MealBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Måltider</a>
+            </li>
+            <li>
+                <a href="{% url 'Butikken_ButikkenBooking_create' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny vare bestilling</a>
+            </li>
+        </ul>
     </div>
-</div>
+</li>
 {% endblock %}
+
+
 
 
 

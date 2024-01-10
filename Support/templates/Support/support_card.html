@@ -1,15 +1,23 @@
-
 {% block app_content %}
-<div class="col">
-    <div class="card h-100">
-        <h5 class="card-header">Support</h5>
-        <div class="card-body">
-            <div class="d-grid gap-2">
-            <a class="btn btn-secondary " href="{% url 'Support_SupportBooking_list' %}">Jeres Support Bookinger</a>
-            <a class="btn btn-secondary " href="{% url 'Support_SupportItem_list' %}">Support's sager</a>
-            </div>
-        </div>
+
+<li class="mb-1">
+    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#Support-collapse" aria-expanded="false">
+        Support
+    </button>
+
+    <div class="collapse" id="Support-collapse">
+        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li>
+                <a href="{% url 'Support_SupportBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
+            </li>
+            <li>
+                <a href="{% url 'Support_SupportItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Katalog</a>
+            </li>
+            <li>
+                <a href="{% url 'Support_SupportItem_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Booking</a>
+            </li>
+        </ul>
     </div>
-</div>
+</li>
 
 {% endblock %}
