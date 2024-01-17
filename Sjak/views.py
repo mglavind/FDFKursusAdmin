@@ -15,7 +15,6 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST, require_http_methods
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from .models import SjakItem
 
 
 from django.views.generic import FormView
@@ -175,6 +174,9 @@ class SjakBookingDeleteView(generic.DeleteView):
     success_url = reverse_lazy("Sjak_SjakBooking_list")
 
 
+
+
+
 class SjakItemTypeListView(generic.ListView):
     model = models.SjakItemType
     form_class = forms.SjakItemTypeForm
@@ -201,6 +203,12 @@ class SjakItemTypeDeleteView(generic.DeleteView):
     success_url = reverse_lazy("Sjak_SjakItemType_list")
 
 
+@login_required
+def search_item(request):
+    search_text = request.POST.get('search')
+    results = models.SjakItem.objects.filter(name__icontains=search_text)
+    context = {"results": results}
+    return render(request, 'Sjak/partials/search-results.html', context)
 
-
-
+def clear(request):
+    return HttpResponse("")

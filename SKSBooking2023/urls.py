@@ -45,7 +45,6 @@ urlpatterns = [
 
 ]
 
-
 # Configure Admin Titles
 admin.site.site_header = "Sletten admin"
 admin.site.site_title = "Sletten admin"

@@ -15,7 +15,7 @@ router.register("SjakItem", api.SjakItemViewSet)
 router.register("SjakBooking", api.SjakBookingViewSet)
 router.register("SjakItemType", api.SjakItemTypeViewSet)
 
-urlpatterns = (
+urlpatterns = [
     path("api/v1/", include(router.urls)),
     path("Sjak/SjakItem/", views.SjakItemListView.as_view(), name="Sjak_SjakItem_list"),
     path("Sjak/SjakItem/create/", views.SjakItemCreateView.as_view(), name="Sjak_SjakItem_create"),
@@ -34,7 +34,6 @@ urlpatterns = (
     path("Sjak/SjakBooking/delete/<int:pk>/", views.SjakBookingDeleteView.as_view(), name="Sjak_SjakBooking_delete"),
 
     
-
     path("Sjak/SjakItemType/", views.SjakItemTypeListView.as_view(), name="Sjak_SjakItemType_list"),
     path("Sjak/SjakItemType/create/", views.SjakItemTypeCreateView.as_view(), name="Sjak_SjakItemType_create"),
     path("Sjak/SjakItemType/detail/<int:pk>/", views.SjakItemTypeDetailView.as_view(), name="Sjak_SjakItemType_detail"),
@@ -47,4 +46,11 @@ urlpatterns = (
     #path('update-Booking/<int:pk>/', views.update_booking, name='update-SjakBooking'),
     #path('delete-Booking/<int:pk>/', views.delete_booking, name='delete-SjakBooking'),
     #path('search/', views.search, name='search'),
-)
+]
+
+htmx_urlpatterns = [
+    path('search-item/', views.search_item, name='search-item'),
+]
+
+urlpatterns += htmx_urlpatterns
+

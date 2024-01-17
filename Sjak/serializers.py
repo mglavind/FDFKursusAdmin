@@ -32,6 +32,7 @@ class SjakBookingSerializer(serializers.ModelSerializer):
             "team",
         ]
 
+
 class SjakItemTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -41,3 +42,5 @@ class SjakItemTypeSerializer(serializers.ModelSerializer):
             "created",
             "last_updated",
         ]
+
+

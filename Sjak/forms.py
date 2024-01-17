@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import SelectDateWidget
 from organization.models import Team, TeamMembership, Volunteer, Event, EventMembership
-from Sjak.models import SjakItem, SjakBooking
+from Sjak.models import SjakItem, SjakBooking, SjakItemType
 from django.contrib.auth.models import Group
 from django.forms import BaseFormSet, TextInput, formset_factory
 import datetime
@@ -93,24 +93,7 @@ class SjakBookingForm(forms.Form):
         return instance
 
     
-        
 
-    
-
-
-# class SjakBaseFormSet(BaseFormSet):
-#     def add_fields(self, form, index):
-#         super().add_fields(form, index)
-
-#     def clean(self):
-#         super().clean()
-#         raise forms.ValidationError("This error was added to show the non form errors styling")
-
-
-#SjakBookingFormSet = formset_factory(SjakBookingForm, formset=SjakBaseFormSet, extra=1, max_num=4, validate_max=True)
-
-
-    
 
             
 class SjakItemForm(forms.ModelForm):
@@ -119,12 +102,12 @@ class SjakItemForm(forms.ModelForm):
         fields = [
             "name",
             "description",
-            "type",
+            "item_type",
         ]
 
     def __init__(self, *args, **kwargs):
         super(SjakItemForm, self).__init__(*args, **kwargs)
-        self.fields["type"].queryset = SjakItemType.objects.all()
+        self.fields["item_type"].queryset = SjakItemType.objects.all()
 
 
 
@@ -137,3 +120,5 @@ class SjakItemTypeForm(forms.ModelForm):
         fields = [
             "name",
         ]
+
+

@@ -137,7 +137,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
     formatted_last_updated.short_description = "Last Updated"
 
 
-
+    
     list_display = [
         "item",
         "quantity",
@@ -243,6 +243,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
     export_to_csv.short_description = "Export selected bookings to CSV"
 
 
+
 class SjakItemTypeAdminForm(forms.ModelForm):
 
     class Meta:
@@ -261,6 +262,8 @@ class SjakItemTypeAdmin(admin.ModelAdmin):
         "created",
         "last_updated",
     ]
+
+
 
 
 admin.site.register(models.SjakItem, SjakItemAdmin)

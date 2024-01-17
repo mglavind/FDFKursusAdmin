@@ -26,3 +26,4 @@ class SjakItemTypeViewSet(viewsets.ModelViewSet):
     queryset = models.SjakItemType.objects.all()
     serializer_class = serializers.SjakItemTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
+

@@ -36,6 +36,8 @@
 
         <link rel="stylesheet" href="{% static 'css/sidebars.css' %}">
         <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+        <!-- HTMX -->
+        <script src="https://unpkg.com/htmx.org@1.6.0"></script>
         
           
 
@@ -379,6 +381,11 @@
     <!--
       <script type="text/javascript">window.$sleek=[];window.SLEEK_PRODUCT_ID=535324369;(function(){d=document;s=d.createElement("script");s.src="https://client.sleekplan.com/sdk/e.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>  
     -->
+    <script>
+      document.body.addEventListener('htmx:configRequest', (event) => {
+          event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+      })
+      </script>
     
 
   </body>

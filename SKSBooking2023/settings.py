@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_comments_xtd',
     'django_comments',
+    #"django_htmx", # HTMX
     'bootstrap5',
     'django_bootstrap_icons',
     'django_admin_listfilter_dropdown',
@@ -73,6 +74,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "django_htmx.middleware.HtmxMiddleware", #HTMX
     
 ]
 
