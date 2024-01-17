@@ -6,11 +6,23 @@
 {% load bootstrap_icons %}
 {% block content %}
 
-<p>
-    <a class="btn btn-light" href="{% url 'Sjak_SjakBooking_list' %}">
-        {% bs_icon 'caret-left' %} Til booking oversigt
-    </a>
-</p>
+
+<div class="container ">
+
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'Sjak_SjakBooking_list' %}">Sjak bookinger</a></li>
+      <li class="breadcrumb-item active" aria-current="page"> {{ object.item }} booking </li>
+    </ol>
+</nav>
+
+<h1 class="display-3" >{{ object.item }} booking til {{ object.team }} </h1>
+
+
+<br>
+
     
 <table class="table">
     <tr>
@@ -62,9 +74,17 @@
         <td>{{ object.last_updated }}</td>
     </tr>
 </table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
 
 
+<br>
+
+<a class="btn btn-primary" href="{{object.get_update_url}}">Rediger</a>
+
+<br>
+<br>
+
+</div>
+<div class="container ">
 
 <!-- Comments -->
 {% get_comment_count for object as comment_count %}
@@ -96,11 +116,7 @@
   </div>
 </div>
 
-
 </div>
-
-
-
-
+</div>
 
 {% endblock %}
