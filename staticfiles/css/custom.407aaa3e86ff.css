@@ -1,0 +1,13 @@
+/* FILEPATH: /Users/mglavind/Documents/Projects/SKSBooking2023/static/css/custom.css */
+
+/* Override Bootstrap colors */
+:root {
+    --primary-color: #ff0000; /* Change the primary color */
+    --secondary-color: #00ff00; /* Change the secondary color */
+    --success-color: #0000ff; /* Change the success color */
+    --info-color: #ffff00; /* Change the info color */
+    --warning-color: #ff00ff; /* Change the warning color */
+    --danger-color: #00ffff; /* Change the danger color */
+    --light-color: #ff8000; /* Change the light color */
+    --dark-color: #8000ff; /* Change the dark color */
+}
