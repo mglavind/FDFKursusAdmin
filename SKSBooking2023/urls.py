@@ -41,6 +41,7 @@ urlpatterns = [
     path('submit-todo', views.submit_todo, name='submit-todo'),
     path('complete-todo/<int:pk>/', views.complete_todo, name='complete-todo'),
     path('delete-todo/<int:pk>/', views.delete_todo, name='delete-todo'),
+    path(r'comments/', include('django_comments_xtd.urls')),
 
 ]
 

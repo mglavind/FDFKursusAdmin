@@ -11,10 +11,21 @@ from organization.models import EventMembership, Event
 from django.utils import timezone
 from django.shortcuts import render, redirect
 
+# HTMX
+from django.views.decorators.http import require_POST, require_http_methods
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from .models import SjakItem
+
+
+from django.views.generic import FormView
+from django.contrib.messages.views import SuccessMessageMixin
+
 class SjakBookingListView(generic.ListView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
     template_name = 'Sjak/SjakBooking_list.html'
+    
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -40,9 +51,13 @@ class SjakBookingListView(generic.ListView):
         return render(request, self.template_name, context)
 
 
-class SjakBookingCreateView(generic.CreateView):
+    
+class SjakBookingCreateView(SuccessMessageMixin, FormView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
+    template_name = 'Sjak/SjakBooking_form.html'
+    success_url = reverse_lazy("Sjak_SjakBooking_list")
+    success_message = "Form submitted successfully! Item: %(item)s"  # Add success message here
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -53,22 +68,7 @@ class SjakBookingCreateView(generic.CreateView):
         kwargs['user'] = self.request.user
         return kwargs
 
-    def form_valid(self, form):
-        user = self.request.user
 
-        # Check if the user has an active event membership
-        event_membership = EventMembership.objects.filter(
-            member=user,
-            event__start_date__gt=timezone.now(),
-            event__is_active=True
-        ).first()
-
-        if not event_membership:
-            messages.error(self.request, "You don't have an active event membership.")
-            return redirect('your_redirect_url')
-        
-        form.instance.event = event_membership.event
-        return super().form_valid(form)
 
 
 
@@ -159,11 +159,6 @@ class SjakBookingListView(generic.ListView):
     form_class = forms.SjakBookingForm
 
 
-class SjakBookingCreateView(generic.CreateView):
-    model = models.SjakBooking
-    form_class = forms.SjakBookingForm
-
-
 class SjakBookingDetailView(generic.DetailView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
@@ -204,3 +199,8 @@ class SjakItemTypeUpdateView(generic.UpdateView):
 class SjakItemTypeDeleteView(generic.DeleteView):
     model = models.SjakItemType
     success_url = reverse_lazy("Sjak_SjakItemType_list")
+
+
+
+
+

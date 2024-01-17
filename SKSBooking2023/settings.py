@@ -38,13 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # new
     'phonenumber_field',
+    'django_comments_xtd',
+    'django_comments',
     'bootstrap5',
     'django_bootstrap_icons',
     'django_admin_listfilter_dropdown',
     'rest_framework',
     'widget_tweaks',
     'template_partials',
+    'django_bootstrap5',
     'Teknik',
     'Sjak',
     'AktivitetsTeam',
@@ -90,6 +94,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+            ],
+            'loaders': [
+                'django.template.loaders.app_directories.Loader',
             ],
         },
     },
@@ -146,6 +153,11 @@ LOGIN_REDIRECT_URL = '/'  # Change the URL to '/' for root URL redirection
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = 'da-dk'
+LANGUAGES = (
+    ('da', 'Danish'),
+    ('no', 'Norwegian'),
+    ('en', 'English'),
+)
 
 TIME_ZONE = 'Europe/Copenhagen'
 USE_L10N = True
@@ -190,3 +202,21 @@ EMAIL_USE_TLS = str(os.getenv('EMAIL_USE_TLS'))
 EMAIL_PORT = str(os.getenv('EMAIL_PORT'))
 EMAIL_HOST_USER = str(os.getenv('EMAIL_USER'))
 EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_PASSWORD'))
+DEFAULT_FROM_EMAIL = "Markus Glavind <markus.glavind@fdf.dk>"
+
+COMMENTS_APP = 'django_comments_xtd'
+
+SITE_ID = 1
+
+COMMENTS_XTD_MAX_THREAD_LEVEL = 1
+
+## Django comments XTD settings
+#  To help obfuscating comments before they are sent for confirmation.
+COMMENTS_XTD_SALT = (b"Timendi causa est nescire. "
+                     b"Aequam memento rebus in arduis servare mentem.")
+
+# Source mail address used for notifications.
+COMMENTS_XTD_FROM_EMAIL = "webmaster@example.com"
+
+# Contact mail address to show in messages.
+COMMENTS_XTD_CONTACT_EMAIL = "helpdesk@example.com"

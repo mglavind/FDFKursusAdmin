@@ -1,5 +1,7 @@
 
 {% extends "base.html" %}
+{% load comments %}
+{% load comments_xtd %}
 {% load static %}
 {% load bootstrap_icons %}
 {% block content %}
@@ -61,5 +63,44 @@
     </tr>
 </table>
 <a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+
+
+
+<!-- Comments -->
+{% get_comment_count for object as comment_count %}
+
+<div class="comment mt-3 mb-5">  
+  <div class="card pt-4">
+    <div class="card-body">
+    <h5 class="card-title">Kommentarer</h5>
+
+    <!-- Kommentar træet -->
+
+    {% if comment_count %}
+        <ul class="media-list">
+        {% render_xtdcomment_tree for object %}
+        </ul>
+    {% endif %}
+
+    <!-- Skrivefelt -->
+
+    {% render_comment_form for object %}
+
+    <!-- Optælling -->
+    <div class="py-4 card-text">
+        <a href="{% url 'Sjak_SjakBooking_list' %}">Tilbage til oversigt</a>
+        &nbsp;&sdot;&nbsp;
+        {{ comment_count }} komment{{ comment_count|pluralize:"ar,arer" }}
+        er givet.
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+
+
+
 
 {% endblock %}

@@ -1,5 +1,12 @@
 {% load static %}
 
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
 <!doctype html>
 <html lang="en" >
     <head>
@@ -7,26 +14,27 @@
         <!-- comment out color modes.js
           <script src="{% static 'js/color-modes.js' %}"></script>
         -->
+        <script src="{% static 'js/sidebars.js' %}"></script>
         
-        
-        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Det nye booking system</title>
 
-        
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+        <script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1/dist/es-module-shims.min.js" crossorigin="anonymous"></script>
+        <script type="importmap">
+        {
+          "imports": {
+            "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/esm/popper.min.js",
+            "bootstrap": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.esm.min.js"
+          }
+        }
+        </script>
+    
+
 
         <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
         
-        
-
-
-
-        <!-- This code includes the necessary links and scripts for using the DaisyUI CSS framework, Tailwind CSS plugins, and htmx library. -->
-        <!--
-        <link href="https://cdn.jsdelivr.net/npm/daisyui@4.5.0/dist/full.min.css" rel="stylesheet" type="text/css" />
-        <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
-
-        -->
         <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
 
         <link rel="stylesheet" href=" {% static 'css/sidebars.css' %} ">
@@ -35,14 +43,253 @@
           
 
 
-        {% block extra_css %}{% endblock %}
+        {% block extra_css %}
+        
+        
+        {% endblock %}
 
     
     </head>
- <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+ <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="pt-0">
     {% load bootstrap_icons %}
 
-  	{% include 'navbar.html' %}
+    <nav class="navbar navbar-expand-lg bg-body-tertiary " data-bs-theme="dark">
+      <div class="container-fluid justify-content-start">
+        <a class="navbar-brand" href="{% url 'index'%}">Hjem</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse text-light" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <!-- A-Team -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                A-Team
+              </a>
+              <ul class="dropdown-menu">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li>
+                    <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Alle bookinger</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'AktivitetsTeam_AktivitetsTeamItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Katalog</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'AktivitetsTeam_AktivitetsTeamItem_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Booking</a>
+                  </li>
+                </ul>
+              </ul>
+            </li>
+
+            <!-- Teknik -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Teknik
+              </a>
+              <ul class="dropdown-menu">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li>
+                      <a href="{% url 'Teknik_TeknikBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Teknik_TeknikItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ting</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Teknik_TeknikBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny booking</a>
+                  </li>
+                </ul>
+              </ul>
+            </li>
+
+            <!-- Sjak -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Sjak
+              </a>
+              <ul class="dropdown-menu">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li>
+                        <a href="{% url 'Sjak_SjakBooking_list' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'Sjak_SjakItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sager</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'Sjak_SjakBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny booking</a>
+                    </li>
+                  </ul>
+                </ul>
+            </li>
+
+
+            <!-- Butik -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Butik
+              </a>
+              <ul class="dropdown-menu">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li>
+                      <a href="{% url 'Butikken_ButikkenBooking_list' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Vare bestillinger</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Butikken_ButikkenItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Tilgængelige varer</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Butikken_MealBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Måltider</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Butikken_ButikkenBooking_create' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny vare bestilling</a>
+                  </li>
+                  </ul>
+              </ul>
+            </li>
+
+
+            <!-- Support -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Support
+              </a>
+              <ul class="dropdown-menu">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <!-- SOS -->
+                  <li><h6 class="dropdown-header">SOS</h6></li>
+                  <li>
+                      <a href="{% url 'SOS_SOSBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Alle bookinger</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'SOS_SOSItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Katalog</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'SOS_SOSItem_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Booking</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+
+                  <!-- Support -->
+                  <li><h6 class="dropdown-header">Supportsjak</h6></li>
+                  <li>
+                      <a href="{% url 'Support_SupportBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Support_SupportItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Katalog</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Support_SupportItem_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Booking</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+
+                  <!-- Foto -->
+                  <li><h6 class="dropdown-header">Foto</h6></li>
+                  <li>
+                    <a href="{% url 'Foto_FotoBooking_list' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Foto_FotoItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ting</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Foto_FotoBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny booking</a>
+                  </li>
+
+                </ul>
+              </ul>
+            </li>
+            <!-- Organisation -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Organisation
+              </a>
+              <ul class="dropdown-menu">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <!-- SOS -->
+                  <li>
+                    <a href="{% url 'organization_Volunteer_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Medarbejdere</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'organization_Key_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Nøgler</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+
+                  <!-- Æblegården -->
+                  <li><h6 class="dropdown-header">Æblegården</h6></li>
+                  <li>
+                    <a href="{% url 'Depot_DepotBooking_list' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Alle bookinger</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Depot_DepotItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ting</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Depot_DepotBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny booking</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+
+                  <!-- Områder -->
+                  <li><h6 class="dropdown-header">Områder</h6></li>
+                  <li>
+                    <a href="{% url 'Location_LocationBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Alle bookinger</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Location_LocationItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Katalog</a>
+                  </li>
+                  <li>
+                      <a href="{% url 'Location_LocationItem_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Booking</a>
+                  </li>
+                  
+                </ul>
+                
+
+              </ul>
+            </li>
+
+
+
+          </ul>
+      
+        </div>
+
+
+      </div>
+
+      <div class="container-fluid justify-content-end">
+
+        {% if user.is_authenticated %}
+          
+
+        <div class="dropdown">
+            <a class="nav-link d-flex align-items-center text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {% load bootstrap_icons %}
+                <span class="me-2">Hej {{ user.first_name }}!</span>
+                {% bs_icon 'person-circle' %} 
+            </a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                {% if request.user.is_authenticated %}
+                    <a class="dropdown-item" href="{% url 'organization_Volunteer_detail' request.user.pk %}">Min profil</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'logout_user' %}">Log ud</a>
+                {% endif %}
+            
+                {% if request.user.is_authenticated and request.user.is_staff %}
+                    <a class="dropdown-item" href="{% url 'admin:index' %}">Adminstrator</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+
+
+
+
+    </nav>
+
+
+
+
+  	<!--
+      {% include 'navbar.html' %}
+    -->
   
       <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
         <symbol id="check2" viewBox="0 0 16 16">
@@ -98,82 +345,44 @@
         </ul>
       </div>
       -->
+      <div class="container">
+        {# Display django.contrib.messages as Bootstrap alerts #}
+        {% bootstrap_messages %}
   
+  
+        {% block sidebar %}
+        <!-- here comes the app_card for each app! -->
+        {% endblock %}
+  
+  
+        {% block app_content %}
+        <!-- here comes the app_card for each app! -->
+        {% endblock %}
+  
+        {% block content %}
+        <!-- here comes the app_card for each app! -->
+        {% endblock %}
+  
+      </div>
+
+
+
+            
+
+
       
-  
-  <main class="d-flex flex-nowrap">
-  
-  {% if user.is_authenticated %}
-    <div class="flex-shrink-0 p-3 shadow" style="width: 280px;">
-      <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
-        <span class="fs-5 fw-semibold">Oversigt</span>
-      </a>
-      <ul class="list-unstyled ps-0">
-
-          {% include "organization/organization_card.html" %}
-          {% include "Teknik/teknik_card.html" %}
-          {% include "Sjak/sjak_card_new.html" %}    
-          {% include "AktivitetsTeam/aktivitetsteam_card.html" %}
-          {% include "Butikken/butikken_card.html" %}
-          {% include "Location/location_card.html" %}
-          {% include "Foto/foto_card.html" %}
-          {% include "Depot/depot_card.html" %}
-          {% include "SOS/sos_card.html" %}
-          {% include "Support/support_card.html" %}
-        
-      </ul>
-    </div>
-
-  {% endif %}
-
-    
-    
-    <div class="container">
-      {% if messages %}
-        {% for message in messages %}
-          
-          <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-
-        {% endfor %}
-      {% endif %}
-
-      {% block app_content %}
-      <!-- here comes the app_card for each app! -->
-      {% endblock %}
-
-      {% block content %}
-      <!-- here comes the app_card for each app! -->
-      {% endblock %}
-
-    </div>
-
-  </main>
-
-  
     
 
-    <!-- Importing the Featurebase SDK -->
-    <script type="text/javascript">window.$sleek=[];window.SLEEK_PRODUCT_ID=535324369;(function(){d=document;s=d.createElement("script");s.src="https://client.sleekplan.com/sdk/e.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>                        
-    <!-- Optional JavaScript; choose one of the two! -->
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
+  
 
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-
-
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!-- FILEPATH: /Users/mglavind/Documents/Projects/SKSBooking2023/templates/base.html -->
+    <!-- This code includes JavaScript scripts for Sleekplan integration, Bootstrap, and a custom sidebar script. -->
     <!--
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
-    
+      <script type="text/javascript">window.$sleek=[];window.SLEEK_PRODUCT_ID=535324369;(function(){d=document;s=d.createElement("script");s.src="https://client.sleekplan.com/sdk/e.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>  
     -->
-    <script src="{% static 'js/sidebars.js' %}"></script>
-
     
+
   </body>
 </html>

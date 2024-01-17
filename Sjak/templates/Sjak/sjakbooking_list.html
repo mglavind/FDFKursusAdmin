@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 {% load bootstrap_icons %}
+
+<br>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Sjak Bookinger</li>
+  </ol>
+</nav>
+
 <br>
 {% if request.user.is_authenticated %}
       <h5>Booking oversigt for team: {% with volunteer_team_memberships=request.user.teammembership_set.all %}
@@ -11,16 +20,12 @@
   {% endif %}
 
 
-
-  <div class="alert alert-warning d-flex align-items-center" role="alert">
-    <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-    <div>
-        {% if user.events.exists %}
-            Deadline for Sjak bookinger: {{ user.events.first.deadline_sjak }}
-        {% else %}
-            No events found for the user.
-        {% endif %}
-    </div>
+  <div>
+    {% if user.events.exists %}
+        Deadline for Sjak bookinger: {{ user.events.first.deadline_sjak }}
+    {% else %}
+        No events found for the user.
+    {% endif %}
 </div>
 
 

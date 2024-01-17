@@ -1,11 +1,21 @@
 {% extends 'base.html' %}
+
+{% load static %}
+
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+
 {% load widget_tweaks %}
 {% load partials %}
 {% load bootstrap_icons %}
 
 
 {% block app_content %}
-
 {% load static %}
 
 <div class="container mx-auto">

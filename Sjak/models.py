@@ -37,6 +37,7 @@ class SjakBooking(models.Model):
     team = models.ForeignKey("organization.Team", on_delete=models.CASCADE)
     item = models.ForeignKey("Sjak.SjakItem", on_delete=models.CASCADE)
     team_contact = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True)
        
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
@@ -51,8 +52,10 @@ class SjakBooking(models.Model):
     )
 
     # Fields
-    start = models.DateTimeField(verbose_name='Start')
-    end = models.DateTimeField(verbose_name='End')
+    start = models.DateTimeField(verbose_name='Start dato')
+    start_time = models.TimeField(verbose_name='Start tidspunkt', default='12:00')
+    end = models.DateTimeField(verbose_name='Slut dato')
+    end_time = models.TimeField(verbose_name='Slut tidspunkt', default='12:00')
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -60,7 +63,7 @@ class SjakBooking(models.Model):
     remarks = models.TextField(blank=True)  # Blank allows for an empty value
     remarks_internal = models.TextField(blank=True)  # Blank allows for an empty value
     status_internal = models.CharField(max_length=10, choices=INTERNAL_STATUS_CHOICES, default='Afventer')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True)
+    
 
 
     class Meta:

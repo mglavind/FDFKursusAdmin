@@ -1,17 +1,78 @@
-
 {% extends "base.html" %}
-{% load static %}
+{% load comments %}
 {% load bootstrap_icons %}
+{% load bootstrap5 %}
+{% load static %}
+
+
+{% block title %}
+    Forms
+{% endblock %}
+
 {% block content %}
 
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'Sjak_SjakBooking_list' %}">Sjak bookinger</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Ny booking </li>
+    </ol>
+</nav>
 
-<p>
-    <a class="btn btn-light" href="{% url 'Sjak_SjakBooking_list' %}">
-        {% bs_icon 'caret-left' %}  Tilbage
-    </a>
-</p>
-  
+<h1 class="display-3" >Ny Sjak booking</h1>
+{% if user.is_authenticated %}
+<p>Deadline for Sjak bestillinger: <mark> {{user.events.first.deadline_sjak}} </mark>.</p>
 
+{% endif %}
+
+<form role="form" method="post">
+    {% csrf_token %}
+    {% bootstrap_form_errors form type='non_fields' %}
+
+    <!-- Start date -->
+    {% bootstrap_label "Start dato"  label_for="start_date"  %}
+    {% bootstrap_field form.start show_label=False  id="start_date" %}
+
+    <!-- Start time -->
+    {% bootstrap_label "Start tidspunkt" %}
+    {% bootstrap_field form.start_time show_label=False %}
+
+
+    <!-- End date -->
+    {% bootstrap_label "Slut dato"  label_for="end_date"  %}
+    {% bootstrap_field form.end  show_label=False   id="end_date"  %}
+
+    <!-- End time -->
+    {% bootstrap_label "Slut tidspunt" %}
+    {% bootstrap_field form.end_time show_label=False %}
+
+    <!-- Item -->
+    {% bootstrap_label "Sjak genstand " %}
+    {% bootstrap_field form.item  show_label=False  %}
+
+    <!-- Quantity -->
+    {% bootstrap_label "Antal " %}
+    {% bootstrap_field form.quantity  show_label=False  %}
+
+    <!-- Team Contact -->
+    {% bootstrap_label "Kontaktperson " %}
+    {% bootstrap_field form.team_contact value=context.user initial=user  show_label=False %}
+
+    <!-- Team -->
+    {% bootstrap_label "Team" %}
+    {% bootstrap_field form.team   show_label=False %}
+
+    <!--Remarks  -->
+    {% bootstrap_label "Bemærkninger " %}
+    {% bootstrap_field form.remarks placeholder='bonkers'  show_label=False %}
+
+    {% buttons submit='Insend' reset="Nulstil" %}
+    {% endbuttons %}
+</form>
+
+
+<!--
 
 
 <form method="post" enctype="multipart/form-data">
@@ -26,9 +87,6 @@
             {{ form.item }}
         </div>
     </div>
-
-
-
 
     <br>
     <div class="form-group row">
@@ -89,6 +147,7 @@
     <input type="submit" value="Insend" class="btn btn-primary">
 </form>
 
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const setPredefinedStartButton = document.getElementById("set-predefined-start");
@@ -106,6 +165,8 @@
     });
 </script>
 
+    
+-->
 
 {% endblock %}
 
