@@ -7,6 +7,7 @@ from datetime import datetime
 
 from . import models
 from . import forms
+from organization.models import Event
 
 
 class LocationTypeListView(generic.ListView):
@@ -25,8 +26,8 @@ class LocationTypeListView(generic.ListView):
         object_list = models.LocationBooking.objects.order_by('item')
         # Format the start and end times for each booking
         for booking in object_list:
-            booking.start = booking.start.strftime("%Y-%m-%DT%H:%M:%S")
-            booking.end = booking.end.strftime("%Y-%m-%DT%H:%M:%S")
+            booking.start_date = booking.start.strftime("%Y-%m-%DT%H:%M:%S")
+            booking.end_date = booking.end.strftime("%Y-%m-%DT%H:%M:%S")
         
 
         context = {
@@ -78,13 +79,26 @@ class LocationBookingListView(generic.ListView):
     model = models.LocationBooking
     form_class = forms.LocationBookingForm
     def get_queryset(self):
-        queryset = models.LocationBooking.objects.all().order_by('item')  # Order by the 'name' field
+        active_event = Event.objects.filter(is_active=True).first()
+        if active_event:
+            queryset = models.LocationBooking.objects.filter(start_date__gte=active_event.start_date).order_by('item')
+        else:
+            queryset = models.LocationBooking.objects.all().order_by('item')
         return queryset
 
 
 class LocationBookingCreateView(generic.CreateView):
     model = models.LocationBooking
     form_class = forms.LocationBookingForm
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 
 class LocationBookingDetailView(generic.DetailView):

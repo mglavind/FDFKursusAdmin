@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load comments %}
+
 {% load bootstrap_icons %}
 {% load bootstrap5 %}
 {% load static %}
@@ -30,8 +31,6 @@
     {% csrf_token %}
 
 
-
-    
     {% bootstrap_form_errors form type='non_fields' %}
 
     <!-- Start date -->
@@ -55,23 +54,40 @@
     <!-- Item -->
     {% bootstrap_label "Sjak genstand " %}
     {% bootstrap_field form.item  show_label=False  %}
-    <p> test </p>
 
     <!-- Quantity -->
     {% bootstrap_label "Antal " %}
     {% bootstrap_field form.quantity  show_label=False  %}
 
-    <!-- Team Contact -->
+    <div class="mb-3">
+        <label class="form-label" for="team_contact">Kontaktperson:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'person-vcard' %}  </span>
+            {{ form.team_contact }}
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label" for="team">Team:</label>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">{% bs_icon 'people' %}  </span>
+            {{ form.team }}
+        </div>
+    </div>
+
+    <!-- Team Contact 
     {% bootstrap_label "Kontaktperson " %}
     {% bootstrap_field form.team_contact show_label=False %}
+    -->
 
-    <!-- Team -->
+    <!-- Team
     {% bootstrap_label "Team" %}
     {% bootstrap_field form.team  show_label=False %}
+     -->
 
     <!--Remarks  -->
     {% bootstrap_label "Bemærkninger " %}
-    {% bootstrap_field form.remarks placeholder='bonkers'  show_label=False %}
+    {% bootstrap_field form.remarks placeholder='bemærkninger'  show_label=False %}
 
     {% buttons submit='Insend' reset="Nulstil" %}
     {% endbuttons %}

@@ -1,14 +1,23 @@
 {% extends "base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 {% load bootstrap_icons %}
 {% block content %}
-<p>
-    <a class="btn btn-light" href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}">
-        {% bs_icon 'caret-left' %}  Tilbage
-    </a>
-</p>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}">AktivitetsTeam bookinger</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Ny booking </li>
+    </ol>
+</nav>
+
+<h1 class="display-3" >Ny Aktivitetsteam booking</h1>
+{% if user.is_authenticated %}
+<p>Deadline for Aktivitetsteam bestillinger: <mark> {{user.events.first.deadline_aktivitetsteam }} </mark>.</p>
+
+{% endif %}
     
-<form method="post" enctype="multipart/form-data">
+<form role="form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.errors }}    
 
@@ -36,17 +45,37 @@
         </div>
       </div>
 
+       <!-- Start date -->
+    {% bootstrap_label "Start dato"  label_for="start_date"  %}
+    {% bootstrap_field form.start_date show_label=False  id="start_date" %}
 
-    <div class="mb-3">
+    <!-- Start time -->
+    {% bootstrap_label "Start tidspunkt" %}
+    {% bootstrap_field form.start_time show_label=False %}
+
+
+    <!-- End date -->
+    {% bootstrap_label "Slut dato"  label_for="end_date"  %}
+    {% bootstrap_field form.end_date  show_label=False   id="end_date"  %}
+
+    <!-- End time -->
+    {% bootstrap_label "Slut tidspunt" %}
+    {% bootstrap_field form.end_time show_label=False %}
+
+<!--
+<div class="mb-3">
         <label class="form-label" for="start_date">Bookes fra:</label>
         <div class="input-group">
             <span class="input-group-text" id="basic-addon1">{% bs_icon 'calendar' %}  </span>
-            <input class="form-control" id="start_date" type="date" name="start_date" value="{{ object.start.date }}">
+            <input class="form-control" id="start_date" type="date" name="start_date" >
             <span class="input-group-text" id="basic-addon1">{% bs_icon 'clock' %}  </span>
-            <input class="form-control" id="start_time" type="time" name="start_time" value="{{ object.start.time }}">
+            <input class="form-control" id="start_time" type="time" name="start_time" >
             <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
         </div>
     </div>
+
+
+    
 
     
     <div class="mb-3">
@@ -59,7 +88,7 @@
             <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursus slut</button>
         </div>
     </div>
-
+-->
     
     
     <div class="mb-3">

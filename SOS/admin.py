@@ -63,8 +63,10 @@ class SOSBookingAdmin(admin.ModelAdmin):
         "quantity",
         "team",
         "formatted_team_contact",
-        "start",
-        "end",
+        "start_date",
+        "start_time",
+        "end_date",
+        "end_time",
         "remarks",
         "remarks_internal",
         "created",
@@ -105,7 +107,7 @@ class SOSBookingAdmin(admin.ModelAdmin):
         response.write(u'\ufeff'.encode('utf8'))
 
         writer = csv.writer(response)
-        writer.writerow(["Item", "Quantity","Remarks","Internal remarks", "Team", "Team Contact", "Start", "End", "Status", "Delivery needed", "Assistance needed"])
+        writer.writerow(["Item", "Quantity","Remarks","Internal remarks", "Team", "Team Contact", "Start dato","Start tid", "End dato", "End tid", "Status", "Delivery needed", "Assistance needed"])
 
         for booking in queryset:
             writer.writerow([
@@ -115,8 +117,10 @@ class SOSBookingAdmin(admin.ModelAdmin):
                 booking.remarks_internal,
                 booking.team,
                 booking.team_contact,
-                booking.start,
-                booking.end,
+                booking.start_date,
+                booking.start_time,
+                booking.end_date,
+                booking.end_time,
                 booking.status,
                 booking.delivery_needed,
                 booking.assistance_needed,

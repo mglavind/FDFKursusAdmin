@@ -1,49 +1,58 @@
 {% extends "base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 {% load bootstrap_icons %}
+
 {% block content %}
-<p>
-    <a class="btn btn-light" href="{% url 'Location_LocationBooking_list' %}">
-        {% bs_icon 'caret-left' %}  Tilbage
-    </a>
-</p>
+
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'Location_LocationBooking_list' %}">Område bestillinger</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Ny booking </li>
+    </ol>
+</nav>
+
+<h1 class="display-3" >Ny område booking</h1>
+{% if user.is_authenticated %}
+<p>Deadline for område bestillinger: <mark> {{user.events.first.deadline_lokaler }} </mark>.</p>
+
+{% endif %}
+
+<br>
     
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.errors }}    
+    {{ form.errors }}
+        <!-- Item -->
+        {% bootstrap_label "Område " %}
+        {% bootstrap_field form.item  show_label=False  %}
 
-    <div class="mb-3">
-        <label class="form-label" for="item">Område:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'geo' %}  </span>
-            {{ form.item }}
-        </div>
-    </div>
+        <!-- Start date -->
+        {% bootstrap_label "Start dato"  label_for="start_date"  %}
+        {% bootstrap_field form.start_date show_label=False  id="start_date" %}
+    
+        <!-- Start time -->
+        {% bootstrap_label "Start tidspunkt" %}
+        {% bootstrap_field form.start_time show_label=False %}
+    
+        <!-- End date -->
+        {% bootstrap_label "Slut dato"  label_for="end_date"  %}
+        {% bootstrap_field form.end_date  show_label=False   id="end_date"  %}
+    
+        <!-- End time -->
+        {% bootstrap_label "Slut tidspunt" %}
+        {% bootstrap_field form.end_time show_label=False %}
+    
+        <!-- Team -->
+        {% bootstrap_label "Team" %}
+        {% bootstrap_field form.team  show_label=False  %}
 
-    <div class="alert alert-warning d-flex align-items-center" role="alert">
-        
-        {% bs_icon 'exclamation-triangle-fill' %}
-        <div>
-           OBS! dato skal tastes ind hver gang - sorry!
-        </div>
-      </div>
+        <!-- Team Contact -->
+        {% bootstrap_label "Kontaktperson " %}
+        {% bootstrap_field form.team_contact  show_label=False  %}
 
-
-      <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="start">Bookes fra: </label>
-        <div class="input-group col-sm-10">
-            <input class="form-control" id="start" type="datetime-local" name="start" value="{{ object.start }}">
-            <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
-        </div>
-    </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="end">Bookes til: </label>
-        <div class="input-group mb-3">
-            <input class="form-control" id="end" type="datetime-local" name="end" value="{{ object.end }}">
-            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursus slut</button>
-        </div>
-    </div>
 
     <div class="form-group row mb-2">
         <div class="col-sm-2 col-form-label">Primær lejrplads?</div>
@@ -55,48 +64,25 @@
         </div>
     </div>
 
-    
-    <div class="mb-3">
-        <label class="form-label" for="team_contact">Kontaktperson:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'person-vcard' %}  </span>
-            {{ form.team_contact }}
-        </div>
-    </div>
-    
-    <div class="mb-3">
-        <label class="form-label" for="team">Team:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'people' %}  </span>
-            {{ form.team }}
-        </div>
-    </div>
 
-    <div class="mb-3">
-        <label class="form-label" for="remarks">Bemærkninger:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'chat-left-text' %}  </span>
+    <div class="form-group row mb-2">
+        <label class="col-sm-2 col-form-label" for="remarks">Bemærkninger:</label>
+        <div class="col-sm-10">
             <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
         </div>
     </div>
 
-    <input type="submit" value="Insend" class="btn btn-primary">
+    <div class="form-group row">
+        <div class="col-sm-10 offset-sm-2">
+            <input type="submit" value="Indsend" class="btn btn-primary">
+        </div>
+    </div>
+
+
+
+
+
 </form>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const setPredefinedStartButton = document.getElementById("set-predefined-start");
-        const setPredefinedEndButton = document.getElementById("set-predefined-end");
-        const startField = document.getElementById("start");
-        const endField = document.getElementById("end");
 
-        setPredefinedStartButton.addEventListener("click", function () {
-            startField.value = "2023-10-14T08:00"; // Replace with your predefined value for start
-        });
-
-        setPredefinedEndButton.addEventListener("click", function () {
-            endField.value = "2023-10-21T16:00"; // Replace with your predefined value for end
-        });
-    });
-</script>
 {% endblock %}

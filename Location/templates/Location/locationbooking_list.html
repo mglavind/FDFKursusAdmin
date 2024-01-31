@@ -2,26 +2,6 @@
 {% block content %}
 {% load bootstrap_icons %}
 
-{% block extra_css %}
-<style>
-  .timeline {
-    position: relative;
-    background: repeating-linear-gradient(
-        to right,
-        #ddd,
-        #ddd 1px,
-        #fff 1px,
-        #fff 60px  // adjust this to change the spacing of the lines
-    );
-}
-
-  .timeline button {
-    height: 20px;
-    background: blue;  // or whatever color you want for the bookings
-  }
-</style>
-{% endblock %}
-
 
 <br>
       <h5>Bestillings oversigt for alle teams: </h5>
@@ -43,8 +23,8 @@
         <tr>
           <th scope="row">{{ object.id}}</th>
           <td>{{object.item}}</a>  </td>
-          <td>{{object.start}}</td>
-          <td>{{object.end}}</td>
+          <td>{{object.start_date}}  {{object.start_time}}</td>
+          <td>{{object.end_date}} {{object.end_time}}</td>
           <td>{{object.team_contact}}</td>
           <td>
             {% if object.status == 'Pending' %}
@@ -89,68 +69,6 @@
   Ny område bestilling
   </a>
 </div>
-
-
-
-
-
-<br>
-<h5>Bestillings oversigt for alle teams: </h5>
-<p>Kursus start: {{ context.kursus_start }}</p>
-<p>Kursus end: {{ context.kursus_end }}</p>
-<p>Duration in hours: {{ context.duration_hours }}</p>
-
-<p>This example demonstrates the item type "background" when using groups.</p>
-<ul>
-  <li>Background items having a group are displayed in that group</li>
-  <li>Background items without a group are spread over the whole timeline</li>
-  <li>Background items with a non-existing group are not displayed</li>
-</ul>
-<div id="visualization"></div>
-
-
-
-<h5>Bestillings oversigt for alle teams: </h5>
-<p>Kursus start: {{ context.kursus_start }}</p>
-<p>Kursus end: {{ context.kursus_end }}</p>
-<p>Duration in hours: {{ context.duration_hours }}</p>
-
-
-<script src="https://unpkg.com/vis-timeline/standalone/umd/vis-timeline-graph2d.min.js"></script>
-<script>
-  var start_date = " {{context.kursus_start }}"
-  var end_date = " {{context.kursus_end }}"
-
-  var items = new vis.DataSet([
-    {% for booking in context.object_list %};
-      var booking_id = {{ booking.id }};
-      var content = {{booking.team}};
-      var start_time = {{booking.start}};
-      var end_time = {{booking.end}};
-      {
-        id: booking_id,
-        content: content,
-        start: start_time,
-        end: end_time,
-      };
-    {% endfor %}
-
-  ]);
-  var groups = new vis.DataSet([
-    {% for booking in context.object_list %}
-      { id: "{{ booking.item__id }}", content: "{{ booking.item }}" },
-    {% endfor %}
-  ]);
-
-  var container = document.getElementById("visualization");
-  var options = {
-    start: "2023-10-16",
-    end: "2023-10-20",
-    editable: true,
-  };
-
-  var timeline = new vis.Timeline(container, items, options);
-</script>
 
 
 {% endblock %}

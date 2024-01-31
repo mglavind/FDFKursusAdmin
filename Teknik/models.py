@@ -17,8 +17,10 @@ class TeknikBooking(models.Model):
     )
 
     # Fields
-    start = models.DateTimeField(default=datetime.datetime.now)
-    end = models.DateTimeField(default=datetime.datetime.now)
+    start_date = models.DateField(default=datetime.datetime.now)
+    start_time = models.TimeField(default=datetime.time(8, 0))
+    end_date = models.DateField(default=datetime.datetime.now)
+    end_time = models.TimeField(default=datetime.time(8, 0))
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)

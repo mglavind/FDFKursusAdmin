@@ -1,60 +1,62 @@
 {% extends "base.html" %}
 {% load static %}
+{% load bootstrap5 %}
+{% load bootstrap_icons %}
+
 {% block content %}
-    
-<p>
-    <a class="btn btn-light" href="{% url 'Teknik_TeknikBooking_list' %}">
-    Tilbage til liste
-    </a>
-</p>
+
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'Teknik_TeknikBooking_list' %}">Teknik bestillinger</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Ny booking </li>
+    </ol>
+</nav>
+
+<h1 class="display-3" >Ny Teknik booking</h1>
+{% if user.is_authenticated %}
+<p>Deadline for Teknik bestillinger: <mark> {{user.events.first.deadline_teknik }} </mark>.</p>
+
+{% endif %}
+
+<br>
     
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.errors }}
-    <div class="form-group row mb-2">
-        <label class="col-sm-2 col-form-label" for="item">Item:</label>
-        <div class="col-sm-10">
-            {{ form.item }}
-        </div>
-    </div>
+        <!-- Item -->
+        {% bootstrap_label "Item " %}
+        {% bootstrap_field form.item  show_label=False  %}
 
-    <div class="form-group row mb-2">
-        <label class="col-sm-2 col-form-label" for="{{ form.quantity.id_for_label }}">Antal:</label>
-        <div class="col-sm-10">
-            {{ form.quantity }}
-        </div>
-    </div>
+        <!-- Quantity -->
+        {% bootstrap_label "Antal " %}
+        {% bootstrap_field form.quantity  show_label=False  %}
 
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="start">Bookes fra: </label>
-        <div class="input-group col-sm-10">
-            <input class="form-control" id="start" type="datetime-local" name="start" value="{{ object.start }}">
-            <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
-        </div>
-    </div>
+        <!-- Start date -->
+        {% bootstrap_label "Start dato"  label_for="start_date"  %}
+        {% bootstrap_field form.start_date show_label=False  id="start_date" %}
+    
+        <!-- Start time -->
+        {% bootstrap_label "Start tidspunkt" %}
+        {% bootstrap_field form.start_time show_label=False %}
+    
+        <!-- End date -->
+        {% bootstrap_label "Slut dato"  label_for="end_date"  %}
+        {% bootstrap_field form.end_date  show_label=False   id="end_date"  %}
+    
+        <!-- End time -->
+        {% bootstrap_label "Slut tidspunt" %}
+        {% bootstrap_field form.end_time show_label=False %}
+    
+        <!-- Team -->
+        {% bootstrap_label "Team" %}
+        {% bootstrap_field form.team  show_label=False  %}
 
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="end">Bookes til: </label>
-        <div class="input-group mb-3">
-            <input class="form-control" id="end" type="datetime-local" name="end" value="{{ object.end }}">
-            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursus slut</button>
-        </div>
-    </div>
-      
+        <!-- Team Contact -->
+        {% bootstrap_label "Kontaktperson " %}
+        {% bootstrap_field form.team_contact  show_label=False  %}
 
-    <div class="form-group row mb-2">
-        <label class="col-sm-2 col-form-label" for="team">Team:</label>
-        <div class="col-sm-10">
-            {{ form.team }}
-        </div>
-    </div>
-
-    <div class="form-group row mb-2">
-        <label class="col-sm-2 col-form-label" for="team_contact">Kontaktperson:</label>
-        <div class="col-sm-10">
-            {{ form.team_contact }}
-        </div>
-    </div>
 
     <div class="form-group row mb-2">
         <div class="col-sm-2 col-form-label">Assistance:</div>

@@ -53,8 +53,10 @@ class LocationBookingAdmin(admin.ModelAdmin):
         "primary_camp",
         "last_updated",
         "status",
-        "start",
-        "end",
+        "start_date",
+        "start_time",
+        "end_date",
+        "end_time",
         "created",
     ]
     readonly_fields = [
@@ -91,15 +93,17 @@ class LocationBookingAdmin(admin.ModelAdmin):
         response.write(u'\ufeff'.encode('utf8'))
 
         writer = csv.writer(response)
-        writer.writerow(["Item", "Team", "Team Contact", "Start", "End", "Status"])
+        writer.writerow(["Item", "Team", "Team Contact", "Start_date", "Start_time", "End_time","End_date", "Status"])
 
         for booking in queryset:
             writer.writerow([
                 booking.item,
                 booking.team,
                 booking.team_contact,
-                booking.start,
-                booking.end,
+                booking.start_date,
+                booking.start_time,
+                booking.end_date,
+                booking.end_time,
                 booking.status,
             ])
 

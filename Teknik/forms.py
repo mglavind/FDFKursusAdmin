@@ -1,26 +1,44 @@
 from django import forms
 from django.forms.widgets import SelectDateWidget
-from organization.models import Team, TeamMembership, Volunteer
+from organization.models import Team, TeamMembership, Volunteer, Event
 from Teknik.models import TeknikItem, TeknikType, TeknikBooking
 from django.contrib.auth.models import Group
 from . import models
+from django.forms import BaseFormSet, TextInput, formset_factory
 
 class TeknikBookingForm(forms.ModelForm):
+    start_date = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
+    )
+    start_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
+    )
+    end_date = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().end_date,
+    )
+    end_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().end_date
+    )
     class Meta:
         model = models.TeknikBooking
+        
         fields = [
             "quantity",
             "team",
             "item",
-            "start",
-            "end",
+            "start_date",
+            "start_time",
+            "end_date",
+            "end_time",
             "team_contact",
             "remarks",
             "delivery_needed",
             "assistance_needed",
         ]
-
-
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -50,8 +68,8 @@ class TeknikBookingForm(forms.ModelForm):
             instance = kwargs.get('instance')
             if instance:
                 self.fields["quantity"].initial = instance.quantity
-                self.fields["start"].initial = instance.start
-                self.fields["end"].initial = instance.end
+                self.fields["start_date"].initial = instance.start_date
+                self.fields["end_date"].initial = instance.end_date
                 # Add other fields similarly
 
 

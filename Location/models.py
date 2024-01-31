@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+import datetime
 
 class LocationType(models.Model):
 
@@ -38,10 +38,13 @@ class LocationBooking(models.Model):
     )
 
     # Fields
-    end = models.DateTimeField()
+
+    start_date = models.DateField(default=datetime.datetime.now)
+    start_time = models.TimeField(default=datetime.time(8, 0))
+    end_date = models.DateField(default=datetime.datetime.now)
+    end_time = models.TimeField(default=datetime.time(8, 0))
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     remarks = models.TextField(blank=True)  # Blank allows for an empty value
-    start = models.DateTimeField()
     created = models.DateTimeField(auto_now_add=True, editable=False)
     primary_camp = models.BooleanField(default=False, blank=True)
     last_updated = models.DateTimeField(auto_now=True, editable=False)

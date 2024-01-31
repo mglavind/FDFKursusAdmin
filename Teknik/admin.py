@@ -15,6 +15,7 @@ from icalendar import Calendar, Event
 from django.urls import reverse
 
 from . import models
+from datetime import datetime
 
 class TeknikBookingAdminForm(forms.ModelForm):
 
@@ -31,8 +32,10 @@ class TeknikBookingAdmin(admin.ModelAdmin):
         "quantity",
         "team",
         "team_contact",
-        "start",
-        "end",
+        "start_date",
+        "start_time",
+        "end_date",
+        "end_time",
         "remarks",
         "remarks_internal",
         "created",
@@ -78,8 +81,10 @@ class TeknikBookingAdmin(admin.ModelAdmin):
                          "Quantity", 
                          "Team", 
                          "Team Contact", 
-                         "Start", 
-                         "End", 
+                         "Start_date", 
+                         "Start_time", 
+                         "End_date", 
+                         "End_time", 
                          "Status", 
                          "Remarks", 
                          "Internal remarks",
@@ -93,8 +98,10 @@ class TeknikBookingAdmin(admin.ModelAdmin):
                 booking.quantity,
                 booking.team,
                 booking.team_contact,
-                booking.start,
-                booking.end,
+                booking.start_date,
+                booking.start_time,
+                booking.end_date,
+                booking.end_time,
                 booking.status,
                 booking.remarks,
                 booking.remarks_internal,
@@ -112,9 +119,15 @@ class TeknikBookingAdmin(admin.ModelAdmin):
             ical_event = Event()
             summary = f"{booking.item} - {booking.team} - {booking.team_contact}"
             ical_event.add('summary', summary)
-            ical_event.add('dtstart', booking.start)
-            ical_event.add('dtend', booking.end)
+
+            # Wrap date and time fields into datetime objects
+            start_datetime = datetime.combine(booking.start_date, booking.start_time)
+            end_datetime = datetime.combine(booking.end_date, booking.end_time)
+
+            ical_event.add('dtstart', start_datetime)
+            ical_event.add('dtend', end_datetime)
             ical_event.add('description', booking.remarks)
+
             # Add more properties as needed
 
             # Add the team_contact name in the "description" field

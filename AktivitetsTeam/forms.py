@@ -1,11 +1,11 @@
 from django import forms
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
-from organization.models import Team, TeamMembership
+from organization.models import Team, TeamMembership, Volunteer, Event, EventMembership
 from AktivitetsTeam.models import AktivitetsTeamItem
 from organization.models import Volunteer
 from . import models
-
+from django.forms import BaseFormSet, TextInput, formset_factory
 from organization.models import Team
 
 
@@ -20,17 +20,21 @@ class AktivitetsTeamItemForm(forms.ModelForm):
 
 class AktivitetsTeamBookingForm(forms.ModelForm):
     start_date = forms.DateField(
-        label="Start Date",
-        initial=timezone.now().date(),
-        widget=forms.DateInput(attrs={"type": "date"}),
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
     )
     start_time = forms.TimeField(
-        label="Start Time",
-        initial=timezone.now().time(),
-        widget=forms.TimeInput(attrs={"type": "time"}),
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
     )
-    
-
+    end_date = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().end_date,
+    )
+    end_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().end_date
+    )
     my_specific_team = Team.objects.get(id=8)
     assigned_aktivitetsteam = forms.ModelMultipleChoiceField(
         queryset=Volunteer.objects.filter(teammembership__team=my_specific_team),

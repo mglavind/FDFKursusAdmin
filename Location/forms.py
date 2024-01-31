@@ -2,10 +2,11 @@ from django import forms
 from organization.models import Team
 from Location.models import LocationItem
 from organization.models import Volunteer
-from organization.models import Team, TeamMembership
+from organization.models import Team, TeamMembership, Event
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
 from . import models
+from django.forms import BaseFormSet, TextInput, formset_factory
 
 class LocationTypeForm(forms.ModelForm):
     class Meta:
@@ -17,12 +18,30 @@ class LocationTypeForm(forms.ModelForm):
 
 
 class LocationBookingForm(forms.ModelForm):
+    start_date = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
+    )
+    start_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
+    )
+    end_date = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().end_date,
+    )
+    end_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().end_date
+    )
     class Meta:
         model = models.LocationBooking
         fields = [
-            "end",
             "remarks",
-            "start",
+            "start_date",
+            "start_time",
+            "end_date",
+            "end_time",
             "primary_camp",
             "team_contact",
             "item",
@@ -38,20 +57,30 @@ class LocationBookingForm(forms.ModelForm):
 
     def __init__(self, *args, user=None, **kwargs):
         super(LocationBookingForm, self).__init__(*args, **kwargs)
-        self.fields["item"].queryset = LocationItem.objects.all().order_by("name")
-        self.fields["team_contact"].queryset = Volunteer.objects.all().order_by("first_name")
-        self.fields["team"].queryset = Team.objects.all().order_by("name")
-        print(user) 
+        self.fields["team"].queryset = Team.objects.all()
+        self.fields["item"].queryset = LocationItem.objects.all()
+        
         if user:
             try:
                 team_membership = TeamMembership.objects.get(member=user)
                 self.fields["team"].initial = team_membership.team
-                self.fields["team_contact"].initial = user
                 self.fields["team_contact"].queryset = Volunteer.objects.filter(
                     teammembership__team=team_membership.team
                 )
             except TeamMembership.DoesNotExist:
                 pass
+            
+            self.fields["team_contact"].initial = user
+            
+            # Set initial values from instance
+            instance = kwargs.get('instance')
+            if instance:
+                self.fields["quantity"].initial = instance.quantity
+                self.fields["start_date"].initial = instance.start_date
+                self.fields["end_date"].initial = instance.end_date
+                self.fields["start_time"].initial = instance.start_time
+                self.fields["end_time"].initial = instance.end_time
+                # Add other fields similarly
 
 
 
