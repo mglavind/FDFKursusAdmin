@@ -100,19 +100,7 @@
         <label class="col-sm-2 col-form-label" for="team">Team: </label>
         {{ form.team }}
     </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="created">Oprættet: </label>
-        <input class="form-control col-sm-10"
-        id="created" type="datetime-local"
-        name="created" value="{{ object.created }}" disabled>
-    </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="last_updated">Sidst opdateret: </label>
-        <input class="form-control col-sm-10"
-        id="last_updated" type="datetime-local"
-        name="last_updated" value="{{ object.last_updated }}" disabled>
-    </div>
+
     <br>
   <input type="submit" value="Gem" class="btn btn-primary">
 </form>

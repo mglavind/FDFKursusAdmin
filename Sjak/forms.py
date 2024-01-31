@@ -56,29 +56,24 @@ class SjakBookingForm(forms.Form):
        ] # list of fields you want from model
 
     def __init__(self, *args, user=None, **kwargs):
+        self.user = user  # Assign the user argument to the form's user attribute
+
         super(SjakBookingForm, self).__init__(*args, **kwargs)
-        self.fields["team"].queryset = Team.objects.all().order_by("name")
-        self.fields["item"].queryset = SjakItem.objects.all().order_by("name")
         
-        if user:
-            try:
-                team_membership = TeamMembership.objects.get(member=user)
-                self.fields["team"].initial = team_membership.team
-                self.fields["team_contact"].queryset = Volunteer.objects.filter(
-                    teammembership__team=team_membership.team
-                )
-            except TeamMembership.DoesNotExist:
-                pass
+        if self.user is not None:
+            user = self.user
+            print("Current user:", user)  # Print to terminal the current user
+            team = Team.objects.filter(teammembership__member=user).first()
+            print("Teams:", team)  # Print to terminal the current user
+
+            self.fields['team_contact'].queryset = Volunteer.objects.filter(teammembership__team=team)
+            self.fields['team_contact'].initial = self.user  # Set the default value to be the user object
             
-            self.fields["team_contact"].initial = user
-            
-            # Set initial values from instance
-            instance = kwargs.get('instance')
-            if instance:
-                self.fields["quantity"].initial = instance.quantity
-                self.fields["start"].initial = instance.start
-                self.fields["end"].initial = instance.end
-                # Add other fields similarly
+            self.fields["team"].queryset = Team.objects.filter(teammembership__member=self.user)
+            self.fields["team"].initial = team
+
+        self.fields["item"].queryset = SjakItem.objects.all().order_by("name")
+        self.fields["team"].queryset = Team.objects.all().order_by("name")
         
 
    

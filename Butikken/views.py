@@ -7,8 +7,8 @@ from . import models
 from . import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import MealBooking, Meal, Day, Option, Recipe
-from organization.models import TeamMembership
-
+from organization.models import TeamMembership, Event
+from django.contrib import messages
 
 class ButikkenItemListView(ListView):
     model = models.ButikkenItem
@@ -66,6 +66,8 @@ class ButikkenBookingListView(ListView):
 class ButikkenBookingCreateView(CreateView):
     model = models.ButikkenBooking
     form_class = forms.ButikkenBookingForm
+    print("Hello from ")  # Print to terminal the current user
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
@@ -75,6 +77,26 @@ class ButikkenBookingCreateView(CreateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add your context data here
+        context['event'] = Event.objects.filter(is_active=True).first()
+        context['form'] = forms.ButikkenBookingForm()
+        team = models.Team.objects.filter(teammembership__member=self.request.user).first()
+        if team:
+            context['bookings'] = models.ButikkenBooking.objects.filter(team=team)
+        return context
+    
+    
+def create_butikken_booking(request):
+    print("Hello from Def")  # Print to terminal the current user
+    if request.method == 'POST':
+        form = forms.ButikkenBookingForm(request.POST or None)
+        if form.is_valid():
+            ButikkenBooking = form.save()
+            context = {'booking': ButikkenBooking}
+            return render(request, 'Butikken/partials/booking.html', context)
+    return render(request, 'Butikken/partials/form.html' , {'form': forms.ButikkenBookingForm()})
 
 class ButikkenBookingDetailView(DetailView):
     model = models.ButikkenBooking

@@ -1,14 +1,28 @@
-
 {% extends "base.html" %}
 {% load static %}
+
+    
+{% block title %}
+    Forms
+{% endblock %}
+
 {% block content %}
-    
-<p>
-    <a class="btn btn-light" href="{% url 'Butikken_ButikkenBooking_list' %}">
-    Jeres Bookinger fra Butikken
-    </a>
-</p>
-    
+{% load bootstrap_icons %}
+{% load bootstrap5 %}
+
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'Butikken_ButikkenBooking_list' %}">Butikkenbestillinger</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Ny bestilling </li>
+    </ol>
+</nav>
+
+<h1 class="display-3" >Butikken</h1>
+{% if user.is_authenticated %}
+<p>Deadline for butik bestillinger: <mark> {{user.events.first.deadline_mad}} </mark>.</p>
+{% endif %}
 
 <div class="alert alert-warning" role="alert">
     <h5> Deltagere og mængder </h5>
@@ -17,48 +31,58 @@
 </div>
 
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.errors}}    
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" id="id_item" for="item">Butikken item: </label>
-        {{ form.item }}
-    </div>
-    <br>
-    <div class="alert alert-warning" role="alert">
-        <p> Husk at tjekke enhederne og standard mængder i butikkens lager liste </p>
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="{{ form.quantity.id_for_label }}">Mængde</label>
-        {{ form.quantity }}
-    </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="start">Bookes fra: </label>
-        <div class="input-group col-sm-10">
-            <input class="form-control" id="start" type="datetime-local" name="start" value="{{ object.start }}">
-            <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
-        </div>
-    </div>
 
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="team_contact">Kontaktperson: </label>
-        {{ form.team_contact }}
-    </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="team">Team: </label>
-        {{ form.team }}
-    </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="remarks">Bemærkninger</label>
-        <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
-    </div>  
-    <br>    
-    <input type="submit" value="Insend" class="btn btn-primary">
-</form>
+<h3 class="display-5" >Jeres bestillinger</h3>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Item</th>
+        <th scope="col">Antal</th>
+        <th scope="col">Til</th>
+        <th scope="col">Booket af</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="booking-list">
+
+        {% for booking in bookings %}
+        {% include 'Butikken/partials/booking.html' %}
+
+        {% endfor %}
+    </tbody>
+
+</table>
+
+
+
+<h3 class="display-5" >Tilføj ny bestilling</h3>
+
+
+
+
+
+<div id="butikken-forms">
+    {%include 'Butikken/partials/form.html' %}
+</div>
+
+<div class="my-4">
+    <button type="button" class="btn btn-success" 
+    hx-get="{% url 'Butikken_ButikkenBooking_create_new' %}"
+    hx-target="#butikken-forms"
+    hx-swap="beforeend"
+    >
+        + Tilføj vare</button>
+
+    <button type="button" id="submit-all" class="btn btn-primary" 
+    hx-get="{% url 'Butikken_ButikkenBooking_create_new' %}"
+    hx-target="#butikken-forms"
+    hx-swap="beforeend"
+    >
+        Indsend alle</button>
+</div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

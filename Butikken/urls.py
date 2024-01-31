@@ -24,6 +24,7 @@ urlpatterns = (
     path("Butikken/ButikkenItem/delete/<int:pk>/", views.ButikkenItemDeleteView.as_view(), name="Butikken_ButikkenItem_delete"),
 
     path("Butikken/ButikkenBooking/", views.ButikkenBookingListView.as_view(), name="Butikken_ButikkenBooking_list"),
+    path("Butikken/ButikkenBooking/createNew/", views.create_butikken_booking, name="Butikken_ButikkenBooking_create_new"),
     path("Butikken/ButikkenBooking/create/", views.ButikkenBookingCreateView.as_view(), name="Butikken_ButikkenBooking_create"),
     path("Butikken/ButikkenBooking/detail/<int:pk>/", views.ButikkenBookingDetailView.as_view(), name="Butikken_ButikkenBooking_detail"),
     path("Butikken/ButikkenBooking/update/<int:pk>/", views.ButikkenBookingUpdateView.as_view(), name="Butikken_ButikkenBooking_update"),
@@ -62,4 +63,8 @@ urlpatterns = (
     path("Butikken/MealBooking/detail/<int:pk>/", views.MealBookingDetailView.as_view(), name="Butikken_MealBooking_detail"),
     path("Butikken/MealBooking/update/<int:pk>/", views.MealBookingUpdateView.as_view(), name="Butikken_MealBooking_update"),
     path("Butikken/MealBooking/delete/<int:pk>/", views.MealBookingDeleteView.as_view(), name="Butikken_MealBooking_delete"),
+
+
+    
+
 )

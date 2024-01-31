@@ -224,6 +224,8 @@ class VolunteerAdmin(admin.ModelAdmin):
                     "username": fields[2],
                     "email": fields[3],
                     "phone": fields[4],
+                    "event": fields[5],
+                    "team": fields[6],
                 }
                 
                 # Generate a random password (you can customize the length and characters)
@@ -232,6 +234,8 @@ class VolunteerAdmin(admin.ModelAdmin):
                 
                 # Set date_joined to the current date and time
                 form_data["date_joined"] = datetime.now()
+
+                
 
                 # Create a VolunteerAdminForm instance with the modified form_data
                 form = VolunteerAdminForm(form_data)
@@ -253,6 +257,18 @@ class VolunteerAdmin(admin.ModelAdmin):
                     # Assign "Medarbejder" auth group
                     medarbejder_group, _ = Group.objects.get_or_create(name="Medarbejder")
                     volunteer.groups.add(medarbejder_group)
+
+                    # Create TeamMembership for each team
+                    for team_id in form_data["team"]:
+                        team = Team.objects.get(id=team_id)  # assuming team_id is the ID of the team
+                        TeamMembership.objects.create(team=team, member=volunteer)
+
+                    # Create EventMembership for each event
+                    for event_id in form_data["events"]:
+                        event = Event.objects.get(id=event_id)  # assuming event_id is the ID of the event
+                        EventMembership.objects.create(event=event, user=volunteer)
+
+                        
                 else:
                     error_messages = []
                     for field, errors in form.errors.items():

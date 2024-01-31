@@ -28,9 +28,6 @@ class ButikkenItem(models.Model):
     def get_update_url(self):
         return reverse("Butikken_ButikkenItem_update", args=(self.pk,))
     
-
-
-
 class ButikkenBooking(models.Model):
     
 
@@ -49,7 +46,7 @@ class ButikkenBooking(models.Model):
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
 
-    start = models.DateTimeField(verbose_name='Start', default=timezone.now)
+    start = models.DateTimeField(verbose_name='Start')
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)

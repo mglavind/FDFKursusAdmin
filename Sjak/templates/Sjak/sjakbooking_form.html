@@ -28,6 +28,10 @@
 
 <form role="form" method="post">
     {% csrf_token %}
+
+
+
+    
     {% bootstrap_form_errors form type='non_fields' %}
 
     <!-- Start date -->
@@ -47,6 +51,7 @@
     {% bootstrap_label "Slut tidspunt" %}
     {% bootstrap_field form.end_time show_label=False %}
 
+    
     <!-- Item -->
     {% bootstrap_label "Sjak genstand " %}
     {% bootstrap_field form.item  show_label=False  %}
@@ -58,11 +63,11 @@
 
     <!-- Team Contact -->
     {% bootstrap_label "Kontaktperson " %}
-    {% bootstrap_field form.team_contact value=context.user initial=user  show_label=False %}
+    {% bootstrap_field form.team_contact show_label=False %}
 
     <!-- Team -->
     {% bootstrap_label "Team" %}
-    {% bootstrap_field form.team   show_label=False %}
+    {% bootstrap_field form.team  show_label=False %}
 
     <!--Remarks  -->
     {% bootstrap_label "Bemærkninger " %}
