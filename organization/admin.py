@@ -40,6 +40,7 @@ class TeamAdmin(admin.ModelAdmin):
     form = TeamAdminForm
     #inlines = [TeamEventMembershipInline]
     list_display = [
+        "id",
         "name",
         "short_name",
     #    "display_events",
@@ -193,10 +194,10 @@ class VolunteerAdmin(admin.ModelAdmin):
             response.write(u'\ufeff'.encode('utf8'))
 
             writer = csv.writer(response)
-            writer.writerow(['First Name', 'Last Name', 'Username', 'Email', 'Phone'])
+            writer.writerow(['First Name', 'Last Name', 'Username', 'Email', 'Phone', 'events'])
 
             for volunteer in queryset:
-                writer.writerow([volunteer.first_name, volunteer.last_name, volunteer.username, volunteer.email, volunteer.phone])
+                writer.writerow([volunteer.first_name, volunteer.last_name, volunteer.username, volunteer.email, volunteer.phone,  volunteer.events])
             return response
     export_to_csv.short_description = "Export selected volunteers to CSV"
     
@@ -227,24 +228,43 @@ class VolunteerAdmin(admin.ModelAdmin):
                     "event": fields[5],
                     "team": fields[6],
                 }
-                
+
                 # Generate a random password (you can customize the length and characters)
                 random_password = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=12))
                 form_data["password"] = random_password
-                
+
                 # Set date_joined to the current date and time
                 form_data["date_joined"] = datetime.now()
 
-                
+                # Check if user with the same email already exists
+                existing_user = User.objects.filter(email=form_data["email"]).first()
+                if existing_user:
+                    # Delete existing TeamMembership and EventMembership objects where member is the user
+                    TeamMembership.objects.filter(member=existing_user).delete()
+                    EventMembership.objects.filter(user=existing_user).delete()
 
-                # Create a VolunteerAdminForm instance with the modified form_data
-                form = VolunteerAdminForm(form_data)
+                    # Assign "Medarbejder" auth group
+                    medarbejder_group, _ = Group.objects.get_or_create(name="Medarbejder")
+                    existing_user.groups.add(medarbejder_group)
 
-                if form.is_valid():
-                     # Save the volunteer instance
+                    # Create TeamMembership for each team
+                    for team_id in form_data["team"]:
+                        team = Team.objects.get(id=team_id)  # assuming team_id is the ID of the team
+                        TeamMembership.objects.create(team=team, member=existing_user)
+
+                    # Create EventMembership for each event
+                    for event_id in form_data["events"]:
+                        event = Event.objects.get(id=event_id)  # assuming event_id is the ID of the event
+                        EventMembership.objects.create(event=event, user=existing_user)
+
+                    messages.success(request, f"Updated: {existing_user.first_name} {existing_user.last_name} to {team.name} at {event.name}")
+
+
+                elif form.is_valid():
+                    # Save the volunteer instance
                     volunteer = form.save()
 
-                     # Activate the user
+                    # Activate the user
                     User = get_user_model()  # Get the custom user model
                     user = User.objects.get(username=volunteer.username)
                     user.is_active = True
@@ -268,7 +288,8 @@ class VolunteerAdmin(admin.ModelAdmin):
                         event = Event.objects.get(id=event_id)  # assuming event_id is the ID of the event
                         EventMembership.objects.create(event=event, user=volunteer)
 
-                        
+                    messages.success(request, f"Created: {user.first_name} {user.last_name} to {team.name} at {event.name}")
+
                 else:
                     error_messages = []
                     for field, errors in form.errors.items():
