@@ -53,7 +53,7 @@ class Volunteer(AbstractUser):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=30, blank=True)
-    events = models.ManyToManyField(Event, through='EventMembership')
+    events = models.ManyToManyField(Event, through='EventMembership',blank=True)
 
     class Meta:
         pass

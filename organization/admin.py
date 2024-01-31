@@ -14,7 +14,7 @@ from django.urls.resolvers import URLPattern
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
+from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 
 from .models import Volunteer
 import random
@@ -184,6 +184,10 @@ class VolunteerAdmin(admin.ModelAdmin):
         "last_updated",
     ]
     actions = ["export_to_csv", "send_email_action", "deactivate_volunteers", "activate_volunteers", "create_event_membership"]
+    list_filter = (
+        ('is_active', ChoiceDropdownFilter),
+        ('last_updated', DropdownFilter),
+    )
 
     def display_events(self, obj):
         return ", ".join([event.name for event in obj.events.all()])
@@ -225,44 +229,43 @@ class VolunteerAdmin(admin.ModelAdmin):
                     "username": fields[2],
                     "email": fields[3],
                     "phone": fields[4],
-                    "event": fields[5],
-                    "team": fields[6],
+                    "team": fields[5],
                 }
 
                 # Generate a random password (you can customize the length and characters)
                 random_password = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=12))
                 form_data["password"] = random_password
-
                 # Set date_joined to the current date and time
                 form_data["date_joined"] = datetime.now()
 
+
+                form = VolunteerAdminForm(form_data)
+                
+
+                
+                
                 # Check if user with the same email already exists
-                existing_user = User.objects.filter(email=form_data["email"]).first()
+                existing_user = models.Volunteer.objects.filter(email=form_data["email"]).first()
+                
                 if existing_user:
                     # Delete existing TeamMembership and EventMembership objects where member is the user
                     TeamMembership.objects.filter(member=existing_user).delete()
-                    EventMembership.objects.filter(user=existing_user).delete()
+                    EventMembership.objects.filter(volunteer=existing_user).delete()
 
                     # Assign "Medarbejder" auth group
                     medarbejder_group, _ = Group.objects.get_or_create(name="Medarbejder")
                     existing_user.groups.add(medarbejder_group)
 
                     # Create TeamMembership for each team
-                    for team_id in form_data["team"]:
-                        team = Team.objects.get(id=team_id)  # assuming team_id is the ID of the team
-                        TeamMembership.objects.create(team=team, member=existing_user)
+                    team = Team.objects.get(id=form_data["team"])  # assuming team_id is the ID of the team
+                    TeamMembership.objects.create(team=team, member=existing_user)
 
-                    # Create EventMembership for each event
-                    for event_id in form_data["events"]:
-                        event = Event.objects.get(id=event_id)  # assuming event_id is the ID of the event
-                        EventMembership.objects.create(event=event, user=existing_user)
-
-                    messages.success(request, f"Updated: {existing_user.first_name} {existing_user.last_name} to {team.name} at {event.name}")
-
+                    messages.success(request, f"Updated: {existing_user.first_name} {existing_user.last_name} to {team.name} ")
 
                 elif form.is_valid():
                     # Save the volunteer instance
                     volunteer = form.save()
+                    print("volunteer", volunteer)
 
                     # Activate the user
                     User = get_user_model()  # Get the custom user model
@@ -270,26 +273,16 @@ class VolunteerAdmin(admin.ModelAdmin):
                     user.is_active = True
                     user.save()
 
-                    # Create TeamMembership for the "Unassigned" team
-                    unassigned_team = Team.objects.get(name="Unassigned users")
-                    team_membership = TeamMembership.objects.create(team=unassigned_team, member=volunteer)
-
                     # Assign "Medarbejder" auth group
                     medarbejder_group, _ = Group.objects.get_or_create(name="Medarbejder")
                     volunteer.groups.add(medarbejder_group)
 
                     # Create TeamMembership for each team
-                    for team_id in form_data["team"]:
-                        team = Team.objects.get(id=team_id)  # assuming team_id is the ID of the team
-                        TeamMembership.objects.create(team=team, member=volunteer)
+                    team = Team.objects.get(id=form_data["team"])  # assuming team_id is the ID of the team
+                    TeamMembership.objects.create(team=team, member=volunteer)
 
-                    # Create EventMembership for each event
-                    for event_id in form_data["events"]:
-                        event = Event.objects.get(id=event_id)  # assuming event_id is the ID of the event
-                        EventMembership.objects.create(event=event, user=volunteer)
 
-                    messages.success(request, f"Created: {user.first_name} {user.last_name} to {team.name} at {event.name}")
-
+                    messages.success(request, f"Created: {user.first_name} {user.last_name} to {team.name} ")
                 else:
                     error_messages = []
                     for field, errors in form.errors.items():
