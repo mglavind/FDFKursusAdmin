@@ -5,15 +5,24 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib import messages
-from organization.models import Todo
+from organization.models import Todo, Team, Event, TeamMembership, EventMembership
 from organization.forms import TodoForm
 
 
 @login_required
 def index(request):
+
+    team = TeamMembership.objects.filter(member=request.user).first().team
+    event = EventMembership.objects.filter(volunteer=request.user).first().event
+    print('team:', team),
+    print('event:', event),
+
     context = {
         'todos': Todo.objects.filter(user=request.user),
-        'form': TodoForm()
+        'form': TodoForm(),
+        'team': team,
+        'event': event,
+        
     }
     return render(request, 'index.html', context)
 

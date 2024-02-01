@@ -22,73 +22,117 @@
     <div class="mt-4">
         <h1 class="display-4 mb-4">Hej {{ user.first_name }}!</h1>
     </div>
+    <p> Så vidt vi ved er du en del af {{event.name}} hvor du er en del af {{team.name}}.
+    </p>
 
-    <form class="mb-4" 
-        hx-post="{% url 'submit-todo' %}"
-        hx-target="#todo-table-body"
-        hx-swap="beforeend"
-        hx-on::after-request="this.reset()">
-        
-        <div class="form-control">
-            <div class="input-group mb-3">
+    <p>Her kan du se kommende deadlines:</p>
 
-                {% render_field form.description class="input form-control"  %}
-
-                <button type="submit" class="btn btn-primary">Tilføj</button>
-        </div>
-
-        
-    </form>
-    
-    <table class="table table-zebra table-lg">
+    <table class="table table-striped">
         <thead>
             <tr>
-                <th>Beskrivelse</th>
-                <th>Oprettet</th>
-                <th>Fuldført</th>
-                <th>Handlinger</th>
+                <th>Deadline</th>
+                <th>Dato</th>
             </tr>
         </thead>
-        <tbody id="todo-table-body">
-        {% for todo in todos %}
-            {% partialdef todoitem-partial inline=True %}
-                <tr>
-                    <td>{{ todo.description }}</td>
-                    <td>{{ todo.created_at }}</td>
-                    <td>{{ todo.is_completed }}</td>
-                    <td>
-                        <button class="btn btn-xs btn-outline-danger"
-                            hx-delete="{% url 'delete-todo' todo.pk %}"
-                            hx-on:delete-todo="this.closest('tr').remove()">
-                            {% bs_icon 'trash3' %}
-                        </button>
-
-                        {% if not todo.is_completed %}
-                            <button class="btn btn-xs btn-success"
-                                hx-post="{% url 'complete-todo' todo.pk %}"
-                                hx-target="closest tr"
-                                hx-swap="outerHTML">
-                                {% bs_icon 'check-lg' %}
-
-                            </button>
-                        {% endif %}
-
-                        
-                    </td>
-                </tr>
-            {% endpartialdef %}
-        {% endfor %}
+        <tbody>
+            <tr>
+                <td>Sjak</td>
+                <td>{{ event.deadline_sjak }}</td>
+            </tr>
+            <tr>
+                <td>Teknik</td>
+                <td>{{event.deadline_teknik }}</td>
+            </tr>   
+            <tr>    
+                <td>Køkken</td>
+                <td>{{event.deadline_mad }}</td>
+            </tr>   
+            <tr>    
+                <td>Aktivitetsteam</td>
+                <td>{{event.deadline_aktivitetsteam }}</td>
+            </tr>   
+            <tr>    
+                <td>Foto</td>
+                <td>{{event.deadline_foto }}</td>
+            </tr>   
+            <tr>    
+                <td>Områder</td>
+                <td>{{event.deadline_lokaler }}</td>
+            </tr>   
+            <tr>    
+                <td>SOS</td>
+                <td>{{event.deadline_sos }}</td>
+            </tr>   
         </tbody>
     </table>
-</div>
+    
+
+
+    <!-- Here is the Todo, where the script does not work on Render.com
+
+    <form class="mb-4" 
+            hx-post="{% url 'submit-todo' %}"
+            hx-target="#todo-table-body"
+            hx-swap="beforeend"
+            hx-on::after-request="this.reset()">
+            
+            <div class="form-control">
+                <div class="input-group mb-3">
+
+                    {% render_field form.description class="input form-control"  %}
+
+                    <button type="submit" class="btn btn-primary">Tilføj</button>
+            </div>
+
+            
+        </form>
+        
+        <table class="table table-zebra table-lg">
+            <thead>
+                <tr>
+                    <th>Beskrivelse</th>
+                    <th>Oprettet</th>
+                    <th>Fuldført</th>
+                    <th>Handlinger</th>
+                </tr>
+            </thead>
+            <tbody id="todo-table-body">
+            {% for todo in todos %}
+                {% partialdef todoitem-partial inline=True %}
+                    <tr>
+                        <td>{{ todo.description }}</td>
+                        <td>{{ todo.created_at }}</td>
+                        <td>{{ todo.is_completed }}</td>
+                        <td>
+                            <button class="btn btn-xs btn-outline-danger"
+                                hx-delete="{% url 'delete-todo' todo.pk %}"
+                                hx-on:delete-todo="this.closest('tr').remove()">
+                                {% bs_icon 'trash3' %}
+                            </button>
+
+                            {% if not todo.is_completed %}
+                                <button class="btn btn-xs btn-success"
+                                    hx-post="{% url 'complete-todo' todo.pk %}"
+                                    hx-target="closest tr"
+                                    hx-swap="outerHTML">
+                                    {% bs_icon 'check-lg' %}
+
+                                </button>
+                            {% endif %}
+
+                            
+                        </td>
+                    </tr>
+                {% endpartialdef %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    -->
 
 
 
-
-
-
-   
-    <!-- Add more includes for other apps as needed -->
 {% endblock %}
 
 

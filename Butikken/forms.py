@@ -13,17 +13,7 @@ class MealBookingForm(forms.ModelForm):
     class Meta:
         model = models.MealBooking
         fields = [
-            "monday_breakfast",
-            "monday_lunch",
-            "monday_dinner",
 
-            "tuesday_breakfast",
-            "tuesday_lunch",
-            "tuesday_dinner",
-
-            "wednesday_breakfast",
-            "wednesday_lunch",
-            "wednesday_dinner",
 
             "thursday_breakfast",
             "thursday_lunch",
@@ -33,108 +23,32 @@ class MealBookingForm(forms.ModelForm):
             "friday_lunch",
             "friday_dinner",
 
+            "saturday_breakfast",
+            "saturday_lunch",
+            "saturday_dinner",
+
+            "sunday_breakfast",
+            "sunday_lunch",
+            "sunday_dinner",
+
             "team_contact",
             "team",
         ]
-        MONDAY_BREAKFAST_CHOICES = (
+        THURSDAY_BREAKFAST_CHOICES = (
         ('Vælg fra liste', 'Vælg fra liste'), 
         ('Spiser inde ', 'Spiser inde '),
         ('Morgenmadspakke', 'Morgenmadspakke'),
         ('Står selv for forplejning', 'Står selv for forplejning'),
         )
-        MONDAY_LUNCH_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'),
-            ('Spiser inde ', 'Spiser inde '),
-            ('Frokostpakke', 'Frokostpakke'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        MONDAY_DINNER_CHOICES   = (
-            ('Vælg fra liste', 'Vælg fra liste'), 
-            ('Spiser inde ', 'Spiser inde '),
-            ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-            ('Dinner trans', 'Dinner trans'),
-            ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-            ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-            ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-            ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-            ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-            ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-
-        monday_breakfast = forms.ChoiceField(choices=MONDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        monday_lunch = forms.ChoiceField(choices=MONDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        monday_dinner = forms.ChoiceField(choices=MONDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-
-        TUESDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        TUESDAY_LUNCH_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-            ('Frokostpakke', 'Frokostpakke'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        TUESDAY_DINNER_CHOICES   = (
-            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-            ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-            ('Dinner trans', 'Dinner trans'),
-            ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-            ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-            ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-            ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-            ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-            ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-
-        tuesday_breakfast = forms.ChoiceField(choices=TUESDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        tuesday_lunch = forms.ChoiceField(choices=TUESDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        tuesday_dinner = forms.ChoiceField(choices=TUESDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-
-
-
-        WEDNESDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        WEDNESDAY_LUNCH_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-            ('Frokostpakke', 'Frokostpakke'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        WEDNESDAY_DINNER_CHOICES   = (
-            ('Vælg fra liste', 'Vælg fra liste'),
-            ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-            ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-            ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-            ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-            ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-            ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-            ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-
-        wednesday_breakfast = forms.ChoiceField(choices=WEDNESDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        wednesday_lunch = forms.ChoiceField(choices=WEDNESDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        wednesday_dinner = forms.ChoiceField(choices=WEDNESDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-
-
-
-        THURSDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
         THURSDAY_LUNCH_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+            ('Vælg fra liste', 'Vælg fra liste'),
+            ('Spiser inde ', 'Spiser inde '),
             ('Frokostpakke', 'Frokostpakke'),
             ('Står selv for forplejning', 'Står selv for forplejning'),
         )
         THURSDAY_DINNER_CHOICES   = (
-            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+            ('Vælg fra liste', 'Vælg fra liste'), 
+            ('Spiser inde ', 'Spiser inde '),
             ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
             ('Dinner trans', 'Dinner trans'),
             ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
@@ -150,25 +64,81 @@ class MealBookingForm(forms.ModelForm):
         thursday_lunch = forms.ChoiceField(choices=THURSDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
         thursday_dinner = forms.ChoiceField(choices=THURSDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
 
-
-
         FRIDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
+            ('Vælg fra liste', 'Vælg fra liste'), 
+            ('Spiser inde ', 'Spiser inde '),
+            ('Morgenmadspakke', 'Morgenmadspakke'),
+            ('Står selv for forplejning', 'Står selv for forplejning'),
         )
         FRIDAY_LUNCH_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+            ('Vælg fra liste', 'Vælg fra liste'), 
+            #('Spiser inde ', 'Spiser inde '),
             ('Frokostpakke', 'Frokostpakke'),
             ('Står selv for forplejning', 'Står selv for forplejning'),
         )
         FRIDAY_DINNER_CHOICES   = (
-            ('Fællesforplejning', 'Fællesforplejning'),
+            ('Vælg fra liste', 'Vælg fra liste'), 
+            #('Spiser inde ', 'Spiser inde '),
+            ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
+            #('Dinner trans', 'Dinner trans'),
+            ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
+            ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
+            ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
+            ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
+            ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
+            ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
+            ('Står selv for forplejning', 'Står selv for forplejning'),
         )
 
         friday_breakfast = forms.ChoiceField(choices=FRIDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
         friday_lunch = forms.ChoiceField(choices=FRIDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
         friday_dinner = forms.ChoiceField(choices=FRIDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+
+
+        SATURDAY_BREAKFAST_CHOICES = (
+        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Morgenmadspakke', 'Morgenmadspakke'),
+        ('Står selv for forplejning', 'Står selv for forplejning'),
+        )
+        SATURDAY_LUNCH_CHOICES = (
+            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+            ('Frokostpakke', 'Frokostpakke'),
+            ('Står selv for forplejning', 'Står selv for forplejning'),
+        )
+        SATURDAY_DINNER_CHOICES   = (
+            ('Vælg fra liste', 'Vælg fra liste'),
+            ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
+            ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
+            ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
+            ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
+            ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
+            ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
+            ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
+            ('Står selv for forplejning', 'Står selv for forplejning'),
+        )
+
+        saturday_breakfast = forms.ChoiceField(choices=SATURDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+        saturday_lunch = forms.ChoiceField(choices=SATURDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+        saturday_dinner = forms.ChoiceField(choices=SATURDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+
+
+        SUNDAY_BREAKFAST_CHOICES = (
+        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Morgenmadspakke', 'Morgenmadspakke'),
+        ('Står selv for forplejning', 'Står selv for forplejning'),
+        )
+        SUNDAY_LUNCH_CHOICES = (
+            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+            ('Frokostpakke', 'Frokostpakke'),
+            ('Står selv for forplejning', 'Står selv for forplejning'),
+        )
+        SUNDAY_DINNER_CHOICES   = (
+            ('Fællesforplejning', 'Fællesforplejning'),
+        )
+
+        sunday_breakfast = forms.ChoiceField(choices=SUNDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+        sunday_lunch = forms.ChoiceField(choices=SUNDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+        sunday_dinner = forms.ChoiceField(choices=SUNDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     
     def save(self, commit=True):
         instance = super().save(commit=False)

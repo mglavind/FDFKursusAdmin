@@ -2,16 +2,26 @@
 {% load static %}
 {% block content %}
     
-<p>
-    <a class="btn btn-light" href="{% url 'Butikken_MealBooking_list' %}">
-    Jeres måltids bestillinger
-    </a>
-</p>
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'Butikken_MealBooking_list' %}">Måltids bookinger</a></li>
+      <li class="breadcrumb-item active" aria-current="page"> Måltidsbestilling </li>
+    </ol>
+</nav>
+
+<h1 class="display-3" >{{ object.team }}'s Måltider </h1>
+
+<br>
+
+
     
 <table class="table">
     <tr><td>Kontaktperson</td><td>{{ object.team_contact }}</td></tr>
     <tr><td>Team</td><td>{{ object.team }}</td></tr>
 
+    <!-- unused days
     <tr><td>Mandag - Morgen</td><td>{{ object.monday_breakfast }}</td></tr>
     <tr><td>Mandag - Middag</td><td>{{ object.monday_lunch }}</td></tr>
     <tr><td>Mandag - Aften</td><td>{{ object.monday_dinner }}</td></tr>
@@ -23,6 +33,8 @@
     <tr><td>Onsdag - Morgen</td><td>{{ object.wednesday_breakfast }}</td></tr>
     <tr><td>Onsdag - Middag</td><td>{{ object.wednesday_lunch }}</td></tr>
     <tr><td>Onsdag - Aften</td><td>{{ object.wednesday_dinner }}</td></tr>
+    -->
+ 
 
     <tr><td>Torsdag - Morgen</td><td>{{ object.thursday_breakfast }}</td></tr>
     <tr><td>Torsdag - Middag</td><td>{{ object.thursday_lunch }}</td></tr>
@@ -31,6 +43,14 @@
     <tr><td>Fredag - Morgen</td><td>{{ object.friday_breakfast }}</td></tr>
     <tr><td>Fredag - Middag</td><td>{{ object.friday_lunch }}</td></tr>
     <tr><td>Fredag - Aften</td><td>{{ object.friday_dinner }}</td></tr>
+
+    <tr><td>Lørdag - Morgen</td><td>{{ object.saturday_breakfast }}</td></tr>
+    <tr><td>Lørdag - Middag</td><td>{{ object.saturday_lunch }}</td></tr>
+    <tr><td>Lørdag - Aften</td><td>{{ object.saturday_dinner }}</td></tr>
+
+    <tr><td>Søndag - Morgen</td><td>{{ object.sunday_breakfast }}</td></tr>
+    <tr><td>Søndag - Middag</td><td>{{ object.sunday_lunch }}</td></tr>
+    <tr><td>Søndag - Aften</td><td>{{ object.sunday_dinner }}</td></tr>
     <tr>
         <td>Status</td>
         <td>

@@ -355,17 +355,17 @@ class MealBookingAdmin(admin.ModelAdmin):
     form = MealBookingAdminForm
     list_display = [
         "team",
-        "monday_breakfast",
-        "monday_lunch",
-        "monday_dinner",
+        #"monday_breakfast",
+        #"monday_lunch",
+        #"monday_dinner",
 
-        "tuesday_breakfast",
-        "tuesday_lunch",
-        "tuesday_dinner",
+        #"tuesday_breakfast",
+        #"tuesday_lunch",
+        #"tuesday_dinner",
 
-        "wednesday_breakfast",
-        "wednesday_lunch",
-        "wednesday_dinner",
+        #"wednesday_breakfast",
+        #"wednesday_lunch",
+        #"wednesday_dinner",
 
         "thursday_breakfast",
         "thursday_lunch",
@@ -374,6 +374,14 @@ class MealBookingAdmin(admin.ModelAdmin):
         "friday_breakfast",
         "friday_lunch",
         "friday_dinner",
+
+        "saturday_breakfast",
+        "saturday_lunch",
+        "saturday_dinner",
+
+        "sunday_breakfast",
+        "sunday_lunch",
+        "sunday_dinner",
 
         "last_updated",
         "created",
@@ -410,17 +418,17 @@ class MealBookingAdmin(admin.ModelAdmin):
         writer = csv.writer(response)
         writer.writerow([
             "team",
-            "monday_breakfast",
-            "monday_lunch",
-            "monday_dinner",
+            #"monday_breakfast",
+            #"monday_lunch",
+            #"monday_dinner",
 
-            "tuesday_breakfast",
-            "tuesday_lunch",
-            "tuesday_dinner",
+            #"tuesday_breakfast",
+            #"tuesday_lunch",
+            #"tuesday_dinner",
 
-            "wednesday_breakfast",
-            "wednesday_lunch",
-            "wednesday_dinner",
+            #"wednesday_breakfast",
+            #"wednesday_lunch",
+            #"wednesday_dinner",
 
             "thursday_breakfast",
             "thursday_lunch",
@@ -430,6 +438,14 @@ class MealBookingAdmin(admin.ModelAdmin):
             "friday_lunch",
             "friday_dinner",
 
+            "saturday_breakfast",
+            "saturday_lunch",
+            "saturday_dinner",
+            
+            "sunday_breakfast",
+            "sunday_lunch",
+            "sunday_dinner",
+
             "last_updated",
             "created",
             "status",
@@ -438,17 +454,17 @@ class MealBookingAdmin(admin.ModelAdmin):
         for booking in queryset:
             writer.writerow([
                 booking.team,
-                booking.monday_breakfast,
-                booking.monday_lunch,
-                booking.monday_dinner,
+                #booking.monday_breakfast,
+                #booking.monday_lunch,
+                #booking.monday_dinner,
 
-                booking.tuesday_breakfast,
-                booking.tuesday_lunch,
-                booking.tuesday_dinner,
+                #booking.tuesday_breakfast,
+                #booking.tuesday_lunch,
+                #booking.tuesday_dinner,
 
-                booking.wednesday_breakfast,
-                booking.wednesday_lunch,
-                booking.wednesday_dinner,
+                #booking.wednesday_breakfast,
+                #booking.wednesday_lunch,
+                #booking.wednesday_dinner,
 
                 booking.thursday_breakfast,
                 booking.thursday_lunch,
@@ -458,6 +474,14 @@ class MealBookingAdmin(admin.ModelAdmin):
                 booking.friday_lunch,
                 booking.friday_dinner,
 
+                booking.saturday_breakfast,
+                booking.saturday_lunch,
+                booking.saturday_dinner,
+
+                booking.sunday_breakfast,
+                booking.sunday_lunch,
+                booking.sunday_dinner,
+                
                 booking.last_updated,
                 booking.created,
                 booking.status,

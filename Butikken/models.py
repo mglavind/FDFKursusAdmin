@@ -189,100 +189,21 @@ class MealBooking(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
 
     # Fields
-    MONDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    MONDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Frokostpakke', 'Frokostpakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    MONDAY_DINNER_CHOICES   = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-        ('Dinner trans', 'Dinner trans'),
-        ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-        ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-        ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-        ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-        ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-        ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    monday_breakfast = models.CharField(max_length=200, choices=MONDAY_BREAKFAST_CHOICES, default="none")
-    monday_lunch = models.CharField(max_length=200, choices=MONDAY_LUNCH_CHOICES, default="none")
-    monday_dinner = models.CharField(max_length=200, choices=MONDAY_DINNER_CHOICES, default="none")
-
-    # Fields
-    TUESDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    TUESDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Frokostpakke', 'Frokostpakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    TUESDAY_DINNER_CHOICES   = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-        ('Dinner trans', 'Dinner trans'),
-        ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-        ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-        ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-        ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-        ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-        ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    tuesday_breakfast = models.CharField(max_length=200, choices=TUESDAY_BREAKFAST_CHOICES, default="none")
-    tuesday_lunch = models.CharField(max_length=200, choices=TUESDAY_LUNCH_CHOICES, default="none")
-    tuesday_dinner = models.CharField(max_length=200, choices=TUESDAY_DINNER_CHOICES, default="none")
-
-    # Fields
-    WEDNESDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    WEDNESDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Frokostpakke', 'Frokostpakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    WEDNESDAY_DINNER_CHOICES   = (
-        ('Vælg fra liste', 'Vælg fra liste'),
-        ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-        ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-        ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-        ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-        ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-        ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-        ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    wednesday_breakfast = models.CharField(max_length=200, choices=WEDNESDAY_BREAKFAST_CHOICES, default="none")
-    wednesday_lunch = models.CharField(max_length=200, choices=WEDNESDAY_LUNCH_CHOICES, default="none")
-    wednesday_dinner = models.CharField(max_length=200, choices=WEDNESDAY_DINNER_CHOICES, default="none")
-
-     # Fields
     THURSDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Vælg fra liste', 'Vælg fra liste'), 
+        ('Spiser inde ', 'Spiser inde '),
         ('Morgenmadspakke', 'Morgenmadspakke'),
         ('Står selv for forplejning', 'Står selv for forplejning'),
     )
     THURSDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Vælg fra liste', 'Vælg fra liste'), 
+        ('Spiser inde ', 'Spiser inde '),
         ('Frokostpakke', 'Frokostpakke'),
         ('Står selv for forplejning', 'Står selv for forplejning'),
     )
     THURSDAY_DINNER_CHOICES   = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Vælg fra liste', 'Vælg fra liste'), 
+        ('Spiser inde ', 'Spiser inde '),
         ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
         ('Dinner trans', 'Dinner trans'),
         ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
@@ -296,24 +217,90 @@ class MealBooking(models.Model):
     thursday_breakfast = models.CharField(max_length=200, choices=THURSDAY_BREAKFAST_CHOICES, default="none")
     thursday_lunch = models.CharField(max_length=200, choices=THURSDAY_LUNCH_CHOICES, default="none")
     thursday_dinner = models.CharField(max_length=200, choices=THURSDAY_DINNER_CHOICES, default="none")
-    
+
     # Fields
     FRIDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Vælg fra liste', 'Vælg fra liste'), 
+        ('Spiser inde ', 'Spiser inde '),
         ('Morgenmadspakke', 'Morgenmadspakke'),
         ('Står selv for forplejning', 'Står selv for forplejning'),
     )
     FRIDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Vælg fra liste', 'Vælg fra liste'), 
         ('Frokostpakke', 'Frokostpakke'),
         ('Står selv for forplejning', 'Står selv for forplejning'),
     )
     FRIDAY_DINNER_CHOICES   = (
-        ('Fællesforplejning', 'Fællesforplejning'), 
+        ('Vælg fra liste', 'Vælg fra liste'),
+        ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
+        ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
+        ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
+        ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
+        ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
+        ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
+        ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
+        ('Står selv for forplejning', 'Står selv for forplejning'),
     )
     friday_breakfast = models.CharField(max_length=200, choices=FRIDAY_BREAKFAST_CHOICES, default="none")
     friday_lunch = models.CharField(max_length=200, choices=FRIDAY_LUNCH_CHOICES, default="none")
     friday_dinner = models.CharField(max_length=200, choices=FRIDAY_DINNER_CHOICES, default="none")
+
+     # Fields
+    SATURDAY_BREAKFAST_CHOICES = (
+        ('Vælg fra liste', 'Vælg fra liste'), 
+        ('Spiser inde ', 'Spiser inde '),
+        ('Morgenmadspakke', 'Morgenmadspakke'),
+        ('Står selv for forplejning', 'Står selv for forplejning'),
+    )
+    SATURDAY_LUNCH_CHOICES = (
+        ('Vælg fra liste', 'Vælg fra liste'), 
+        ('Spiser inde ', 'Spiser inde '),
+        ('Frokostpakke', 'Frokostpakke'),
+        ('Står selv for forplejning', 'Står selv for forplejning'),
+    )
+    SATURDAY_DINNER_CHOICES   = (
+        ('Vælg fra liste', 'Vælg fra liste'), 
+        ('Spiser inde ', 'Spiser inde '),
+        ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
+        ('Dinner trans', 'Dinner trans'),
+        ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
+        ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
+        ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
+        ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
+        ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
+        ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
+        ('Står selv for forplejning', 'Står selv for forplejning'),
+    )
+    saturday_breakfast = models.CharField(max_length=200, choices=SATURDAY_BREAKFAST_CHOICES, default="none")
+    saturday_lunch = models.CharField(max_length=200, choices=SATURDAY_LUNCH_CHOICES, default="none")
+    saturday_dinner = models.CharField(max_length=200, choices=SATURDAY_DINNER_CHOICES, default="none")
+    
+    # Fields
+    SUNDAY_BREAKFAST_CHOICES = (
+        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Morgenmadspakke', 'Morgenmadspakke'),
+        ('Står selv for forplejning', 'Står selv for forplejning'),
+    )
+    SUNDAY_LUNCH_CHOICES = (
+        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
+        ('Frokostpakke', 'Frokostpakke'),
+        ('Står selv for forplejning', 'Står selv for forplejning'),
+    )
+    SUNDAY_DINNER_CHOICES   = (
+        ('Fællesforplejning', 'Fællesforplejning'), 
+    )
+    sunday_breakfast = models.CharField(max_length=200, choices=SUNDAY_BREAKFAST_CHOICES, default="none")
+    sunday_lunch = models.CharField(max_length=200, choices=SUNDAY_LUNCH_CHOICES, default="none")
+    sunday_dinner = models.CharField(max_length=200, choices=SUNDAY_DINNER_CHOICES, default="none")
+
+
+
+
+
+
+
+
+
 
     last_updated = models.DateTimeField(auto_now=True, editable=False) 
     created = models.DateTimeField(auto_now_add=True, editable=False)

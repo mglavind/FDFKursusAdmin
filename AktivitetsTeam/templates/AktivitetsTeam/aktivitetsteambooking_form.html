@@ -3,6 +3,8 @@
 {% load bootstrap5 %}
 {% load bootstrap_icons %}
 {% block content %}
+
+<br>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
@@ -11,6 +13,7 @@
     </ol>
 </nav>
 
+<br>
 <h1 class="display-3" >Ny Aktivitetsteam booking</h1>
 {% if user.is_authenticated %}
 <p>Deadline for Aktivitetsteam bestillinger: <mark> {{user.events.first.deadline_aktivitetsteam }} </mark>.</p>
