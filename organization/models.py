@@ -27,6 +27,7 @@ class Event(models.Model):
     deadline_lokaler = models.DateField()
     deadline_sos = models.DateField()
 
+
     class Meta:
         pass
 

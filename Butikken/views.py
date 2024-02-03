@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views import generic
 from django.urls import reverse_lazy
 from . import models
 from . import forms
@@ -63,10 +64,9 @@ class ButikkenBookingListView(ListView):
         return super().dispatch(*args, **kwargs)
 
 
-class ButikkenBookingCreateView(CreateView):
+class ButikkenBookingCreateView(generic.CreateView):
     model = models.ButikkenBooking
     form_class = forms.ButikkenBookingForm
-    print("Hello from ")  # Print to terminal the current user
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

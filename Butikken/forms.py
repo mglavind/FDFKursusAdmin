@@ -3,7 +3,7 @@ from Butikken.models import ButikkenItemType, ButikkenItem, Day, Meal, Option, R
 from organization.models import Team, TeamMembership, Volunteer, Event
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
+from django.forms import BaseFormSet, TextInput, formset_factory
 from . import models
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -225,9 +225,50 @@ class ButikkenItemForm(forms.ModelForm):
         super(ButikkenItemForm, self).__init__(*args, **kwargs)
         self.fields["type"].queryset = ButikkenItemType.objects.all()
 
-
-
 class ButikkenBookingForm(forms.ModelForm):
+    start = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
+    )
+    class Meta:
+        model = models.ButikkenBooking
+        fields = fields = '__all__' 
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.status = "Pending"
+
+        if commit:
+            instance.save()
+
+        return instance
+    
+    def __init__(self, *args, user=None, **kwargs):
+        print("Initializing ButikkenBookingForm")  # Print to terminal when the method is called
+        print("Current user: 0", user) 
+        #user = kwargs.pop('user', None)
+        self.user = user  # Assign the user argument to the form's user attribute
+        print("Current user: 1", user)  # Print to terminal the current user
+
+        super(ButikkenBookingForm, self).__init__(*args, **kwargs)
+
+        if self.user is not None:
+            print("Current user: 2", self.user)  # Print to terminal the current user
+            team = Team.objects.filter(teammembership__member=self.user).first()
+            print("Teams:", team)  # Print to terminal the current user
+
+            self.fields['team_contact'].queryset = Volunteer.objects.filter(teammembership__team=team)
+            self.fields['team_contact'].initial = self.user  # Set the default value to be the user object
+
+            self.fields["team"].queryset = Team.objects.filter(teammembership__member=self.user)
+            self.fields["team"].initial = team
+            
+        self.fields["start"].initial = Event.objects.filter(is_active=True).first()
+        self.fields["item"].queryset = ButikkenItem.objects.all().order_by("name")
+        self.fields["team"].queryset = Team.objects.all().order_by("name")
+
+
+class OldButikkenBookingForm(forms.ModelForm):
     class Meta:
         model = models.ButikkenBooking
         fields = [
