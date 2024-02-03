@@ -84,39 +84,38 @@
 <br>
 
 </div>
-<div class="container ">
+    <div class="container ">
 
-<!-- Comments -->
-{% get_comment_count for object as comment_count %}
+    <!-- Comments -->
+        {% get_comment_count for object as comment_count %}
+        <div class="comment mt-3 mb-5">  
+        <div class="card pt-4">
+            <div class="card-body">
+            <h5 class="card-title">Kommentarer</h5>
 
-<div class="comment mt-3 mb-5">  
-  <div class="card pt-4">
-    <div class="card-body">
-    <h5 class="card-title">Kommentarer</h5>
+            <!-- Kommentar træet -->
 
-    <!-- Kommentar træet -->
+            {% if comment_count %}
+                <ul class="media-list">
+                {% render_xtdcomment_tree for object %}
+                </ul>
+            {% endif %}
 
-    {% if comment_count %}
-        <ul class="media-list">
-        {% render_xtdcomment_tree for object %}
-        </ul>
-    {% endif %}
+            <!-- Skrivefelt -->
 
-    <!-- Skrivefelt -->
+            {% render_comment_form for object %}
 
-    {% render_comment_form for object %}
+            <!-- Optælling -->
+            <div class="py-4 card-text">
+                <a href="{% url 'Sjak_SjakBooking_list' %}">Tilbage til oversigt</a>
+                &nbsp;&sdot;&nbsp;
+                {{ comment_count }} komment{{ comment_count|pluralize:"ar,arer" }}
+                er givet.
+            </div>
+        </div>
+        </div>
 
-    <!-- Optælling -->
-    <div class="py-4 card-text">
-        <a href="{% url 'Sjak_SjakBooking_list' %}">Tilbage til oversigt</a>
-        &nbsp;&sdot;&nbsp;
-        {{ comment_count }} komment{{ comment_count|pluralize:"ar,arer" }}
-        er givet.
     </div>
-  </div>
-</div>
-
-</div>
 </div>
 
 {% endblock %}

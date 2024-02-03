@@ -1,13 +1,23 @@
 {% extends "base.html" %}
+{% load comments %}
+{% load comments_xtd %}
 {% load static %}
 {% load bootstrap_icons %}
 {% block content %}
     
-<p>
-    <a class="btn btn-light" href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}">
-        {% bs_icon 'caret-left' %} Til booking oversigt
-    </a>
-</p>
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}">AktivitetsTeam bookinger</a></li>
+      <li class="breadcrumb-item active" aria-current="page"> {{ object.item }} booking </li>
+    </ol>
+</nav>
+
+<h1 class="display-3" >{{ object.item }} booking til {{ object.team }} </h1>
+
+
+<br>
     
 <table class="table">
     <tr>
@@ -61,6 +71,39 @@
 </table>
 <a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
 
+
+<div class="container ">
+
+    <!-- Comments -->
+        {% get_comment_count for object as comment_count %}
+        <div class="comment mt-3 mb-5">  
+        <div class="card pt-4">
+            <div class="card-body">
+            <h5 class="card-title">Kommentarer</h5>
+
+            <!-- Kommentar træet -->
+
+            {% if comment_count %}
+                <ul class="media-list">
+                {% render_xtdcomment_tree for object %}
+                </ul>
+            {% endif %}
+
+            <!-- Skrivefelt -->
+
+            {% render_comment_form for object %}
+
+            <!-- Optælling -->
+            <div class="py-4 card-text">
+                <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}">Tilbage til oversigt</a>
+                &nbsp;&sdot;&nbsp;
+                {{ comment_count }} komment{{ comment_count|pluralize:"ar,arer" }}
+                er givet.
+            </div>
+        </div>
+        </div>
+
+    </div>
 {% endblock %}
 
 
