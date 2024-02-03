@@ -20,105 +20,60 @@
 
 {% endif %}
     
-<form role="form" method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.errors }}    
+    {{ form.errors }}
+        <!-- Item -->
+        {% bootstrap_label "Item " %}
+        {% bootstrap_field form.item  show_label=False  %}
 
-    <div class="mb-3">
-        <label class="form-label" for="item">Aktivitet:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'rocket-takeoff' %}  </span>
-            {{ form.item }}
-        </div>
-    </div>
+        <!-- Quantity -->
+        {% bootstrap_label "Location " %}
+        {% bootstrap_field form.location show_label=False  %}
 
-    <div class="mb-3">
-        <label class="form-label" for="location">Location:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'geo' %}  </span>
-            <input class="form-control" id="location" type="text" name="location" value="{{ object.location }}">    
-        </div>      
-    </div>
-
-    <div class="alert alert-warning d-flex align-items-center" role="alert">
-        
-        {% bs_icon 'exclamation-triangle-fill' %}
-        <div>
-           OBS! dato skal tastes ind hver gang - sorry!
-        </div>
-      </div>
-
-       <!-- Start date -->
-    {% bootstrap_label "Start dato"  label_for="start_date"  %}
-    {% bootstrap_field form.start_date show_label=False  id="start_date" %}
-
-    <!-- Start time -->
-    {% bootstrap_label "Start tidspunkt" %}
-    {% bootstrap_field form.start_time show_label=False %}
-
-
-    <!-- End date -->
-    {% bootstrap_label "Slut dato"  label_for="end_date"  %}
-    {% bootstrap_field form.end_date  show_label=False   id="end_date"  %}
-
-    <!-- End time -->
-    {% bootstrap_label "Slut tidspunt" %}
-    {% bootstrap_field form.end_time show_label=False %}
-
-<!--
-<div class="mb-3">
-        <label class="form-label" for="start_date">Bookes fra:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'calendar' %}  </span>
-            <input class="form-control" id="start_date" type="date" name="start_date" >
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'clock' %}  </span>
-            <input class="form-control" id="start_time" type="time" name="start_time" >
-            <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
-        </div>
-    </div>
-
-
+        <!-- Start date -->
+        {% bootstrap_label "Start dato"  label_for="start_date"  %}
+        {% bootstrap_field form.start_date show_label=False  id="start_date" %}
     
+        <!-- Start time -->
+        {% bootstrap_label "Start tidspunkt" %}
+        {% bootstrap_field form.start_time show_label=False %}
+    
+        <!-- End date -->
+        {% bootstrap_label "Slut dato"  label_for="end_date"  %}
+        {% bootstrap_field form.end_date  show_label=False   id="end_date"  %}
+    
+        <!-- End time -->
+        {% bootstrap_label "Slut tidspunt" %}
+        {% bootstrap_field form.end_time show_label=False %}
+    
+        <!-- Team -->
+        {% bootstrap_label "Team" %}
+        {% bootstrap_field form.team  show_label=False  %}
 
-    
-    <div class="mb-3">
-        <label class="form-label" for="end_date">Bookes til:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'calendar' %}  </span>
-            <input class="form-control" id="end_date" type="date" name="end_date" value="{{ object.end.date }}">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'clock' %}  </span>
-            <input class="form-control" id="end_time" type="time" name="end_time" value="{{ object.end.time }}">
-            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursus slut</button>
-        </div>
-    </div>
--->
-    
-    
-    <div class="mb-3">
-        <label class="form-label" for="team_contact">Kontaktperson:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'person-vcard' %}  </span>
-            {{ form.team_contact }}
-        </div>
-    </div>
-    
-    <div class="mb-3">
-        <label class="form-label" for="team">Team:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'people' %}  </span>
-            {{ form.team }}
-        </div>
-    </div>
+        <!-- Team Contact -->
+        {% bootstrap_label "Kontaktperson " %}
+        {% bootstrap_field form.team_contact  show_label=False  %}
 
-    <div class="mb-3">
-        <label class="form-label" for="remarks">Bemærkninger:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'chat-left-text' %}  </span>
+        <!-- Team Contact -->
+        {% bootstrap_label "Kontaktperson " %}
+        {% bootstrap_field form.team_contact  show_label=False  %}
+
+        <!-- Status -->
+        {% bootstrap_field form.status  show_label=False  value="Pending"  %}
+
+    <div class="form-group row mb-2">
+        <label class="col-sm-2 col-form-label" for="remarks">Bemærkninger:</label>
+        <div class="col-sm-10">
             <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
         </div>
     </div>
 
-    <input type="submit" value="Insend" class="btn btn-primary">
+    <div class="form-group row">
+        <div class="col-sm-10 offset-sm-2">
+            <input type="submit" value="Indsend" class="btn btn-primary">
+        </div>
+    </div>
 </form>
 
 <script>

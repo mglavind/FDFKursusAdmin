@@ -39,19 +39,20 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
     assigned_aktivitetsteam = forms.ModelMultipleChoiceField(
         queryset=Volunteer.objects.filter(teammembership__team=my_specific_team),
         widget=forms.CheckboxSelectMultiple,
+        required=False,
     )
-
     class Meta:
         model = models.AktivitetsTeamBooking
         fields = '__all__' 
  
 
-
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.status = "Pending"
+
         if commit:
             instance.save()
+
         return instance
     
     

@@ -38,7 +38,7 @@ class AktivitetsTeamBooking(models.Model):
     team_contact = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE, related_name='team_contact_bookings')
 
     # Add Many-to-Many relationship with Volunteer
-    assigned_aktivitetsteam = models.ManyToManyField("organization.Volunteer", related_name='Assigned_Aktivitetsteam')
+    assigned_aktivitetsteam = models.ManyToManyField("organization.Volunteer", related_name='Assigned_Aktivitetsteam', blank=True)
 
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
