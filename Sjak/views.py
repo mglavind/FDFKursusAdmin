@@ -51,13 +51,9 @@ class SjakBookingListView(generic.ListView):
 
 
     
-class SjakBookingCreateView(SuccessMessageMixin, FormView):
+class SjakBookingCreateView(generic.CreateView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
-    template_name = 'Sjak/sjakbooking_form.html'
-    success_url = reverse_lazy("Sjak_SjakBooking_list")
-    success_message = "Form submitted successfully! Item: %(item)s"  # Add success message here
-
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -67,9 +63,6 @@ class SjakBookingCreateView(SuccessMessageMixin, FormView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
-
-
-
 
 
 

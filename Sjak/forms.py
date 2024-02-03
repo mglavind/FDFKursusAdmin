@@ -18,7 +18,7 @@ from django_bootstrap5.widgets import RadioSelectButtonGroup
 
 
 
-class SjakBookingForm(forms.Form): 
+class SjakBookingForm(forms.ModelForm): 
     # To update the form, you need to update the model and the form
     start = forms.DateField(
         widget=TextInput(attrs={"type": "date"}),
@@ -36,18 +36,11 @@ class SjakBookingForm(forms.Form):
         widget=TextInput(attrs={"type": "time"}),
         initial=Event.objects.filter(is_active=True).first().end_date
     )
-    team_contact = forms.ChoiceField(
-        choices=[(user.id, f"{user.first_name} {user.last_name}") for user in get_user_model().objects.all().order_by("first_name")]
-    )
-    item = forms.ChoiceField(choices=[(item.id, item.name) for item in SjakItem.objects.all().order_by("name")])
-    team = forms.ChoiceField(
-        choices=[(team.id, team.name) for team in Team.objects.all().order_by("name")]
-    )
     remarks = forms.CharField(widget=forms.Textarea, required=False)
     quantity = forms.DecimalField(max_digits=10, decimal_places=1, required=True)
 
     class Meta:
-       model = SjakBooking
+       model = models.SjakBooking
        fields = [
             "start",
             "end",
@@ -57,6 +50,21 @@ class SjakBookingForm(forms.Form):
             "remarks",
             "quantity",
        ] # list of fields you want from model
+
+    def save(self, commit=True):
+        print("Begin save")
+        instance = super().save(commit=False)
+        instance.status = "Pending"
+        instance.status_internal = "Afventer"
+        instance.event = Event.objects.filter(is_active=True).first()
+        deadline = Event.objects.filter(is_active=True).first().deadline_sjak
+        print("Begin end save")
+        if deadline > timezone.now().date():
+            if commit:
+                instance.save()
+                print("Inside Commit and before deadline")
+        return instance
+
 
     def __init__(self, *args, user=None, **kwargs):
         super(SjakBookingForm, self).__init__(*args, **kwargs)
@@ -73,21 +81,11 @@ class SjakBookingForm(forms.Form):
                 teammembership__team=team_membership.team
             )
             self.fields["team_contact"].initial = user
+
+    
         
 
-   
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.status = "Pending"
-        instance.status_internal = "Afventer"
-        instance.event = Event.objects.filter(is_active=True).first().id
-        deadline = Event.objects.filter(is_active=True).first().deadline_sjak
-        if deadline < timezone.now().date():
-            if commit:
-                instance.save()
-        return instance
-
+    
     
 
 
