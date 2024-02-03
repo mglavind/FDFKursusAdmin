@@ -41,10 +41,15 @@ class TeknikBookingForm(forms.ModelForm):
         ]
 
     def save(self, commit=True):
+        print("TeknikBookingForm.save() begin")
         instance = super().save(commit=False)
+        print("instance loaded")
         instance.status = "Pending"
+        print("Instance set to pending")
         if commit:
+            print("Connet exists")
             instance.save()
+            print("instance saved")
         return instance
 
     def __init__(self, *args, user=None, **kwargs):
