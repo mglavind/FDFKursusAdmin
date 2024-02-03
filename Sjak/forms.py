@@ -19,6 +19,7 @@ from django_bootstrap5.widgets import RadioSelectButtonGroup
 
 
 class SjakBookingForm(forms.Form): 
+    # To update the form, you need to update the model and the form
     start = forms.DateField(
         widget=TextInput(attrs={"type": "date"}),
         initial=Event.objects.filter(is_active=True).first().start_date

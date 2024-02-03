@@ -54,7 +54,7 @@ class SjakBookingListView(generic.ListView):
 class SjakBookingCreateView(SuccessMessageMixin, FormView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
-    template_name = 'Sjak/SjakBooking_form.html'
+    template_name = 'Sjak/sjakbooking_form.html'
     success_url = reverse_lazy("Sjak_SjakBooking_list")
     success_message = "Form submitted successfully! Item: %(item)s"  # Add success message here
 
