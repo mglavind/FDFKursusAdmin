@@ -230,6 +230,10 @@ class ButikkenBookingForm(forms.ModelForm):
         widget=TextInput(attrs={"type": "date"}),
         initial=Event.objects.filter(is_active=True).first().start_date
     )
+    start_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
+    )
     class Meta:
         model = models.ButikkenBooking
         fields = fields = '__all__' 
