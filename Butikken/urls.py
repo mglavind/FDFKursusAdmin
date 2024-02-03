@@ -24,7 +24,7 @@ urlpatterns = (
     path("Butikken/ButikkenItem/delete/<int:pk>/", views.ButikkenItemDeleteView.as_view(), name="Butikken_ButikkenItem_delete"),
 
     path("Butikken/ButikkenBooking/", views.ButikkenBookingListView.as_view(), name="Butikken_ButikkenBooking_list"),
-    path("Butikken/ButikkenBooking/createNew/", views.create_butikken_booking, name="Butikken_ButikkenBooking_create_new"),
+    #path("Butikken/ButikkenBooking/createNew/", views.create_butikken_booking, name="Butikken_ButikkenBooking_create_new"),
     path("Butikken/ButikkenBooking/create/", views.ButikkenBookingCreateView.as_view(), name="Butikken_ButikkenBooking_create"),
     path("Butikken/ButikkenBooking/detail/<int:pk>/", views.ButikkenBookingDetailView.as_view(), name="Butikken_ButikkenBooking_detail"),
     path("Butikken/ButikkenBooking/update/<int:pk>/", views.ButikkenBookingUpdateView.as_view(), name="Butikken_ButikkenBooking_update"),

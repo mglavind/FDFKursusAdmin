@@ -77,15 +77,15 @@ class ButikkenBookingCreateView(generic.CreateView):
         kwargs['user'] = self.request.user
         return kwargs
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    #def get_context_data(self, **kwargs):
+    #    context = super().get_context_data(**kwargs)
         # Add your context data here
-        context['event'] = Event.objects.filter(is_active=True).first()
-        context['form'] = forms.ButikkenBookingForm()
-        team = models.Team.objects.filter(teammembership__member=self.request.user).first()
-        if team:
-            context['bookings'] = models.ButikkenBooking.objects.filter(team=team)
-        return context
+    #    context['event'] = Event.objects.filter(is_active=True).first()
+    #    context['form'] = forms.ButikkenBookingForm()
+    #    team = models.Team.objects.filter(teammembership__member=self.request.user).first()
+    #    if team:
+    #        context['bookings'] = models.ButikkenBooking.objects.filter(team=team)
+    #    return context
     
     
 def create_butikken_booking(request):

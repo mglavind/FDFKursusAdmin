@@ -16,7 +16,7 @@
 <br>
 <h1 class="display-3" >Ny butikken booking</h1>
 {% if user.is_authenticated %}
-<p>Deadline for butikken bestillinger: <mark> {{user.events.first.deadline_butikken }} </mark>.</p>
+<p>Deadline for butikken bestillinger: <mark> {{user.events.first.deadline_mad}} </mark>.</p>
 
 {% endif %}
     
@@ -43,18 +43,18 @@
         {% bootstrap_label "Kontaktperson " %}
         {% bootstrap_field form.team_contact  show_label=False  %}
 
-    <div class="form-group row mb-2">
-        <label class="col-sm-2 col-form-label" for="remarks">Bemærkninger:</label>
-        <div class="col-sm-10">
-            <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
-        </div>
-    </div>
 
-    <div class="form-group row">
-        <div class="col-sm-10 offset-sm-2">
-            <input type="submit" value="Indsend" class="btn btn-primary">
-        </div>
-    </div>
+    <!--Remarks  -->
+    {% bootstrap_label "Bemærkninger " %}
+    {% bootstrap_field form.remarks placeholder='bemærkninger'  show_label=False %}
+
+    <!-- Status -->
+    {% bootstrap_field form.status  show_label=False  value="Pending"  %}
+
+
+
+    {% buttons submit='Insend' reset="Nulstil" %}
+    {% endbuttons %}
 </form>
 
 
