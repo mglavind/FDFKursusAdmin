@@ -92,13 +92,14 @@ class LocationBookingListView(generic.ListView):
         primary_camp_bookings = models.LocationBooking.objects.filter(primary_camp=True)
         context['primary_camp_bookings'] = primary_camp_bookings
 
-        DEA_start_datetime = datetime(2024, 3, 30, 21, 0, 0)  # Updated DEA start datetime
-        DEA_end_datetime = datetime(2024, 3, 30, 23, 59, 0)  # Updated DEA end datetime
+        DEA_start_datetime = datetime(2024, 3, 30, 21, 30, 0)  # Updated DEA start datetime
+        DEA_end_datetime = datetime(2024, 3, 30, 22, 30, 0)  # Updated DEA end datetime
         overlapping_bookings = models.LocationBooking.objects.filter(
             start_date__lte=DEA_end_datetime.date(),
             end_date__gte=DEA_start_datetime.date(),
             start_time__lte=DEA_end_datetime.time(),
             end_time__gte=DEA_start_datetime.time()
+            
         )
         context['overlapping_bookings'] = overlapping_bookings
 
