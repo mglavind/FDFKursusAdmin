@@ -30,7 +30,8 @@
                                             <label class="small mb-1" for="id_username">Brugernavn</label>
                                             <input type="text" name="username" class="form-control"
                                                    autocomplete="username" required id="id_username"
-                                                   placeholder="Indtast brugernavn">
+                                                   placeholder="Indtast brugernavn" pattern="^[^@]+$"
+                                                   title="Brugernavn kan ikke være en email " />
                                         </div>
                                     </div>
                                 </div>
