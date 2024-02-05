@@ -78,6 +78,7 @@ class LocationTypeDeleteView(generic.DeleteView):
 class LocationBookingListView(generic.ListView):
     model = models.LocationBooking
     form_class = forms.LocationBookingForm
+
     def get_queryset(self):
         active_event = Event.objects.filter(is_active=True).first()
         if active_event:
@@ -85,6 +86,23 @@ class LocationBookingListView(generic.ListView):
         else:
             queryset = models.LocationBooking.objects.all().order_by('item')
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        primary_camp_bookings = models.LocationBooking.objects.filter(primary_camp=True)
+        context['primary_camp_bookings'] = primary_camp_bookings
+
+        DEA_start_datetime = datetime(2024, 3, 30, 21, 0, 0)  # Updated DEA start datetime
+        DEA_end_datetime = datetime(2024, 3, 30, 23, 59, 0)  # Updated DEA end datetime
+        overlapping_bookings = models.LocationBooking.objects.filter(
+            start_date__lte=DEA_end_datetime.date(),
+            end_date__gte=DEA_start_datetime.date(),
+            start_time__lte=DEA_end_datetime.time(),
+            end_time__gte=DEA_start_datetime.time()
+        )
+        context['overlapping_bookings'] = overlapping_bookings
+
+        return context
 
 
 class LocationBookingCreateView(generic.CreateView):
