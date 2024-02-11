@@ -52,6 +52,8 @@ class ButikkenBooking(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     remarks = models.TextField(blank=True)  # Blank allows for an empty value
+    remarks_internal = models.TextField(blank=True)  # Blank allows for an empty value
+    for_meal = models.BooleanField(default=False)
 
     class Meta:
         pass

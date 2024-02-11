@@ -178,6 +178,8 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
         "status",
         "created",
         "formatted_last_updated",
+        "remarks_internal",
+        "for_meal",
     ]
     readonly_fields = [
         "created",
@@ -221,7 +223,7 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
         response.write(u'\ufeff'.encode('utf8'))
 
         writer = csv.writer(response)
-        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "Status","Remarks","last updated"])
+        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "start tid", "Status","Remarks","last updated", "remarks internal", "for meal"])
 
         for booking in queryset:
             writer.writerow([
@@ -230,9 +232,12 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
                 booking.team,
                 booking.team_contact,
                 booking.start,
+                booking.start_time,
                 booking.status,
                 booking.remarks,
-                booking.last_updated
+                booking.last_updated,
+                booking.remarks_internal,
+                booking.for_meal,
             ])
 
         return response

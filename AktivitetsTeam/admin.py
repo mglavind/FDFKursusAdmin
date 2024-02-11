@@ -3,6 +3,8 @@ from django import forms
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import formats
+from icalendar import Calendar, Event
+from datetime import datetime
 import csv
 
 from . import models
@@ -94,7 +96,7 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
         ('team', RelatedDropdownFilter),
         ('assigned_aktivitetsteam', RelatedDropdownFilter)
     )
-    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv", "export_selected_to_ical"]
     search_fields = ['item__name', 'team__name'] 
 
     inlines = [
@@ -125,23 +127,60 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
         response.write(u'\ufeff'.encode('utf8'))
         writer = csv.writer(response)
         
-        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "End", "Status", "Remarks", "Internal remarks"])
+        writer.writerow(["Aktivitet", "Team", "Kontaktperson", "Start dato","Start tid", "Slut dato", "Slut tid", "location", "Status", "Remarks", "Assigned AT", "Internal remarks"])
 
         for booking in queryset:
             writer.writerow([
                 booking.item,
-                booking.quantity,
                 booking.team,
                 booking.team_contact,
-                booking.start,
-                booking.end,
+                booking.start_date,
+                booking.start_time,
+                booking.end_date,
+                booking.end_time,
+                booking.location,
                 booking.status,
                 booking.remarks,
+                booking.assigned_aktivitetsteam,
                 booking.remarks_internal,
             ])
 
         return response
     export_to_csv.short_description = "Export selected bookings to CSV"
+
+
+    def export_selected_to_ical(self, request, queryset):
+        calendar = Calendar()
+
+        def convert_to_ical(booking):
+            ical_event = Event()
+            summary = f"{booking.item} - {booking.team} - {booking.team_contact}"
+            ical_event.add('summary', summary)
+
+            # Wrap date and time fields into datetime objects
+            start_datetime = datetime.combine(booking.start_date, booking.start_time)
+            end_datetime = datetime.combine(booking.end_date, booking.end_time)
+
+            ical_event.add('dtstart', start_datetime)
+            ical_event.add('dtend', end_datetime)
+            ical_event.add('description', booking.remarks)
+
+            # Add more properties as needed
+
+            # Add the team_contact name in the "description" field
+            description_with_contact = f"Kontaktperson: {booking.team_contact}\n{booking.remarks}"
+            ical_event.add('description', description_with_contact)
+
+            return ical_event
+
+        for booking in queryset:
+            ical_event = convert_to_ical(booking)
+            calendar.add_component(ical_event)
+
+        response = HttpResponse(calendar.to_ical(), content_type='text/calendar')
+        response['Content-Disposition'] = 'attachment; filename="bookings.ics"'
+
+        return response
 
 
 

@@ -16,6 +16,11 @@ from django.urls import reverse
 
 from . import models
 from datetime import datetime
+from django_comments_xtd.models import XtdComment
+
+class CommentInline(admin.TabularInline):
+    model = XtdComment
+
 
 class TeknikBookingAdminForm(forms.ModelForm):
 
@@ -54,6 +59,7 @@ class TeknikBookingAdmin(admin.ModelAdmin):
     )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv", 'export_selected_to_ical']
     search_fields = ['item', 'team','team_contact'] 
+    #inlines = [CommentInline]
 
     def approve_bookings(self, request, queryset):
         for booking in queryset:
