@@ -53,7 +53,15 @@ class ButikkenBooking(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     remarks = models.TextField(blank=True)  # Blank allows for an empty value
     remarks_internal = models.TextField(blank=True)  # Blank allows for an empty value
-    for_meal = models.BooleanField(default=False)
+
+    # Fields
+    TYPE_CHOICES = (
+        ('Aktivitet', 'Aktivitet'),
+        ('Morgenmad', 'Morgenmad'),
+        ('Frokost', 'Frokost'),
+        ('Aftensmad', 'Aftensmad'),
+    )  
+    for_meal = models.CharField(max_length=10, choices=TYPE_CHOICES, default='Pending')
 
     class Meta:
         pass
