@@ -50,14 +50,13 @@
     {% bootstrap_label "Slut tidspunt" %}
     {% bootstrap_field form.end_time show_label=False %}
 
+ 
+  
     
-    <!-- Item -->
-    {% bootstrap_label "Sjak genstand " %}
-    {% bootstrap_field form.item  show_label=False  %}
-
     <!-- Quantity -->
     {% bootstrap_label "Antal " %}
     {% bootstrap_field form.quantity  show_label=False  %}
+    
 
     <div class="mb-3">
         <label class="form-label" for="team_contact">Kontaktperson:</label>
@@ -89,106 +88,42 @@
     {% bootstrap_label "Bemærkninger " %}
     {% bootstrap_field form.remarks placeholder='bemærkninger'  show_label=False %}
 
+    <div class="mb-3">
+        <label class="form-label" for="item">SjakItem:</label>
+        
+        <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
+        
+        <datalist id="datalistOptions">
+            {% for sjak_item in sjak_items %}
+                <option value="{{ sjak_item.id }}" label="{{sjak_item.name}} " data-id="{{ sjak_item.id }}"> 
+                </option>
+            {% endfor %}
+        </datalist>
+    </div>
+
+
+
+
     {% buttons submit='Insend' reset="Nulstil" %}
     {% endbuttons %}
 </form>
 
-
-<!--
-
-
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.errors}}   
-    
-
-    <div class="mb-3">
-        <label class="form-label" for="item">Sjak item:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'rocket-takeoff' %}  </span>
-            {{ form.item }}
-        </div>
-    </div>
-
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="{{ form.quantity.id_for_label }}">Antal </label>
-        {{ form.quantity }}
-    </div>
-    <br>
-
-
-    <div class="mb-3">
-        <label class="form-label" for="start">Bookes fra:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'calendar' %}  </span>
-            <input class="form-control" id="start" type="date" name="start" value="{{ object.start }}">
-            <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
-        </div>
-    </div>
-
-    
-    <div class="mb-3">
-        <label class="form-label" for="end">Bookes til:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'calendar' %}  </span>
-            <input class="form-control" id="end" type="date" name="end" value="{{ object.end }}">
-            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursusslut</button>
-        </div>
-    </div>
-    <br>
-      
-
-    <div class="mb-3">
-        <label class="form-label" for="team_contact">Kontaktperson:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'person-vcard' %}  </span>
-            {{ form.team_contact }}
-        </div>
-    </div>
-
-  <div class="mb-3">
-        <label class="form-label" for="team">Team:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'people' %}  </span>
-            {{ form.team }}
-        </div>
-    </div>
-
-
-
-  <div class="mb-3">
-        <label class="form-label" for="remarks">Bemærkninger:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'chat-left-text' %}  </span>
-            <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
-        </div>
-    </div>
-
-
-    <input type="submit" value="Insend" class="btn btn-primary">
-</form>
-
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const setPredefinedStartButton = document.getElementById("set-predefined-start");
-        const setPredefinedEndButton = document.getElementById("set-predefined-end");
-        const startField = document.getElementById("start");
-        const endField = document.getElementById("end");
-
-        setPredefinedStartButton.addEventListener("click", function () {
-            startField.value = user.events.first.start_date ; // Replace with your predefined value for start
-        });
-
-        setPredefinedEndButton.addEventListener("click", function () {
-            endField.value = user.events.first.end_date ; // Replace with your predefined value for end
+        document.getElementById("item").addEventListener("input", function () {
+            let input = this.value.toLowerCase();
+            let options = document.querySelectorAll("#datalistOptions option");
+            
+            options.forEach(function (option) {
+                if (option.value.toLowerCase() === input) {
+                    document.getElementById("item").value = option.value;
+                    document.getElementById("item_id").value = option.getAttribute("data-id");
+                }
+            });
         });
     });
 </script>
 
-    
--->
 
 {% endblock %}
 

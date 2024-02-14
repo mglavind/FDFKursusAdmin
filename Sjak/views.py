@@ -64,6 +64,13 @@ class SjakBookingCreateView(generic.CreateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        sjak_items = models.SjakItem.objects.all()
+        context['sjak_items'] = sjak_items
+        return context
+
+
 
 
 class SjakBookingDetailView(generic.DetailView):
