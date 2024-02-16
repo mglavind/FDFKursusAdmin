@@ -27,7 +27,7 @@
 
 {% endif %}
 
-<form role="form" method="post">
+<form id="form" role="form" method="post">
     {% csrf_token %}
 
 
@@ -116,10 +116,15 @@
             
             options.forEach(function (option) {
                 if (option.value.toLowerCase() === input) {
-                    document.getElementById("item").value = option.value;
-                    document.getElementById("item_id").value = option.getAttribute("data-id");
+                    document.getElementById("item").value = option.value + " - " + option.label;
+                    //document.getElementById("item_id").value = option.getAttribute("data-id");
                 }
             });
+        }); 
+
+        document.getElementById("form").addEventListener("submit", function() {
+            let item = document.getElementById("item")
+            item.value = item.value.split(" - ")[0]
         });
     });
 </script>
