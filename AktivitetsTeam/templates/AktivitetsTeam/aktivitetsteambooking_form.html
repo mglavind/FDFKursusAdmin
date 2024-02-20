@@ -20,12 +20,24 @@
 
 {% endif %}
     
-<form method="post" enctype="multipart/form-data">
+<form id="form" role="form" method="post">
     {% csrf_token %}
-    {{ form.errors }}
-        <!-- Item -->
-        {% bootstrap_label "Item " %}
-        {% bootstrap_field form.item  show_label=False  %}
+
+
+    {% bootstrap_form_errors form type='non_fields' %}
+
+    <div class="mb-3">
+        <label class="form-label" for="item">Aktivitet:</label>
+        
+        <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
+        
+        <datalist id="datalistOptions">
+            {% for aktivitetsteam_item in aktivitetsteam_items %}
+                <option value="{{ aktivitetsteam_item.id }}" label="{{aktivitetsteam_item.name}} " data-id="{{ aktivitetsteam_item.id }}"> 
+                </option>
+            {% endfor %}
+        </datalist>
+    </div>
 
         <!-- Quantity -->
         {% bootstrap_label "Location " %}
@@ -55,41 +67,43 @@
         {% bootstrap_label "Kontaktperson " %}
         {% bootstrap_field form.team_contact  show_label=False  %}
 
+        <!--Remarks  -->
+        {% bootstrap_label "Bemærkninger " %}
+        {% bootstrap_field form.remarks placeholder='bemærkninger'  show_label=False %}
 
         <!-- Status -->
         {% bootstrap_field form.status  show_label=False  value="Pending"  %}
 
-    <div class="form-group row mb-2">
-        <label class="col-sm-2 col-form-label" for="remarks">Bemærkninger:</label>
-        <div class="col-sm-10">
-            <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
-        </div>
-    </div>
+        {% buttons submit='Insend' reset="Nulstil" %}
+        {% endbuttons %}
 
-    <div class="form-group row">
-        <div class="col-sm-10 offset-sm-2">
-            <input type="submit" value="Indsend" class="btn btn-primary">
-        </div>
-    </div>
+        
+
 </form>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const setPredefinedStartButton = document.getElementById("set-predefined-start");
-        const setPredefinedEndButton = document.getElementById("set-predefined-end");
-        const startDateField = document.getElementById("start_date");
-        const startTimeField = document.getElementById("start_time");
-        const endDateField = document.getElementById("end_date");
-        const endTimeField = document.getElementById("end_time");
+        document.getElementById("item").addEventListener("input", function () { 
+            let input = this.value.toLowerCase();
+            let options = document.querySelectorAll("#datalistOptions option");
+        
+            options.forEach(function (option) {
+        
+                if (option.value.toLowerCase() === input) {
+                    document.getElementById("item").value = option.value + " - " + option.label;
+                    //document.getElementById("item_id").value = option.getAttribute("data-id");
+                }
+            });
+        }); 
 
-        setPredefinedStartButton.addEventListener("click", function () {
-            startDateField.value = "2023-10-14"; // Replace with your predefined date for start
-            startTimeField.value = "08:00"; // Replace with your predefined time for start
+        document.getElementById("form").addEventListener("submit", function() {
+            let item = document.getElementById("item")
+            item.value = item.value.split(" - ")[0]
         });
-
-        setPredefinedEndButton.addEventListener("click", function () {
-            endDateField.value = "2023-10-21"; // Replace with your predefined date for end
-            endTimeField.value = "16:00"; // Replace with your predefined time for end
+        
+        document.getElementById("form").addEventListener("submit", function() {
+            let item = document.getElementById("item")
+            item.value = item.value.split(" - ")[0]
         });
     });
 </script>
