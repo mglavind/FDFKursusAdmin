@@ -10,7 +10,7 @@
     </a>
 </p>
     
-<form method="post" role="form"  enctype="multipart/form-data">
+<form id="form" role="form" method="post">
     {% csrf_token %}
     {% bootstrap_form_errors form type='non_fields' %}  
 
@@ -89,15 +89,20 @@
             options.forEach(function (option) {
         
                 if (option.value.toLowerCase() === input) {
-                     
-                document.getElementById("item").value = option.value + " - " + option.label;
+                    document.getElementById("item").value = option.value + " - " + option.label;
+                    //document.getElementById("item_id").value = option.getAttribute("data-id");
                 }
-             });
+            });
+        }); 
+
+        document.getElementById("form").addEventListener("submit", function() {
+            let item = document.getElementById("item")
+            item.value = item.value.split(" - ")[0]
         });
         
         document.getElementById("form").addEventListener("submit", function() {
-                let item = document.getElementById("item")
-                item.value = item.value.split(" - ")[0]
+            let item = document.getElementById("item")
+            item.value = item.value.split(" - ")[0]
         });
     });
 </script>

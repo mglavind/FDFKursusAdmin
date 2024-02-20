@@ -22,12 +22,24 @@
 
 <br>
     
-<form method="post" enctype="multipart/form-data">
+<form id="form" role="form" method="post">
     {% csrf_token %}
-    {{ form.errors }}
-        <!-- Item -->
-        {% bootstrap_label "Item " %}
-        {% bootstrap_field form.item  show_label=False  %}
+
+
+    {% bootstrap_form_errors form type='non_fields' %}
+
+    <div class="mb-3">
+        <label class="form-label" for="item">Teknik ting:</label>
+        
+        <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
+        
+        <datalist id="datalistOptions">
+            {% for teknik_item in teknik_items %}
+                <option value="{{ teknik_item.id }}" label="{{teknik_item.name}} " data-id="{{ teknik_item.id }}"> 
+                </option>
+            {% endfor %}
+        </datalist>
+    </div>
 
         <!-- Quantity -->
         {% bootstrap_label "Antal " %}
@@ -94,17 +106,27 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const setPredefinedStartButton = document.getElementById("set-predefined-start");
-        const setPredefinedEndButton = document.getElementById("set-predefined-end");
-        const startField = document.getElementById("start");
-        const endField = document.getElementById("end");
+        document.getElementById("item").addEventListener("input", function () { 
+            let input = this.value.toLowerCase();
+            let options = document.querySelectorAll("#datalistOptions option");
+        
+            options.forEach(function (option) {
+        
+                if (option.value.toLowerCase() === input) {
+                    document.getElementById("item").value = option.value + " - " + option.label;
+                    //document.getElementById("item_id").value = option.getAttribute("data-id");
+                }
+            });
+        }); 
 
-        setPredefinedStartButton.addEventListener("click", function () {
-            startField.value = "2023-10-14T08:00"; // Replace with your predefined value for start
+        document.getElementById("form").addEventListener("submit", function() {
+            let item = document.getElementById("item")
+            item.value = item.value.split(" - ")[0]
         });
-
-        setPredefinedEndButton.addEventListener("click", function () {
-            endField.value = "2023-10-21T16:00"; // Replace with your predefined value for end
+        
+        document.getElementById("form").addEventListener("submit", function() {
+            let item = document.getElementById("item")
+            item.value = item.value.split(" - ")[0]
         });
     });
 </script>
