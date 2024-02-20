@@ -22,9 +22,10 @@
 
 <br>
     
-<form method="post" enctype="multipart/form-data">
+<form id="form" role="form" method="post">
     {% csrf_token %}
-    {{ form.errors }}
+
+    {% bootstrap_form_errors form type='non_fields' %}
         <!-- Item -->
         
         <div class="mb-3">
