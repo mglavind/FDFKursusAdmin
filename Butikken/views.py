@@ -76,6 +76,12 @@ class ButikkenBookingCreateView(generic.CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        butikken_items = models.ButikkenItem.objects.all()
+        context['butikken_items'] = butikken_items
+        return context
 
     #def get_context_data(self, **kwargs):
     #    context = super().get_context_data(**kwargs)

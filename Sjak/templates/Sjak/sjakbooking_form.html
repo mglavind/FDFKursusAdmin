@@ -33,6 +33,20 @@
 
     {% bootstrap_form_errors form type='non_fields' %}
 
+    <div class="mb-3">
+        <label class="form-label" for="item">Sjak ting:</label>
+        
+        <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
+        
+        <datalist id="datalistOptions">
+            {% for sjak_item in sjak_items %}
+                <option value="{{ sjak_item.id }}" label="{{sjak_item.name}} " data-id="{{ sjak_item.id }}"> 
+                </option>
+            {% endfor %}
+        </datalist>
+    </div>
+
+
     <!-- Start date -->
     {% bootstrap_label "Start dato"  label_for="start_date"  %}
     {% bootstrap_field form.start show_label=False  id="start_date" %}
@@ -88,42 +102,34 @@
     {% bootstrap_label "Bemærkninger " %}
     {% bootstrap_field form.remarks placeholder='bemærkninger'  show_label=False %}
 
-    <div class="mb-3">
-        <label class="form-label" for="item">SjakItem:</label>
-        
-        <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
-        
-        <datalist id="datalistOptions">
-            {% for sjak_item in sjak_items %}
-                <option value="{{ sjak_item.id }}" label="{{sjak_item.name}} " data-id="{{ sjak_item.id }}"> 
-                </option>
-            {% endfor %}
-        </datalist>
-    </div>
-
-
 
 
     {% buttons submit='Insend' reset="Nulstil" %}
     {% endbuttons %}
 </form>
 
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("item").addEventListener("input", function () {
+        document.getElementById("item").addEventListener("input", function () { 
             let input = this.value.toLowerCase();
             let options = document.querySelectorAll("#datalistOptions option");
-            
+        
             options.forEach(function (option) {
+        
                 if (option.value.toLowerCase() === input) {
-                    document.getElementById("item").value = option.value;
-                    document.getElementById("item_id").value = option.getAttribute("data-id");
+                     
+                document.getElementById("item").value = option.value + " - " + option.label;
                 }
-            });
+             });
+        });
+        
+        document.getElementById("form").addEventListener("submit", function() {
+            let item = document.getElementById("item")
+            item.value = item.value.split(" - ")[0]
         });
     });
 </script>
-
 
 {% endblock %}
 

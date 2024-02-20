@@ -24,8 +24,19 @@
     {% csrf_token %}
     {{ form.errors }}
         <!-- Item -->
-        {% bootstrap_label "Item " %}
-        {% bootstrap_field form.item  show_label=False  %}
+        <div class="mb-3">
+            <label class="form-label" for="item">Madvare:</label>
+            
+            <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
+            
+            <datalist id="datalistOptions">
+                {% for butikken_item in butikken_items %}
+                    <option value="{{ butikken_item.id }}" label="{{butikken_item.name}} (pakke af {{butikken_item.description}} )" data-id="{{ butikken_item.id }}"> 
+                    </option>
+                {% endfor %}
+            </datalist>
+        </div>
+    
 
         <!-- Quantity -->
         {% bootstrap_label "Antal " %}
@@ -64,6 +75,28 @@
     {% buttons submit='Insend' reset="Nulstil" %}
     {% endbuttons %}
 </form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("item").addEventListener("input", function () { 
+            let input = this.value.toLowerCase();
+            let options = document.querySelectorAll("#datalistOptions option");
+        
+            options.forEach(function (option) {
+        
+                if (option.value.toLowerCase() === input) {
+                     
+                document.getElementById("item").value = option.value + " - " + option.label;
+                }
+             });
+        });
+        
+        document.getElementById("form").addEventListener("submit", function() {
+                let item = document.getElementById("item")
+                item.value = item.value.split(" - ")[0]
+        });
+    });
+</script>
 
 
 {% endblock %}

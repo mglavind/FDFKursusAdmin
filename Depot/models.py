@@ -70,10 +70,16 @@ class DepotBooking(models.Model):
 
     # Fields
     remarks = models.TextField(max_length=500, blank=True)
-    end = models.DateTimeField()
+    
+    start = models.DateField(verbose_name='Start dato')
+    start_time = models.TimeField(verbose_name='Start tidspunkt', default='12:01')
+    end = models.DateField(verbose_name='Slut dato')
+    end_time = models.TimeField(verbose_name='Slut tidspunkt', default='12:01')
+
+
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    start = models.DateTimeField()
+    
     quantity = models.BigIntegerField()
 
     class Meta:

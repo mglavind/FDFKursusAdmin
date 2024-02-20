@@ -1,13 +1,14 @@
 from django import forms
-from Depot.models import DepotBox
+from Depot.models import DepotBox, DepotBooking
 from organization.models import Team
 from Depot.models import DepotItem
-from organization.models import Volunteer
+from organization.models import Team, TeamMembership, Volunteer, Event, EventMembership
 from Depot.models import DepotLocation
-from organization.models import Team, TeamMembership
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
 from . import models
+
+from django.forms import BaseFormSet, TextInput, formset_factory
 
 
 class DepotItemForm(forms.ModelForm):
@@ -38,13 +39,31 @@ class DepotLocationForm(forms.ModelForm):
 
 
 class DepotBookingForm(forms.ModelForm):
+    start = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
+    )
+    start_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().start_date
+    )
+    end = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().end_date,
+    )
+    end_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().end_date
+    )
     class Meta:
         model = models.DepotBooking
         exclude = ['status']
         fields = [
-            "remarks",
-            "end",
             "start",
+            "start_time",
+            "end",
+            "end_time",
+            "remarks",
             "quantity",
             "team",
             "item",

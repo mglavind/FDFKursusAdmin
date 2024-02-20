@@ -1,6 +1,8 @@
 {% extends "base.html" %}
-{% load static %}
 {% load bootstrap_icons %}
+{% load bootstrap5 %}
+{% load static %}
+
 {% block content %}
 <p>
     <a class="btn btn-light" href="{% url 'Depot_DepotBooking_list' %}">
@@ -8,50 +10,45 @@
     </a>
 </p>
     
-<form method="post" enctype="multipart/form-data">
+<form method="post" role="form"  enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.errors }}    
+    {% bootstrap_form_errors form type='non_fields' %}  
 
+     <!-- Item -->
     <div class="mb-3">
-        <label class="form-label" for="item">Ting:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'balloon' %}  </span>
-            {{ form.item }}
-        </div>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label" for="quantity">Antal:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'basket' %}  </span>
-            <input class="form-control" id="quantity" type="text" name="quantity" value="{{ object.quantity }}">    
-        </div>      
-    </div>
-
-    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <label class="form-label" for="item">Depot ting:</label>
         
-        {% bs_icon 'exclamation-triangle-fill' %}
-        <div>
-           OBS! dato skal tastes ind hver gang - sorry!
-        </div>
-      </div>
+        <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
+        
+        <datalist id="datalistOptions">
+            {% for depot_item in depot_items %}
+                <option value="{{ depot_item.id }}" label="{{depot_item.name}} " data-id="{{ depot_item.id }}"> 
+                </option>
+            {% endfor %}
+        </datalist>
+    </div>
+
+    <!-- Quantity -->
+    {% bootstrap_label "Antal " %}
+    {% bootstrap_field form.quantity  show_label=False  %}
+        
+
+    <!-- Start date -->
+    {% bootstrap_label "Start dato"  label_for="start_date"  %}
+    {% bootstrap_field form.start show_label=False  id="start_date" %}
+
+    <!-- Start time -->
+    {% bootstrap_label "Start tidspunkt" %}
+    {% bootstrap_field form.start_time show_label=False %}
 
 
-      <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="start">Bookes fra: </label>
-        <div class="input-group col-sm-10">
-            <input class="form-control" id="start" type="datetime-local" name="start" value="{{ object.start }}">
-            <button type="button" id="set-predefined-start" class="btn btn-secondary">Sæt til kursusstart</button>
-        </div>
-    </div>
-    <br>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="end">Bookes til: </label>
-        <div class="input-group mb-3">
-            <input class="form-control" id="end" type="datetime-local" name="end" value="{{ object.end }}">
-            <button type="button" id="set-predefined-end" class="btn btn-secondary">Sæt til kursus slut</button>
-        </div>
-    </div>
+    <!-- End date -->
+    {% bootstrap_label "Slut dato"  label_for="end_date"  %}
+    {% bootstrap_field form.end  show_label=False   id="end_date"  %}
+
+    <!-- End time -->
+    {% bootstrap_label "Slut tidspunt" %}
+    {% bootstrap_field form.end_time show_label=False %}
 
 
 
@@ -75,30 +72,32 @@
         </div>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label" for="remarks">Bemærkninger:</label>
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon1">{% bs_icon 'chat-left-text' %}  </span>
-            <textarea class="form-control" id="remarks" name="remarks" rows="4">{{ object.remarks }}</textarea>
-        </div>
-    </div>
-
-    <input type="submit" value="Insend" class="btn btn-primary">
+        <!--Remarks  -->
+        {% bootstrap_label "Bemærkninger " %}
+        {% bootstrap_field form.remarks placeholder='bemærkninger'  show_label=False %}
+    
+        {% buttons submit='Insend' reset="Nulstil" %}
+        {% endbuttons %}
 </form>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const setPredefinedStartButton = document.getElementById("set-predefined-start");
-        const setPredefinedEndButton = document.getElementById("set-predefined-end");
-        const startField = document.getElementById("start");
-        const endField = document.getElementById("end");
-
-        setPredefinedStartButton.addEventListener("click", function () {
-            startField.value = "2023-10-14T08:00"; // Replace with your predefined value for start
+        document.getElementById("item").addEventListener("input", function () { 
+            let input = this.value.toLowerCase();
+            let options = document.querySelectorAll("#datalistOptions option");
+        
+            options.forEach(function (option) {
+        
+                if (option.value.toLowerCase() === input) {
+                     
+                document.getElementById("item").value = option.value + " - " + option.label;
+                }
+             });
         });
-
-        setPredefinedEndButton.addEventListener("click", function () {
-            endField.value = "2023-10-21T16:00"; // Replace with your predefined value for end
+        
+        document.getElementById("form").addEventListener("submit", function() {
+                let item = document.getElementById("item")
+                item.value = item.value.split(" - ")[0]
         });
     });
 </script>

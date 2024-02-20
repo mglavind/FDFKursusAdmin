@@ -26,8 +26,21 @@
     {% csrf_token %}
     {{ form.errors }}
         <!-- Item -->
-        {% bootstrap_label "Område " %}
-        {% bootstrap_field form.item  show_label=False  %}
+        
+        <div class="mb-3">
+            <label class="form-label" for="item">Område:</label>
+            
+            <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
+            
+            <datalist id="datalistOptions">
+                {% for location_item in location_items %}
+                    <option value="{{ location_item.id }}" label="{{location_item.name}} " data-id="{{ location_item.id }}"> 
+                    </option>
+                {% endfor %}
+            </datalist>
+        </div>
+    
+        
 
         <!-- Start date -->
         {% bootstrap_label "Start dato"  label_for="start_date"  %}
@@ -83,6 +96,26 @@
 
 
 </form>
-
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("item").addEventListener("input", function () { 
+            let input = this.value.toLowerCase();
+            let options = document.querySelectorAll("#datalistOptions option");
+        
+            options.forEach(function (option) {
+        
+                if (option.value.toLowerCase() === input) {
+                     
+                document.getElementById("item").value = option.value + " - " + option.label;
+                }
+             });
+        });
+        
+        document.getElementById("form").addEventListener("submit", function() {
+                let item = document.getElementById("item")
+                item.value = item.value.split(" - ")[0]
+        });
+    });
+</script>
 
 {% endblock %}
