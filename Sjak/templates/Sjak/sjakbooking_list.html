@@ -10,14 +10,6 @@
 </nav>
 
 <br>
-{% messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endmessages %}
-
 
 {% if request.user.is_authenticated %}
       <h5>Booking oversigt for team: {% with volunteer_team_memberships=request.user.teammembership_set.all %}
