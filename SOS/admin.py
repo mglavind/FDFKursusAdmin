@@ -10,6 +10,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import SOSItem
 from django.utils import formats
+from icalendar import Calendar, Event
+from datetime import datetime
 import csv
 
 from . import models
@@ -27,7 +29,6 @@ class SOSBookingAdmin(admin.ModelAdmin):
     list_max_show_all = 500  # Set the maximum number of items per page to 100
     list_per_page = 25  # Set the default number of items per page to 25
     # ...
-
 
     def formatted_team_contact(self, obj):
         return obj.team_contact.first_name
@@ -73,12 +74,14 @@ class SOSBookingAdmin(admin.ModelAdmin):
         "created",
         "last_updated",
         "delivery_needed",
+        "dispatched",
+        "received",
     ]
     readonly_fields = [
         "created",
         "last_updated",
     ]
-    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv", 'export_selected_to_ical']
     list_filter = (
         ('status', ChoiceDropdownFilter),
         ('item', RelatedDropdownFilter),
@@ -107,7 +110,7 @@ class SOSBookingAdmin(admin.ModelAdmin):
         response.write(u'\ufeff'.encode('utf8'))
 
         writer = csv.writer(response)
-        writer.writerow(["Item", "Quantity","Remarks","Internal remarks", "Team", "Team Contact", "Start dato","Start tid", "End dato", "End tid", "Status", "Delivery needed", "Assistance needed"])
+        writer.writerow(["Item", "Quantity","Remarks","Internal remarks", "Team", "Team Contact", "Start dato","Start tid", "End dato", "End tid", "Status", "Delivery needed", "Assistance needed", "Dispatched", "Received"])
 
         for booking in queryset:
             writer.writerow([
@@ -124,10 +127,47 @@ class SOSBookingAdmin(admin.ModelAdmin):
                 booking.status,
                 booking.delivery_needed,
                 booking.assistance_needed,
+                booking.dispatched,
+                booking.received,
             ])
 
         return response
     export_to_csv.short_description = "Export selected bookings to CSV"
+
+    def export_selected_to_ical(self, request, queryset):
+        calendar = Calendar()
+
+        def convert_to_ical(booking):
+            ical_event = Event()
+            summary = f"{booking.item} - {booking.team} - {booking.team_contact}"
+            ical_event.add('summary', summary)
+
+            # Wrap date and time fields into datetime objects
+            start_datetime = datetime.combine(booking.start_date, booking.start_time)
+            end_datetime = datetime.combine(booking.end_date, booking.end_time)
+
+            ical_event.add('dtstart', start_datetime)
+            ical_event.add('dtend', end_datetime)
+            ical_event.add('description', booking.remarks)
+
+            # Add more properties as needed
+
+            # Add the team_contact name in the "description" field
+            description_with_contact = f"Kontaktperson: {booking.team_contact}\n{booking.remarks}"
+            ical_event.add('description', description_with_contact)
+
+            return ical_event
+
+        for booking in queryset:
+            ical_event = convert_to_ical(booking)
+            calendar.add_component(ical_event)
+
+        response = HttpResponse(calendar.to_ical(), content_type='text/calendar')
+        response['Content-Disposition'] = 'attachment; filename="bookings.ics"'
+
+        return response
+
+    export_selected_to_ical.short_description = "Export selected bookings to iCal"
 
 
 
@@ -157,6 +197,7 @@ class SOSItemAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         new_urls = [path('upload-csv/', self.upload_csv),]
         return new_urls + urls
+    
     def upload_csv(self, request):
         if request.method == "POST":
             csv_file = request.FILES["csv_upload"]

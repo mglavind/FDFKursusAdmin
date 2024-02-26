@@ -154,6 +154,8 @@ class VolunteerAdminForm(forms.ModelForm):
         model = models.Volunteer
         fields = "__all__"
 
+    
+
 class CsvImportForm(forms.Form):
     csv_upload = forms.FileField()
 
@@ -184,6 +186,7 @@ class VolunteerAdmin(admin.ModelAdmin):
         "last_updated",
     ]
     actions = ["export_to_csv", "send_email_action", "deactivate_volunteers", "activate_volunteers", "create_event_membership"]
+    search_fields = ['first_name', 'last_name', 'email', 'username'] 
     list_filter = (
         ('is_active', ChoiceDropdownFilter),
         ('last_updated', DropdownFilter),

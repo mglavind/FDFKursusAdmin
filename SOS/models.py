@@ -29,6 +29,8 @@ class SOSBooking(models.Model):
     remarks_internal = models.TextField(blank=True)  # Blank allows for an empty value
     assistance_needed = models.BooleanField(default=False, blank=True)
     delivery_needed = models.BooleanField(default=False, blank=True)
+    dispatched = models.BooleanField(default=False, editable=False)
+    received = models.BooleanField(default=False, editable=False)
 
 
 
