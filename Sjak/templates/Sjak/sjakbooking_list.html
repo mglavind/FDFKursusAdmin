@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 {% load bootstrap_icons %}
-
 <br>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
@@ -69,12 +68,22 @@
               {% endif %}
             </td>
               <td>
-                <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
-                  {% bs_icon 'pencil' %}  
-                </a>
-                <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-                  {% bs_icon 'trash' %}  
-                </a>
+                {% if before_deadline %}
+                  <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+                    {% bs_icon 'pencil' %}  
+                  </a>
+                  <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                    {% bs_icon 'trash' %}  
+                  </a>
+                {% else %}
+                  <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm disabled">
+                    {% bs_icon 'pencil' %}  
+                  </a>
+                  <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm disabled">
+                    {% bs_icon 'trash' %}  
+                  </a>
+                {% endif %}
+                
             </td>
           </tr>
           {% endif %}
@@ -85,9 +94,17 @@
 </table>
 
 <div>
+  {% if before_deadline %}
   <a class="btn btn-primary"
     href="{% url 'Sjak_SjakBooking_create' %}">
-  Ny Sjak booking
+    Ny Sjak booking
   </a>
+  {% else %}
+  <a class="btn btn-primary disabled"
+    href="{% url 'Sjak_SjakBooking_create' %}">
+    Deadline overskredet - booking lukket
+  </a>
+  {% endif %}
+
 </div>
 {% endblock %}

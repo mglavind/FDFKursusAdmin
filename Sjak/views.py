@@ -19,6 +19,7 @@ from django.shortcuts import render, get_object_or_404
 
 from django.views.generic import FormView
 from django.contrib.messages.views import SuccessMessageMixin
+from organization.models import Event  # Import the Event model
 
 class SjakBookingListView(generic.ListView):
     model = models.SjakBooking
@@ -30,22 +31,26 @@ class SjakBookingListView(generic.ListView):
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
+
     def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            user = self.request.user
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
 
-            # Check the user's Event Memberships
-            event_memberships = user.eventmembership_set.all()
-            print("User's Event Memberships:", event_memberships)
+        # Filter events by user and is_active
+        events = Event.objects.filter(user=user, is_active=True).first()  # Define the "events" variable
+        if events.deadline_sjak < timezone.now():
+            messages.error(self.request, "Tilmeldingsfristen er overskredet")
+            before_deadline = False
+        else:
+            before_deadline = True
 
-            # Filter events by user and is_active
-            active_events = user.events.filter(is_active=True)
-            print("Active Events:", active_events)
+        context = {
+            'events': events,  # Add the "events" variable to the context
+            'before_deadline': before_deadline,
+        }
+        return context
 
-            context['active_events'] = active_events
-            return context
-
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         context = self.get_context_data()
         return render(request, self.template_name, context)
 
