@@ -4,7 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from . import models
 from . import forms
-
+from organization.models import Event  # Import the Event model
+from django.utils import timezone
+from django.shortcuts import redirect
+from django.contrib import messages
 
 class SOSBookingListView(generic.ListView):
     model = models.SOSBooking
@@ -20,8 +23,12 @@ class SOSBookingCreateView(generic.CreateView):
     form_class = forms.SOSBookingForm
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_sos < timezone.now().date():
+            messages.error(request, 'Booking is closed.')
+            return redirect('SOS_SOSBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -44,8 +51,12 @@ class SOSBookingUpdateView(generic.UpdateView):
     pk_url_kwarg = "pk"
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_sos < timezone.now().date():
+            messages.error(request, 'Booking is closed.')
+            return redirect('SOS_SOSBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

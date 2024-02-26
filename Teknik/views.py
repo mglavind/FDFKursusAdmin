@@ -5,6 +5,10 @@ from django.utils.decorators import method_decorator
 from . import models
 from . import forms
 
+from django.contrib import messages
+from organization.models import EventMembership, Event
+from django.utils import timezone
+from django.shortcuts import redirect
 
 class TeknikBookingListView(generic.ListView):
     model = models.TeknikBooking
@@ -13,6 +17,24 @@ class TeknikBookingListView(generic.ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        # Filter events by user and is_active
+        events = Event.objects.filter(user=user, is_active=True).first()  # Define the "events" variable
+        if events.deadline_teknik < timezone.now():
+            messages.error(self.request, "Tilmeldingsfristen er overskredet")
+            before_deadline = False
+        else:
+            before_deadline = True
+
+        context = {
+            'events': events,  # Add the "events" variable to the context
+            'before_deadline': before_deadline,
+        }
+        return context
 
 
 class TeknikBookingCreateView(generic.CreateView):
@@ -20,8 +42,12 @@ class TeknikBookingCreateView(generic.CreateView):
     form_class = forms.TeknikBookingForm
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_teknik < timezone.now().date():
+            messages.error(request, 'Booking is closed.')
+            return redirect('Teknik_TeknikBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -50,8 +76,12 @@ class TeknikBookingUpdateView(generic.UpdateView):
     pk_url_kwarg = "pk"
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_teknik < timezone.now().date():
+            messages.error(request, 'Booking is closed.')
+            return redirect('Teknik_TeknikBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

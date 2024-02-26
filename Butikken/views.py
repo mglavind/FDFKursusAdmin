@@ -8,8 +8,11 @@ from . import models
 from . import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import MealBooking, Meal, Day, Option, Recipe
-from organization.models import TeamMembership, Event
+
 from django.contrib import messages
+from organization.models import EventMembership, Event
+from django.utils import timezone
+from django.shortcuts import redirect
 
 class ButikkenItemListView(ListView):
     model = models.ButikkenItem
@@ -69,8 +72,13 @@ class ButikkenBookingCreateView(generic.CreateView):
     form_class = forms.ButikkenBookingForm
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_mad < timezone.now().date():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Butikken_ButikkenBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
+    
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -117,8 +125,12 @@ class ButikkenBookingUpdateView(UpdateView):
     form_class = forms.ButikkenBookingForm
     pk_url_kwarg = "pk"
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_mad < timezone.now().date():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Butikken_ButikkenBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -234,8 +246,12 @@ class MealBookingCreateView(CreateView):
     model = models.MealBooking
     form_class = forms.MealBookingForm
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_mad < timezone.now().date():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Butikken_MealBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -256,8 +272,12 @@ class MealBookingUpdateView(UpdateView):
     form_class = forms.MealBookingForm
     pk_url_kwarg = "pk"
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_mad < timezone.now().date():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Butikken_MealBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

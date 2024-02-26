@@ -4,7 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from . import models
 from . import forms
-
+from django.contrib import messages
+from organization.models import EventMembership, Event
+from django.utils import timezone
+from django.shortcuts import redirect
 
 class FotoItemListView(generic.ListView):
     model = models.FotoItem
@@ -21,8 +24,13 @@ class FotoItemCreateView(generic.CreateView):
     form_class = forms.FotoItemForm
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_foto < timezone.now().date():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Foto_FotoBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
+
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -41,6 +49,14 @@ class FotoItemUpdateView(generic.UpdateView):
     model = models.FotoItem
     form_class = forms.FotoItemForm
     pk_url_kwarg = "pk"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_foto < timezone.now().date():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Foto_FotoBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
 
 class FotoItemDeleteView(generic.DeleteView):

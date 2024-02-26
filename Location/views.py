@@ -7,7 +7,10 @@ from datetime import datetime
 
 from . import models
 from . import forms
-from organization.models import Event
+from django.contrib import messages
+from organization.models import EventMembership, Event
+from django.utils import timezone
+from django.shortcuts import redirect
 
 
 class LocationTypeListView(generic.ListView):
@@ -111,8 +114,12 @@ class LocationBookingCreateView(generic.CreateView):
     form_class = forms.LocationBookingForm
     
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_lokaler < timezone.now():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Location_LocationBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -135,6 +142,25 @@ class LocationBookingUpdateView(generic.UpdateView):
     model = models.LocationBooking
     form_class = forms.LocationBookingForm
     pk_url_kwarg = "pk"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_lokaler < timezone.now():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Location_LocationBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        location_items = models.LocationItem.objects.all()
+        context['location_items'] = location_items
+        return context
 
 
 class LocationBookingDeleteView(generic.DeleteView):

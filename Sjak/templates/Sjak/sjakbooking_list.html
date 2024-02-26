@@ -10,6 +10,15 @@
 </nav>
 
 <br>
+{% messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endmessages %}
+
+
 {% if request.user.is_authenticated %}
       <h5>Booking oversigt for team: {% with volunteer_team_memberships=request.user.teammembership_set.all %}
           {% if volunteer_team_memberships %}
@@ -68,21 +77,13 @@
               {% endif %}
             </td>
               <td>
-                {% if before_deadline %}
-                  <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
-                    {% bs_icon 'pencil' %}  
-                  </a>
-                  <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-                    {% bs_icon 'trash' %}  
-                  </a>
-                {% else %}
                   <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm disabled">
                     {% bs_icon 'pencil' %}  
                   </a>
                   <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm disabled">
                     {% bs_icon 'trash' %}  
                   </a>
-                {% endif %}
+
                 
             </td>
           </tr>
@@ -94,17 +95,10 @@
 </table>
 
 <div>
-  {% if before_deadline %}
   <a class="btn btn-primary"
     href="{% url 'Sjak_SjakBooking_create' %}">
     Ny Sjak booking
   </a>
-  {% else %}
-  <a class="btn btn-primary disabled"
-    href="{% url 'Sjak_SjakBooking_create' %}">
-    Deadline overskredet - booking lukket
-  </a>
-  {% endif %}
 
 </div>
 {% endblock %}

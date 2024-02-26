@@ -5,11 +5,10 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.utils.decorators import method_decorator
 from django.urls import reverse
 
-from django.contrib import messages
 from . import models
 from . import forms
 from organization.models import EventMembership, Event
-from django.utils import timezone
+
 
 # HTMX
 from django.views.decorators.http import require_POST, require_http_methods
@@ -20,6 +19,9 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import FormView
 from django.contrib.messages.views import SuccessMessageMixin
 from organization.models import Event  # Import the Event model
+from django.utils import timezone
+from django.shortcuts import redirect
+from django.contrib import messages
 
 class SjakBookingListView(generic.ListView):
     model = models.SjakBooking
@@ -61,8 +63,12 @@ class SjakBookingCreateView(generic.CreateView):
     form_class = forms.SjakBookingForm
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_sjak < timezone.now().date():
+            messages.error(request, 'Booking is closed.')
+            return redirect('Sjak_SjakBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
     
     def form_valid(self, form):
         if form.is_valid():
@@ -104,8 +110,12 @@ class SjakBookingUpdateView(generic.UpdateView):
     pk_url_kwarg = "pk"
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_sjak < timezone.now().date():
+            messages.error(request, 'Booking is closed.')
+            return redirect('Sjak_SjakBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
