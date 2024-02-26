@@ -59,6 +59,8 @@ class SOSBookingAdmin(admin.ModelAdmin):
 
     list_display = [
         "item",
+        "remarks",
+        "assistance_needed",
         "status",
         "quantity",
         "team",
@@ -67,11 +69,9 @@ class SOSBookingAdmin(admin.ModelAdmin):
         "start_time",
         "end_date",
         "end_time",
-        "remarks",
         "remarks_internal",
         "created",
         "last_updated",
-        "assistance_needed",
         "delivery_needed",
     ]
     readonly_fields = [

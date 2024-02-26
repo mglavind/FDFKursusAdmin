@@ -3,17 +3,17 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.utils.decorators import method_decorator
+from django.urls import reverse
 
 from django.contrib import messages
 from . import models
 from . import forms
 from organization.models import EventMembership, Event
 from django.utils import timezone
-from django.shortcuts import render, redirect
 
 # HTMX
 from django.views.decorators.http import require_POST, require_http_methods
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 
@@ -58,6 +58,14 @@ class SjakBookingCreateView(generic.CreateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            self.object = form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            print(form.errors)
+            return self.form_invalid(form)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -69,6 +77,9 @@ class SjakBookingCreateView(generic.CreateView):
         sjak_items = models.SjakItem.objects.all()
         context['sjak_items'] = sjak_items
         return context
+    
+    def get_success_url(self):
+        return reverse('Sjak_SjakBooking_detail', args=[self.object.pk])
 
 
 
@@ -99,6 +110,12 @@ class SjakBookingUpdateView(generic.UpdateView):
     def form_valid(self, form):
         form.instance.event = self.request.user.event_set.filter(is_active=True).first()  # Set the active event based on the user
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        sjak_items = models.SjakItem.objects.all()
+        context['sjak_items'] = sjak_items
+        return context
     
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)

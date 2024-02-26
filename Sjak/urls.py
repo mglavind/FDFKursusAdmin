@@ -23,12 +23,7 @@ urlpatterns = [
     path("Sjak/SjakItem/update/<int:pk>/", views.SjakItemUpdateView.as_view(), name="Sjak_SjakItem_update"),
     path("Sjak/SjakItem/delete/<int:pk>/", views.SjakItemDeleteView.as_view(), name="Sjak_SjakItem_delete"),
     path("Sjak/SjakBooking/", views.SjakBookingListView.as_view(), name="Sjak_SjakBooking_list"),
-
-    #path("Sjak/SjakBooking/create/", views.SjakBookingCreateView.as_view(), name="Sjak_SjakBooking_create"),
-    #path("Sjak/SjakBooking/create/",  views.DefaultFormsetView.as_view(), name="Sjak_SjakBooking_create"),
     path("Sjak/SjakBooking/create/", views.SjakBookingCreateView.as_view(), name="Sjak_SjakBooking_create"),
-    
-    
     path("Sjak/SjakBooking/detail/<int:pk>/", views.SjakBookingDetailView.as_view(), name="Sjak_SjakBooking_detail"),
     path("Sjak/SjakBooking/update/<int:pk>/", views.SjakBookingUpdateView.as_view(), name="Sjak_SjakBooking_update"),
     path("Sjak/SjakBooking/delete/<int:pk>/", views.SjakBookingDeleteView.as_view(), name="Sjak_SjakBooking_delete"),

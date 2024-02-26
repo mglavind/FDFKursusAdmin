@@ -65,6 +65,8 @@ class SjakBookingForm(forms.ModelForm):
             if commit:
                 instance.save()
                 print("Inside Commit and before deadline")
+        else:
+            print("Outside Commit and after deadline")
         return instance
 
 
