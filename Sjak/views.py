@@ -69,14 +69,6 @@ class SjakBookingCreateView(generic.CreateView):
             messages.error(request, 'Booking is closed.')
             return redirect('Sjak_SjakBooking_list')  # replace with the name of your list view url
         return super().dispatch(request, *args, **kwargs)
-    
-    def form_valid(self, form):
-        if form.is_valid():
-            self.object = form.save()
-            return HttpResponseRedirect(self.get_success_url())
-        else:
-            print(form.errors)
-            return self.form_invalid(form)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

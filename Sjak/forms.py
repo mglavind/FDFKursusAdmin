@@ -58,15 +58,10 @@ class SjakBookingForm(forms.ModelForm):
         instance = super().save(commit=False)
         instance.status = "Pending"
         instance.status_internal = "Afventer"
-        instance.event = Event.objects.filter(is_active=True).first()
-        deadline = Event.objects.filter(is_active=True).first().deadline_sjak
-        print("Begin end save")
-        if deadline > timezone.now().date():
-            if commit:
-                instance.save()
-                print("Inside Commit and before deadline")
-        else:
-            print("Outside Commit and after deadline")
+        if commit:
+            print("Connet exists")
+            instance.save()
+            print("instance saved")
         return instance
 
 
