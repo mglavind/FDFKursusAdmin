@@ -116,7 +116,7 @@ class LocationBookingCreateView(generic.CreateView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         event = Event.objects.filter(is_active=True).first()
-        if event and event.deadline_lokaler < timezone.now():
+        if event and event.deadline_lokaler < timezone.now().date():
             messages.error(request, 'Deadline for booking overskredet')
             return redirect('Location_LocationBooking_list')  # replace with the name of your list view url
         return super().dispatch(request, *args, **kwargs)

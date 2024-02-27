@@ -73,6 +73,14 @@ class FotoBookingCreateView(generic.CreateView):
     model = models.FotoBooking
     form_class = forms.FotoBookingForm
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_foto < timezone.now().date():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Foto_FotoBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
+
 
 class FotoBookingDetailView(generic.DetailView):
     model = models.FotoBooking
@@ -83,6 +91,14 @@ class FotoBookingUpdateView(generic.UpdateView):
     model = models.FotoBooking
     form_class = forms.FotoBookingForm
     pk_url_kwarg = "pk"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        event = Event.objects.filter(is_active=True).first()
+        if event and event.deadline_foto < timezone.now().date():
+            messages.error(request, 'Deadline for booking overskredet')
+            return redirect('Foto_FotoBooking_list')  # replace with the name of your list view url
+        return super().dispatch(request, *args, **kwargs)
 
 
 class FotoBookingDeleteView(generic.DeleteView):
