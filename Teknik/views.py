@@ -27,9 +27,11 @@ class TeknikBookingCreateView(generic.CreateView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         event = Event.objects.filter(is_active=True).first()
-        if event and event.deadline_teknik < timezone.now().date():
+        
+        if not self.request.user.is_staff and event and event.deadline_teknik < timezone.now().date():
             messages.error(request, 'booking deadline overskredet')
             return redirect('Teknik_TeknikBooking_list')  # replace with the name of your list view url
+        
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
@@ -61,8 +63,8 @@ class TeknikBookingUpdateView(generic.UpdateView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         event = Event.objects.filter(is_active=True).first()
-        if event and event.deadline_teknik < timezone.now().date():
-            messages.error(request, 'booking deadline overskredet.')
+        if not self.request.user.is_staff and event and event.deadline_teknik < timezone.now().date():
+            messages.error(request, 'booking deadline overskredet')
             return redirect('Teknik_TeknikBooking_list')  # replace with the name of your list view url
         return super().dispatch(request, *args, **kwargs)
 
