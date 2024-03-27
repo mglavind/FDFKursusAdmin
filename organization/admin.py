@@ -164,12 +164,16 @@ class EventMembershipInline(admin.TabularInline):
     model = EventMembership
     extra = 1
 
+class TeamMembershipInline(admin.TabularInline):
+    model = TeamMembership
+    extra = 1
+
 
 
 
 class VolunteerAdmin(admin.ModelAdmin):
     form = VolunteerAdminForm
-    inlines = [EventMembershipInline]
+    inlines = [EventMembershipInline, TeamMembershipInline]
     list_display = [
         "first_name",
         "last_name",
@@ -177,6 +181,7 @@ class VolunteerAdmin(admin.ModelAdmin):
         "email",
         "phone",
         "display_events",
+        "display_teams",
         "created",
         "last_updated",
         "is_active",
@@ -190,10 +195,14 @@ class VolunteerAdmin(admin.ModelAdmin):
     list_filter = (
         ('is_active', ChoiceDropdownFilter),
         ('last_updated', DropdownFilter),
+        ('events', RelatedDropdownFilter),
+        ('teams', RelatedDropdownFilter),
     )
 
     def display_events(self, obj):
         return ", ".join([event.name for event in obj.events.all()])
+    def display_teams(self, obj):
+        return ", ".join([team.name for team in obj.teams.all()])
     
     def export_to_csv(modeladmin, request, queryset):
             response = HttpResponse(content_type='text/csv')

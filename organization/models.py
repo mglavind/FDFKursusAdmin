@@ -41,7 +41,28 @@ class Event(models.Model):
         return reverse("organization_Event_update", args=(self.pk,))
 
 
+class Team(models.Model):
 
+    # Fields
+    name = models.CharField(max_length=30)
+    short_name = models.CharField(max_length=30)   
+    events = models.ManyToManyField(Event, through='TeamEventMembership') 
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return str(self.name)
+
+    def get_absolute_url(self):
+        return reverse("organization_Team_detail", args=(self.short_name,))
+
+    def get_update_url(self):
+        return reverse("organization_Team_update", args=(self.short_name,))
 
     
 class Volunteer(AbstractUser):
@@ -55,6 +76,7 @@ class Volunteer(AbstractUser):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=30, blank=True)
     events = models.ManyToManyField(Event, through='EventMembership',blank=True)
+    teams = models.ManyToManyField(Team, through='TeamMembership', blank=True)
 
     class Meta:
         pass
@@ -104,28 +126,7 @@ class EventMembership(models.Model):
 
 
 
-class Team(models.Model):
 
-    # Fields
-    name = models.CharField(max_length=30)
-    short_name = models.CharField(max_length=30)   
-    events = models.ManyToManyField(Event, through='TeamEventMembership') 
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-
-
-
-    class Meta:
-        pass
-
-    def __str__(self):
-        return str(self.name)
-
-    def get_absolute_url(self):
-        return reverse("organization_Team_detail", args=(self.short_name,))
-
-    def get_update_url(self):
-        return reverse("organization_Team_update", args=(self.short_name,))
 
 
 class TeamEventMembership(models.Model):
