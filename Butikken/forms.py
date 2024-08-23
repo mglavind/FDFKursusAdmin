@@ -7,163 +7,46 @@ from django.forms import BaseFormSet, TextInput, formset_factory
 from . import models
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from django.forms import inlineformset_factory, BaseInlineFormSet
 
+
+from django import forms
+from .models import MealPlan, MealOption, TeamMealPlan, MealBooking
+from django.contrib.auth.models import User
 
 class MealBookingForm(forms.ModelForm):
     class Meta:
-        model = models.MealBooking
+        model = MealBooking
         fields = [
-
-
-            "thursday_breakfast",
-            "thursday_lunch",
-            "thursday_dinner",
-
-            "friday_breakfast",
-            "friday_lunch",
-            "friday_dinner",
-
-            "saturday_breakfast",
-            "saturday_lunch",
-            "saturday_dinner",
-
-            "sunday_breakfast",
-            "sunday_lunch",
-            "sunday_dinner",
-
-            "team_contact",
-            "team",
-        ]
-        THURSDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        THURSDAY_LUNCH_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'),
-            ('Spiser inde ', 'Spiser inde '),
-            ('Frokostpakke', 'Frokostpakke'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        THURSDAY_DINNER_CHOICES   = (
-            ('Vælg fra liste', 'Vælg fra liste'), 
-            ('Spiser inde ', 'Spiser inde '),
-            ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-            ('Dinner trans', 'Dinner trans'),
-            ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-            ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-            ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-            ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-            ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-            ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-
-        thursday_breakfast = forms.ChoiceField(choices=THURSDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        thursday_lunch = forms.ChoiceField(choices=THURSDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        thursday_dinner = forms.ChoiceField(choices=THURSDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-
-        FRIDAY_BREAKFAST_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'), 
-            ('Spiser inde ', 'Spiser inde '),
-            ('Morgenmadspakke', 'Morgenmadspakke'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        FRIDAY_LUNCH_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'), 
-            #('Spiser inde ', 'Spiser inde '),
-            ('Frokostpakke', 'Frokostpakke'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        FRIDAY_DINNER_CHOICES   = (
-            ('Vælg fra liste', 'Vælg fra liste'), 
-            #('Spiser inde ', 'Spiser inde '),
-            ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-            #('Dinner trans', 'Dinner trans'),
-            ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-            ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-            ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-            ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-            ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-            ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-
-        friday_breakfast = forms.ChoiceField(choices=FRIDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        friday_lunch = forms.ChoiceField(choices=FRIDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        friday_dinner = forms.ChoiceField(choices=FRIDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-
-
-        SATURDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        SATURDAY_LUNCH_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-            ('Frokostpakke', 'Frokostpakke'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        SATURDAY_DINNER_CHOICES   = (
-            ('Vælg fra liste', 'Vælg fra liste'),
-            ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-            ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-            ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-            ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-            ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-            ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-            ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-
-        saturday_breakfast = forms.ChoiceField(choices=SATURDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        saturday_lunch = forms.ChoiceField(choices=SATURDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        saturday_dinner = forms.ChoiceField(choices=SATURDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-
-
-        SUNDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        SUNDAY_LUNCH_CHOICES = (
-            ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-            ('Frokostpakke', 'Frokostpakke'),
-            ('Står selv for forplejning', 'Står selv for forplejning'),
-        )
-        SUNDAY_DINNER_CHOICES   = (
-            ('Fællesforplejning', 'Fællesforplejning'),
-        )
-
-        sunday_breakfast = forms.ChoiceField(choices=SUNDAY_BREAKFAST_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        sunday_lunch = forms.ChoiceField(choices=SUNDAY_LUNCH_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-        sunday_dinner = forms.ChoiceField(choices=SUNDAY_DINNER_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-    
+            'team',
+            'team_contact',
+            'status',
+            ]  # Add other fields as necessary
+        widgets = {
+            "team": forms.Select(attrs={"class": "form-control", "data-error": "Please select a team."}),
+            "team_contact": forms.Select(attrs={"class": "form-control", "data-error": "Please select a team contact"}),
+            "status": forms.Select(attrs={"class": "form-control", "data-error": "Please select a status."}),
+        }
+    def __init__(self, *args, user=None, **kwargs):
+        super(MealBookingForm, self).__init__(*args, **kwargs)
+        self.fields["team_contact"].queryset = Volunteer.objects.all().order_by("first_name")
+        self.fields["team"].queryset = Team.objects.all().order_by("name")
+        print("user", user)
+        self.fields["team_contact"].initial = user
+        if user:
+            print("A user exists")
+            team_membership = TeamMembership.objects.get(member=user)
+            self.fields["team"].initial = team_membership.team
+            self.fields["team_contact"].queryset = Volunteer.objects.filter(
+                teammembership__team=team_membership.team
+            )
+            self.fields["team_contact"].initial = user
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.status = "Pending"
         if commit:
             instance.save()
         return instance
-    
-    def __init__(self, *args, user=None, **kwargs):
-        super(MealBookingForm, self).__init__(*args, **kwargs)
-        self.fields["team_contact"].queryset = Volunteer.objects.all().order_by("first_name")
-        self.fields["team"].queryset = Team.objects.all().order_by("name")
-        
-        if user:
-            try:
-                team_membership = TeamMembership.objects.get(member=user)
-                self.fields["team"].initial = team_membership.team
-                self.fields["team_contact"].queryset = Volunteer.objects.filter(
-                    teammembership__team=team_membership.team
-                )
-            except TeamMembership.DoesNotExist:
-                pass
-            
-            self.fields["team_contact"].initial = user
-            
 
 
 class MealForm(forms.ModelForm):
@@ -324,3 +207,74 @@ class ButikkenItemTypeForm(forms.ModelForm):
             "name",
             "description",
         ]
+
+
+class MealPlanForm(forms.ModelForm):
+    class Meta:
+        model = MealPlan
+        fields = [
+            "name",
+            "meal_date",
+            "open_date",
+            "close_date",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(MealPlanForm, self).__init__(*args, **kwargs)
+
+class MealOptionForm(forms.ModelForm):
+    class Meta:
+        model = MealOption
+        fields = [
+            "meal_plan",
+            "recipe",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(MealOptionForm, self).__init__(*args, **kwargs)
+        self.fields["meal_plan"].queryset = MealPlan.objects.all()
+        self.fields["recipe"].queryset = Recipe.objects.all()
+
+
+class TeamMealPlanForm(forms.ModelForm):
+    class Meta:
+        model = models.TeamMealPlan
+        fields = [
+            "meal_plan",
+            "meal_option",
+            "team",
+            "team_contact",
+        ]
+        widgets = {
+            "meal_plan": forms.Select(attrs={"class": "form-control"}),
+            "team": forms.Select(attrs={"class": "form-control"}),
+            "meal_option": forms.Select(attrs={"class": "form-control"}),
+            "team_contact": forms.Select(attrs={"class": "form-control"}),
+        }
+        labels = {
+            "meal_plan": "Måltid",
+            "meal_option": "Måltidspakke",
+            "team": "Team",
+            "team_contact": "Kontaktperson",
+        }
+
+    def __init__(self, *args, **kwargs):
+        meal_plan = kwargs.pop('meal_plan', None)
+        user = kwargs.pop('user', None)
+        super(TeamMealPlanForm, self).__init__(*args, **kwargs)
+        self.fields["meal_plan"].queryset = MealPlan.objects.all()
+        self.fields["team"].queryset = Team.objects.all()
+        
+        if meal_plan:
+            self.fields['meal_option'].queryset = MealOption.objects.filter(meal_plan=meal_plan)
+        else:
+            self.fields['meal_option'].queryset = MealOption.objects.none()
+        
+        if user:
+            # Get the team of the current user
+            user_team = models.Team.objects.filter(teammembership__member=user).first()
+            if user_team:
+                # Filter team_contact to only include volunteers related to the same team
+                self.fields['team_contact'].queryset = models.Volunteer.objects.filter(teammembership__team=user_team)
+                # Set the default value of team_contact to the current user
+                self.fields['team_contact'].initial = user

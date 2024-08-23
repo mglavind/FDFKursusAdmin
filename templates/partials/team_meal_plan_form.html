@@ -1,0 +1,13 @@
+<tr id="meal-plan-{{ meal_plan.id }}">
+      <form method="post">
+        {% csrf_token %}
+        <td>{{ form.team}}</td>
+        <td>{{ form.meal_plan}}</td>
+        <td>{{ form.meal_option}}</td>
+        <td>
+          <button class="btn btn-success" hx-put="{% url 'team_meal_plan_edit' meal_plan_id=meal_plan.id %}" hx-include="closest tr">
+            Submit
+          </button>
+        </td>
+    </form>
+  </tr>

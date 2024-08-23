@@ -1,37 +1,28 @@
 
 {% extends "base.html" %}
-{% load comments %}
-{% load comments_xtd %}
 {% load static %}
-{% load bootstrap_icons %}
 {% block content %}
-
+    
+    
 <br>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'Butikken_ButikkenBooking_list' %}">Butikken bookinger</a></li>
-      <li class="breadcrumb-item active" aria-current="page"> {{ object.item }} booking </li>
+      <li class="breadcrumb-item"><a href="{% url 'Butikken_TeamMealPlan_list' %}">Måltids bookinger</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ object.meal_plan.name }} </li>
     </ol>
 </nav>
-
-<h1 class="display-3" >{{ object.item }} booking til {{ object.team }} </h1>
-
 
 <br>
     
 <table class="table">
     <tr>
-        <td>Item</td>
-        <td>{{ object.item }}</td>
+        <td>Måltid</td>
+        <td>{{ object.meal_plan }}</td>
     </tr>
     <tr>
-        <td>Antal</td>
-        <td>{{ object.quantity }}</td>
-    </tr>
-    <tr>
-        <td>Fra</td>
-        <td>{{ object.start }}</td>
+        <td>Måltidspakke</td>
+        <td>{{ object.meal_option }}</td>
     </tr>
     <tr>
         <td>Team</td>
@@ -40,14 +31,6 @@
     <tr>
         <td>Kontaktperson</td>
         <td>{{ object.team_contact }}</td>
-    </tr>
-    <tr>
-        <td>Del af Måltid</td>
-        <td>{{ object.for_meal }}</td>
-    </tr>
-    <tr>
-        <td>Bemærkninger</td>
-        <td>{{ object.remarks }}</td>
     </tr>
     <tr>
         <td>Status</td>
@@ -70,7 +53,8 @@
         <td>{{ object.last_updated }}</td>
     </tr>
 </table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Rediger</a>
 
 
 {% endblock %}
+

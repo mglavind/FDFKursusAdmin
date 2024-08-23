@@ -6,8 +6,10 @@ from django.urls import path
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
-from .models import ButikkenItem, MealBooking, Day, Meal, Recipe, Option
+from .models import ButikkenItem, MealBooking, Day, Meal, Recipe, Option, MealPlan, MealOption, TeamMealPlan
 import csv
+from django.contrib import admin
+from django import forms
 
 
 from . import models
@@ -299,15 +301,13 @@ class RecipeAdminForm(forms.ModelForm):
 class RecipeAdmin(admin.ModelAdmin):
     form = RecipeAdminForm
     list_display = [
-        "last_updated",
         "name",
         "description",
+        "last_updated",
         "created",
     ]
     readonly_fields = [
         "last_updated",
-        "name",
-        "description",
         "created",
     ]
 
@@ -360,34 +360,6 @@ class MealBookingAdmin(admin.ModelAdmin):
     form = MealBookingAdminForm
     list_display = [
         "team",
-        #"monday_breakfast",
-        #"monday_lunch",
-        #"monday_dinner",
-
-        #"tuesday_breakfast",
-        #"tuesday_lunch",
-        #"tuesday_dinner",
-
-        #"wednesday_breakfast",
-        #"wednesday_lunch",
-        #"wednesday_dinner",
-
-        "thursday_breakfast",
-        "thursday_lunch",
-        "thursday_dinner",
-
-        "friday_breakfast",
-        "friday_lunch",
-        "friday_dinner",
-
-        "saturday_breakfast",
-        "saturday_lunch",
-        "saturday_dinner",
-
-        "sunday_breakfast",
-        "sunday_lunch",
-        "sunday_dinner",
-
         "last_updated",
         "created",
         "status",
@@ -423,34 +395,6 @@ class MealBookingAdmin(admin.ModelAdmin):
         writer = csv.writer(response)
         writer.writerow([
             "team",
-            #"monday_breakfast",
-            #"monday_lunch",
-            #"monday_dinner",
-
-            #"tuesday_breakfast",
-            #"tuesday_lunch",
-            #"tuesday_dinner",
-
-            #"wednesday_breakfast",
-            #"wednesday_lunch",
-            #"wednesday_dinner",
-
-            "thursday_breakfast",
-            "thursday_lunch",
-            "thursday_dinner",
-
-            "friday_breakfast",
-            "friday_lunch",
-            "friday_dinner",
-
-            "saturday_breakfast",
-            "saturday_lunch",
-            "saturday_dinner",
-            
-            "sunday_breakfast",
-            "sunday_lunch",
-            "sunday_dinner",
-
             "last_updated",
             "created",
             "status",
@@ -459,34 +403,6 @@ class MealBookingAdmin(admin.ModelAdmin):
         for booking in queryset:
             writer.writerow([
                 booking.team,
-                #booking.monday_breakfast,
-                #booking.monday_lunch,
-                #booking.monday_dinner,
-
-                #booking.tuesday_breakfast,
-                #booking.tuesday_lunch,
-                #booking.tuesday_dinner,
-
-                #booking.wednesday_breakfast,
-                #booking.wednesday_lunch,
-                #booking.wednesday_dinner,
-
-                booking.thursday_breakfast,
-                booking.thursday_lunch,
-                booking.thursday_dinner,
-
-                booking.friday_breakfast,
-                booking.friday_lunch,
-                booking.friday_dinner,
-
-                booking.saturday_breakfast,
-                booking.saturday_lunch,
-                booking.saturday_dinner,
-
-                booking.sunday_breakfast,
-                booking.sunday_lunch,
-                booking.sunday_dinner,
-                
                 booking.last_updated,
                 booking.created,
                 booking.status,
@@ -495,12 +411,144 @@ class MealBookingAdmin(admin.ModelAdmin):
         return response
     export_to_csv.short_description = "Export selected bookings to CSV"
 
+class MealPlanAdminForm(forms.ModelForm):
+    class Meta:
+        model = MealPlan
+        fields = "__all__"
 
-admin.site.register(models.Day, DayAdmin)
+
+class MealPlanInline(admin.TabularInline):
+    model = MealOption
+    extra = 1
+
+
+class MealPlanAdmin(admin.ModelAdmin):
+    form = MealPlanAdminForm
+    list_display = [
+        "name",
+        "get_day_of_week",  # Add the new field here
+        "meal_date",
+        "open_date",
+        "close_date",
+        "last_updated",
+    ]
+    readonly_fields = [
+        "created",
+        "last_updated",
+    ]
+    inlines = [
+        MealPlanInline,
+    ]
+
+    def get_day_of_week(self, obj):
+        return obj.meal_date.strftime("%A")  # Return the friendly name for the day
+
+    get_day_of_week.short_description = "Day of Week"  # Set the column header for the new field
+
+
+class MealOptionAdminForm(forms.ModelForm):
+    class Meta:
+        model = MealOption
+        fields = "__all__"
+
+class RecipeInline(admin.TabularInline):
+    model = Recipe
+    extra = 0
+
+    
+class MealOptionAdmin(admin.ModelAdmin):
+    form = MealOptionAdminForm
+    list_display = [
+        "meal_plan",
+        "recipe",
+        "last_updated",
+    ]
+    readonly_fields = [
+        "created",
+        "last_updated",
+    ]
+
+class TeamMealPlanAdminForm(forms.ModelForm):
+    class Meta:
+        model = TeamMealPlan
+        fields = "__all__"
+
+class TeamMealPlanAdmin(admin.ModelAdmin):
+    form = TeamMealPlanAdminForm
+    list_display = [
+        "team",
+        "meal_plan",
+        "meal_option",
+        "team_contact",
+        "status",
+        "last_updated",
+        "created",
+        
+    ]
+    readonly_fields = [
+        "last_updated",
+        "created",
+    ]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv"]
+
+    def approve_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Approved"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) approved.")
+    approve_bookings.short_description = "Godkend valgte"
+
+    def reject_bookings(self, request, queryset):
+        for booking in queryset:
+            booking.status = "Rejected"
+            booking.save()
+
+        self.message_user(request, f"{queryset.count()} booking(s) rejected.")
+    reject_bookings.short_description = "Afvis valgte"
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=meal_bookings.csv"
+        response.write(u'\ufeff'.encode('utf8'))
+
+        writer = csv.writer(response)
+        writer.writerow([
+            "Team",
+            "Måltid",
+            "Måltidspakke",
+            "Kontaktperson",
+            "Status",
+            "last_updated",
+            "created",
+        ])
+
+        for booking in queryset:
+            writer.writerow([
+                booking.team,
+                booking.meal_plan,
+                booking.meal_option,
+                booking.team_contact,
+                booking.status,
+                booking.last_updated,
+                booking.created,
+            ])
+
+        return response
+    export_to_csv.short_description = "Eksporter valgte til CSV"
+
+
+
+
+
+admin.site.register(models.TeamMealPlan, TeamMealPlanAdmin)
+admin.site.register(models.MealPlan, MealPlanAdmin)
+admin.site.register(models.MealOption, MealOptionAdmin)
+#admin.site.register(models.Day, DayAdmin)
 admin.site.register(models.Recipe, RecipeAdmin)
-admin.site.register(models.ButikkenItemType, ButikkenItemTypeAdmin)
-admin.site.register(models.Meal, MealAdmin)
-admin.site.register(models.Option, OptionAdmin)
+#admin.site.register(models.ButikkenItemType, ButikkenItemTypeAdmin)
+#admin.site.register(models.Meal, MealAdmin)
+#admin.site.register(models.Option, OptionAdmin)
 admin.site.register(models.ButikkenItem, ButikkenItemAdmin)
 admin.site.register(models.ButikkenBooking, ButikkenBookingAdmin)
-admin.site.register(models.MealBooking, MealBookingAdmin)
+#admin.site.register(models.MealBooking, MealBookingAdmin)

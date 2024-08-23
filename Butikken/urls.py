@@ -14,6 +14,7 @@ router.register("Option", api.OptionViewSet)
 router.register("ButikkenItem", api.ButikkenItemViewSet)
 router.register("ButikkenBooking", api.ButikkenBookingViewSet)
 router.register("MealBooking", api.MealBookingViewSet)
+router.register("TeamMealPlan", api.TeamMealPlanViewSet)
 
 urlpatterns = (
     path("api/v1/", include(router.urls)),
@@ -41,16 +42,19 @@ urlpatterns = (
     path("Butikken/Day/detail/<int:pk>/", views.DayDetailView.as_view(), name="Butikken_Day_detail"),
     path("Butikken/Day/update/<int:pk>/", views.DayUpdateView.as_view(), name="Butikken_Day_update"),
     path("Butikken/Day/delete/<int:pk>/", views.DayDeleteView.as_view(), name="Butikken_Day_delete"),
+
     path("Butikken/Recipe/", views.RecipeListView.as_view(), name="Butikken_Recipe_list"),
     path("Butikken/Recipe/create/", views.RecipeCreateView.as_view(), name="Butikken_Recipe_create"),
     path("Butikken/Recipe/detail/<int:pk>/", views.RecipeDetailView.as_view(), name="Butikken_Recipe_detail"),
     path("Butikken/Recipe/update/<int:pk>/", views.RecipeUpdateView.as_view(), name="Butikken_Recipe_update"),
     path("Butikken/Recipe/delete/<int:pk>/", views.RecipeDeleteView.as_view(), name="Butikken_Recipe_delete"),
+
     path("Butikken/Meal/", views.MealListView.as_view(), name="Butikken_Meal_list"),
     path("Butikken/Meal/create/", views.MealCreateView.as_view(), name="Butikken_Meal_create"),
     path("Butikken/Meal/detail/<int:pk>/", views.MealDetailView.as_view(), name="Butikken_Meal_detail"),
     path("Butikken/Meal/update/<int:pk>/", views.MealUpdateView.as_view(), name="Butikken_Meal_update"),
     path("Butikken/Meal/delete/<int:pk>/", views.MealDeleteView.as_view(), name="Butikken_Meal_delete"),
+
     path("Butikken/Option/", views.OptionListView.as_view(), name="Butikken_Option_list"),
     path("Butikken/Option/create/", views.OptionCreateView.as_view(), name="Butikken_Option_create"),
     path("Butikken/Option/detail/<int:pk>/", views.OptionDetailView.as_view(), name="Butikken_Option_detail"),
@@ -64,7 +68,10 @@ urlpatterns = (
     path("Butikken/MealBooking/update/<int:pk>/", views.MealBookingUpdateView.as_view(), name="Butikken_MealBooking_update"),
     path("Butikken/MealBooking/delete/<int:pk>/", views.MealBookingDeleteView.as_view(), name="Butikken_MealBooking_delete"),
 
-
-    
+    path("Butikken/TeamMealPlan/", views.TeamMealPlanListView.as_view(), name="Butikken_TeamMealPlan_list"),
+    path("Butikken/TeamMealPlan/create/", views.TeamMealPlanCreateView.as_view(), name="Butikken_TeamMealPlan_create"),
+    path("Butikken/TeamMealPlan/detail/<int:pk>/", views.TeamMealPlanDetailView.as_view(), name="Butikken_TeamMealPlan_detail"),
+    path("Butikken/TeamMealPlan/update/<int:pk>/", views.TeamMealPlanUpdateView.as_view(), name="Butikken_TeamMealPlan_update"),
+    path("Butikken/TeamMealPlan/delete/<int:pk>/", views.TeamMealPlanDeleteView.as_view(), name="Butikken_TeamMealPlan_delete"),
 
 )

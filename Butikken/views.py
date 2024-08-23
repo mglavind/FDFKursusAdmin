@@ -1,18 +1,26 @@
+import logging
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_http_methods
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.views import generic
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from . import models
 from . import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import MealBooking, Meal, Day, Option, Recipe
+from .models import MealBooking, Meal, Day, Option, Recipe, MealPlan, MealOption, TeamMealPlan, MealBooking, TeamMealPlan
+import logging
+
+logger = logging.getLogger(__name__)
+
+from django.http import HttpResponse, HttpResponseNotAllowed
+from .forms import TeamMealPlanForm
 
 from django.contrib import messages
-from organization.models import EventMembership, Event
+from organization.models import EventMembership, Event, TeamMembership, Volunteer
 from django.utils import timezone
-from django.shortcuts import redirect
+
 
 class ButikkenItemListView(ListView):
     model = models.ButikkenItem
@@ -237,52 +245,121 @@ class MealDeleteView(DeleteView):
 class MealBookingListView(ListView):
     model = models.MealBooking
     form_class = forms.MealBookingForm
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['meal_plans'] = models.MealPlan.objects.all()
+        return context
 
-class MealBookingCreateView(CreateView):
-    model = models.MealBooking
+
+class MealBookingCreateView(generic.CreateView):
+    model = MealBooking
     form_class = forms.MealBookingForm
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        event = Event.objects.filter(is_active=True).first()
-        if event and event.deadline_mad < timezone.now().date():
-            messages.error(request, 'Deadline for booking overskredet')
-            return redirect('Butikken_MealBooking_list')  # replace with the name of your list view url
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs   
-
-
-class MealBookingDetailView(DetailView):
-    model = models.MealBooking
-    form_class = forms.MealBookingForm
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-
-class MealBookingUpdateView(UpdateView):
-    model = models.MealBooking
-    form_class = forms.MealBookingForm
-    pk_url_kwarg = "pk"
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        event = Event.objects.filter(is_active=True).first()
-        if event and event.deadline_mad < timezone.now().date():
-            messages.error(request, 'Deadline for booking overskredet')
-            return redirect('Butikken_MealBooking_list')  # replace with the name of your list view url
-        return super().dispatch(request, *args, **kwargs)
+    template_name = 'Butikken/mealbooking_form.html'
+    success_url = reverse_lazy('Butikken_MealBooking_list')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+    
+
+class MealBookingUpdateView(generic.UpdateView):
+    model = MealBooking
+    form_class = forms.MealBookingForm
+    template_name = 'Butikken/mealbooking_form.html'
+    success_url = reverse_lazy('Butikken_MealBooking_list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+
+class MealBookingDetailView(DetailView):
+    model = models.MealBooking
+    form_class = forms.MealBookingForm
+   
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['team_meal_plans'] = TeamMealPlan.objects.filter(meal_booking=self.object)
+        return context
+        
+
+class TeamMealPlanListView(ListView):
+    model = TeamMealPlan
+    form_class = TeamMealPlanForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['TeamMealPlans'] = TeamMealPlan.objects.all().order_by('meal_plan__name')
+        return context
+        
+
+
+class TeamMealPlanCreateView(CreateView):
+    model = TeamMealPlan
+    form_class = TeamMealPlanForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['TeamMealPlans'] = TeamMealPlan.objects.all()
+        return context
+
+class TeamMealPlanDetailView(DetailView):
+    model = TeamMealPlan
+    form_class = TeamMealPlanForm
+
+
+class TeamMealPlanUpdateView(UpdateView):
+    model = TeamMealPlan
+    form_class = TeamMealPlanForm
+    pk_url_kwarg = "pk"
+    success_url = reverse_lazy("Butikken_TeamMealPlan_list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        kwargs['meal_plan'] = self.object.meal_plan
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['meal_plan'] = self.object.meal_plan
+        return context
+
+
+class TeamMealPlanDeleteView(DeleteView):
+    model = TeamMealPlan
+    success_url = reverse_lazy("Butikken_TeamMealPlan_list")
+
+
+
+#class MealBookingUpdateView(UpdateView):
+#    model = models.MealBooking
+#    form_class = forms.MealBookingForm
+#    pk_url_kwarg = "pk"
+#    @method_decorator(login_required)
+#    def dispatch(self, request, *args, **kwargs):
+#        event = Event.objects.filter(is_active=True).first()
+#        if event and event.deadline_mad < timezone.now().date():
+#            messages.error(request, 'Deadline for booking overskredet')
+#            return redirect('Butikken_MealBooking_list')  # replace with the name of your list view url
+#        return super().dispatch(request, *args, **kwargs)
+#
+#    def get_form_kwargs(self):
+#        kwargs = super().get_form_kwargs()
+#        kwargs['user'] = self.request.user
+#        return kwargs
 
 
 class MealBookingDeleteView(DeleteView):
@@ -342,3 +419,4 @@ class RecipeUpdateView(UpdateView):
 class RecipeDeleteView(DeleteView):
     model = models.Recipe
     success_url = reverse_lazy("Butikken_Recipe_list")
+

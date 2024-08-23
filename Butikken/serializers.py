@@ -100,3 +100,15 @@ class MealBookingSerializer(serializers.ModelSerializer):
             "team_contact",
             "team",
         ]
+
+class TeamMealPlanSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.TeamMealPlan
+        fields = [
+            "last_updated",
+            "created",
+            "meal_plan",
+            "team",
+            "meal_option",
+        ]

@@ -65,3 +65,10 @@ class MealBookingViewSet(viewsets.ModelViewSet):
     queryset = models.MealBooking.objects.all()
     serializer_class = serializers.MealBookingSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class TeamMealPlanViewSet(viewsets.ModelViewSet):
+    """ViewSet for the TeamMealPlan class"""
+
+    queryset = models.TeamMealPlan.objects.all()
+    serializer_class = serializers.TeamMealPlanSerializer
+    permission_classes = [permissions.IsAuthenticated]

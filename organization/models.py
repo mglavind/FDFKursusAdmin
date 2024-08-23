@@ -4,12 +4,6 @@ from django.utils import timezone
 from django.urls import reverse
 
 
-
-
-
-
-
-
 class Event(models.Model):
 
     # Fields

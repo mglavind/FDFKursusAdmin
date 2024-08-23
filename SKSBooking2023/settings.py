@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_comments_xtd',
     'django_comments',
-    #"django_htmx", # HTMX
+    "django_htmx", # HTMX
     'bootstrap5',
     'django_bootstrap_icons',
     'django_admin_listfilter_dropdown',
@@ -74,7 +74,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
-    # "django_htmx.middleware.HtmxMiddleware", #HTMX
+     "django_htmx.middleware.HtmxMiddleware", #HTMX
     
 ]
 
@@ -98,9 +98,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'loaders': [
-                'django.template.loaders.app_directories.Loader',
-            ],
+            #'loaders': [
+            #    'django.template.loaders.app_directories.Loader',
+            #],
         },
     },
 ]
@@ -150,6 +150,7 @@ LOGIN_URL = 'login_user'
 
 # Set the LOGIN_REDIRECT_URL to the URL where you want to redirect the user after successful login
 LOGIN_REDIRECT_URL = '/'  # Change the URL to '/' for root URL redirection
+
 
 
 # Internationalization

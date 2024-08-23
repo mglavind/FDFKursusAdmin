@@ -17,6 +17,8 @@ class ButikkenItem(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
 
     class Meta:
+        verbose_name = "Butiksvare"
+        verbose_name_plural = "Butiksvarer"
         pass
 
     def __str__(self):
@@ -64,6 +66,8 @@ class ButikkenBooking(models.Model):
     for_meal = models.CharField(max_length=10, choices=TYPE_CHOICES, default='Pending')
 
     class Meta:
+        verbose_name = "Butiksbestilling"
+        verbose_name_plural = "Butiksbestillinger"
         pass
 
     def __str__(self):
@@ -153,6 +157,8 @@ class Recipe(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
+        verbose_name = "Måltidspakke"
+        verbose_name_plural = "Måltidspakker"
         pass
 
     def __str__(self):
@@ -198,121 +204,6 @@ class MealBooking(models.Model):
         ('Rejected', 'Rejected'),
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
-
-    # Fields
-    THURSDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    THURSDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Frokostpakke', 'Frokostpakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    THURSDAY_DINNER_CHOICES   = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-        ('Dinner trans', 'Dinner trans'),
-        ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-        ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-        ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-        ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-        ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-        ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    thursday_breakfast = models.CharField(max_length=200, choices=THURSDAY_BREAKFAST_CHOICES, default="none")
-    thursday_lunch = models.CharField(max_length=200, choices=THURSDAY_LUNCH_CHOICES, default="none")
-    thursday_dinner = models.CharField(max_length=200, choices=THURSDAY_DINNER_CHOICES, default="none")
-
-    # Fields
-    FRIDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    FRIDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Frokostpakke', 'Frokostpakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    FRIDAY_DINNER_CHOICES   = (
-        ('Vælg fra liste', 'Vælg fra liste'),
-        ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-        ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-        ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-        ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-        ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-        ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-        ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    friday_breakfast = models.CharField(max_length=200, choices=FRIDAY_BREAKFAST_CHOICES, default="none")
-    friday_lunch = models.CharField(max_length=200, choices=FRIDAY_LUNCH_CHOICES, default="none")
-    friday_dinner = models.CharField(max_length=200, choices=FRIDAY_DINNER_CHOICES, default="none")
-
-     # Fields
-    SATURDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    SATURDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Frokostpakke', 'Frokostpakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    SATURDAY_DINNER_CHOICES   = (
-        ('Vælg fra liste', 'Vælg fra liste'), 
-        ('Spiser inde ', 'Spiser inde '),
-        ('Laver mad bestilt ved KØK', 'Laver mad bestilt ved KØK'),
-        ('Dinner trans', 'Dinner trans'),
-        ('DYI - Chili Con Carne med ris / Råkost', 'DYI - Chili Con Carne med ris / Råkost'),
-        ('DYI - Ciabatta med kylling og bacon', 'DYI - Ciabatta med kylling og bacon'),
-        ('DYI - Indisk Kartoffelcurry / Råkost', 'DYI - Indisk Kartoffelcurry / Råkost'),
-        ('DYI - Jambalaya / Spidskålssalat', 'DYI - Jambalaya / Spidskålssalat'),
-        ('DYI - Pasta kødsovs / Spidskålssalat', 'DYI - Pasta kødsovs / Spidskålssalat'),
-        ('DYI - Svensk pølseret / Spidskålssalat', 'DYI - Svensk pølseret / Spidskålssalat'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    saturday_breakfast = models.CharField(max_length=200, choices=SATURDAY_BREAKFAST_CHOICES, default="none")
-    saturday_lunch = models.CharField(max_length=200, choices=SATURDAY_LUNCH_CHOICES, default="none")
-    saturday_dinner = models.CharField(max_length=200, choices=SATURDAY_DINNER_CHOICES, default="none")
-    
-    # Fields
-    SUNDAY_BREAKFAST_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Morgenmadspakke', 'Morgenmadspakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    SUNDAY_LUNCH_CHOICES = (
-        ('Vælg fra liste', 'Vælg fra liste'), ('Spiser inde ', 'Spiser inde '),
-        ('Frokostpakke', 'Frokostpakke'),
-        ('Står selv for forplejning', 'Står selv for forplejning'),
-    )
-    SUNDAY_DINNER_CHOICES   = (
-        ('Fællesforplejning', 'Fællesforplejning'), 
-    )
-    sunday_breakfast = models.CharField(max_length=200, choices=SUNDAY_BREAKFAST_CHOICES, default="none")
-    sunday_lunch = models.CharField(max_length=200, choices=SUNDAY_LUNCH_CHOICES, default="none")
-    sunday_dinner = models.CharField(max_length=200, choices=SUNDAY_DINNER_CHOICES, default="none")
-
-
-
-
-
-
-
-
-
-
     last_updated = models.DateTimeField(auto_now=True, editable=False) 
     created = models.DateTimeField(auto_now_add=True, editable=False)
     
@@ -328,3 +219,111 @@ class MealBooking(models.Model):
 
     def get_update_url(self):
         return reverse("Butikken_MealBooking_update", args=(self.pk,))
+    
+
+
+
+class MealPlan(models.Model):
+
+    # Fields
+    name = models.CharField(max_length=100, blank=True)
+    meal_date = models.DateTimeField(default=timezone.now)
+    open_date = models.DateTimeField(default=timezone.now)
+    close_date = models.DateTimeField(default=timezone.now)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        verbose_name = "Måltid"
+        verbose_name_plural = "Måltider"
+        pass
+
+    def __str__(self):
+        return f"{self.name}"
+
+    def get_absolute_url(self):
+        return reverse("mealplan_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("mealplan_update", args=(self.pk,))
+
+    @staticmethod
+    def get_htmx_create_url():
+        return reverse("mealplan_htmx_create")
+
+    def get_htmx_delete_url(self):
+        return reverse("mealplan_htmx_delete", args=(self.pk,))
+
+
+class MealOption(models.Model):
+    # Relationships
+    meal_plan = models.ForeignKey(MealPlan, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+
+    # Fields
+    # name = models.CharField(max_length=100, blank=True)
+    # description = models.TextField(max_length=500, blank=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        verbose_name = "Måltidsvalgmulighed"
+        verbose_name_plural = "Måltidsvalgmulighedr"
+        pass
+
+    def __str__(self):
+        return f"{self.recipe.name}"
+
+    def get_absolute_url(self):
+        return reverse("mealoption_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("mealoption_update", args=(self.pk,))
+
+    @staticmethod
+    def get_htmx_create_url():
+        return reverse("mealoption_htmx_create")
+
+    def get_htmx_delete_url(self):
+        return reverse("mealoption_htmx_delete", args=(self.pk,))
+    
+class TeamMealPlan(models.Model):
+
+    # Relationships
+    meal_plan = models.ForeignKey("Butikken.MealPlan", on_delete=models.CASCADE)
+    meal_option = models.ForeignKey("Butikken.MealOption", on_delete=models.CASCADE, blank=True, null=True)
+    team = models.ForeignKey("organization.Team", on_delete=models.CASCADE)
+    team_contact = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE, blank=True, null=True)
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+
+    # Fields
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    class Meta:
+        verbose_name = "Måltidsbestilling"
+        verbose_name_plural = "Måltidsbestillinger"
+        pass
+
+    def __str__(self):
+        return str(self.pk)
+
+    def get_absolute_url(self):
+        return reverse("Butikken_TeamMealPlan_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("Butikken_TeamMealPlan_update", args=(self.pk,))
+
+    @staticmethod
+    def get_htmx_create_url():
+        return reverse("Butikken_TeamMealPlan_htmx_create")
+
+    def get_htmx_delete_url(self):
+        return reverse("Butikken_TeamMealPlan_htmx_delete", args=(self.pk,))
+
+

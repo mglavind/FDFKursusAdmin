@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-
 <br>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -15,137 +14,20 @@
 <h1 class="display-3" >Ny måltidsbestilling</h1>
 
 <br>
-
-
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{form.errors}}
-<!--
-  <h2> Mandag </h2>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="monday_breakfast">Morgenmad </label>
-        {{ form.monday_breakfast }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="monday_lunch">Middag: </label>
-        {{ form.monday_lunch }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="monday_dinner">Aften: </label>
-        {{ form.monday_dinner }}
-    </div>
-
-    <br>
-    <h2> Tirsdag </h2>
-
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="tuesday_breakfast">Morgen: </label>
-        {{ form.tuesday_breakfast }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="tuesday_lunch">Middag: </label>
-        {{ form.tuesday_lunch }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="tuesday_dinner">Aften: </label>
-        {{ form.tuesday_dinner }}
-    </div>
-
-    <br>
-    <h2> Onsdag </h2>
-
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="wednesday_breakfast">Morgen: </label>
-        {{ form.wednesday_breakfast }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="wednesday_lunch">Middag: </label>
-        {{ form.wednesday_lunch }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="wednesday_dinner">Aften: </label>
-        {{ form.wednesday_dinner }}
-    </div>
-
--->
-
-    <br>
-    <h2> Torsdag </h2>
-
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="thursday_breakfast">Morgen: </label>
-        {{ form.thursday_breakfast }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="thursday_lunch">Middag: </label>
-        {{ form.thursday_lunch }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="thursday_dinner">Aften: </label>
-        {{ form.thursday_dinner }}
-    </div>
-
-    <br>
-    <h2> Fredag </h2>
-
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="friday_breakfast">Morgen: </label>
-        {{ form.friday_breakfast }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="friday_lunch">Middag: </label>
-        {{ form.friday_lunch }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="friday_dinner">Aften: </label>
-        {{ form.friday_dinner }}
-    </div>
-
-    <br>
-    <h2> Lørdag </h2>
-
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="saturday_breakfast">Morgen: </label>
-        {{ form.saturday_breakfast }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="saturday_lunch">Middag: </label>
-        {{ form.saturday_lunch }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="saturday_dinner">Aften: </label>
-        {{ form.saturday_dinner }}
-    </div>
-
-    <br>
-    <h2> Søndag </h2>
-
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="sunday_breakfast">Morgen: </label>
-        {{ form.sunday_breakfast }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="sunday_lunch">Middag: </label>
-        {{ form.sunday_lunch }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="sunday_dinner">Aften: </label>
-        {{ form.sunday_dinner }}
-    </div>
-
-    <br>
-    <h2> Team </h2>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="team_contact">Kontaktperson: </label>
-        {{ form.team_contact }}
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="team">Team: </label>
-        {{ form.team }}
-    </div>
-
-    <br>
-  <input type="submit" value="Gem" class="btn btn-primary">
+<form method="post">
+    {% csrf_token %}
+    {{form.errors}}
+    {{formset.errors}}
+    {{ form.as_p }}
+    {{ teammealplan_formset.management_form }}
+    <table class="table">
+        {% for form in teammealplan_formset %}
+        <tr>
+            <td>{{ form.meal_plan.label }}: {{ form.meal_plan }}</td>
+            <td>{{ form.meal_option.label }}: {{ form.meal_option }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
-
 {% endblock %}

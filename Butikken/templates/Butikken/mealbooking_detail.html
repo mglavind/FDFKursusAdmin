@@ -20,37 +20,6 @@
 <table class="table">
     <tr><td>Kontaktperson</td><td>{{ object.team_contact }}</td></tr>
     <tr><td>Team</td><td>{{ object.team }}</td></tr>
-
-    <!-- unused days
-    <tr><td>Mandag - Morgen</td><td>{{ object.monday_breakfast }}</td></tr>
-    <tr><td>Mandag - Middag</td><td>{{ object.monday_lunch }}</td></tr>
-    <tr><td>Mandag - Aften</td><td>{{ object.monday_dinner }}</td></tr>
-
-    <tr><td>Tirsdag - Morgen</td><td>{{ object.tuesday_breakfast }}</td></tr>
-    <tr><td>Tirsdag - Middag</td><td>{{ object.tuesday_lunch }}</td></tr>
-    <tr><td>Tirsdag - Aften</td><td>{{ object.tuesday_dinner }}</td></tr>
-
-    <tr><td>Onsdag - Morgen</td><td>{{ object.wednesday_breakfast }}</td></tr>
-    <tr><td>Onsdag - Middag</td><td>{{ object.wednesday_lunch }}</td></tr>
-    <tr><td>Onsdag - Aften</td><td>{{ object.wednesday_dinner }}</td></tr>
-    -->
- 
-
-    <tr><td>Torsdag - Morgen</td><td>{{ object.thursday_breakfast }}</td></tr>
-    <tr><td>Torsdag - Middag</td><td>{{ object.thursday_lunch }}</td></tr>
-    <tr><td>Torsdag - Aften</td><td>{{ object.thursday_dinner }}</td></tr>
-
-    <tr><td>Fredag - Morgen</td><td>{{ object.friday_breakfast }}</td></tr>
-    <tr><td>Fredag - Middag</td><td>{{ object.friday_lunch }}</td></tr>
-    <tr><td>Fredag - Aften</td><td>{{ object.friday_dinner }}</td></tr>
-
-    <tr><td>Lørdag - Morgen</td><td>{{ object.saturday_breakfast }}</td></tr>
-    <tr><td>Lørdag - Middag</td><td>{{ object.saturday_lunch }}</td></tr>
-    <tr><td>Lørdag - Aften</td><td>{{ object.saturday_dinner }}</td></tr>
-
-    <tr><td>Søndag - Morgen</td><td>{{ object.sunday_breakfast }}</td></tr>
-    <tr><td>Søndag - Middag</td><td>{{ object.sunday_lunch }}</td></tr>
-    <tr><td>Søndag - Aften</td><td>{{ object.sunday_dinner }}</td></tr>
     <tr>
         <td>Status</td>
         <td>
@@ -63,9 +32,24 @@
             {% endif %}
         </td>
     </tr>
-
     <tr><td>Oprættet</td><td>{{ object.created }}</td></tr>
     <tr><td>Sidst opdateret</td><td>{{ object.last_updated }}</td></tr>
+</table>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Meal Plan</th>
+            <th>Meal Option</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team_meal_plan in team_meal_plans %}
+        <tr>
+            <td>{{ team_meal_plan.meal_plan }}</td>
+            <td>{{ team_meal_plan.meal_option }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 <a class="btn btn-primary" href="{{object.get_update_url}}">Rediger</a>
 

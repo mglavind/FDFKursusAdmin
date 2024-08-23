@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from django.db.models import Q
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import formats
@@ -39,7 +40,14 @@ class AktivitetsTeamBookingAdminForm(forms.ModelForm):
         fields = "__all__"
 
 class AssignedInline(admin.TabularInline):
-        model = AktivitetsTeamBooking.assigned_aktivitetsteam.through
+    model = models.AktivitetsTeamBooking.assigned_aktivitetsteam.through
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        # Filter the queryset to only include volunteers from a specific team
+        queryset = queryset.filter(volunteer__teams='8')
+        return queryset
+
 
 class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
     form = AktivitetsTeamBookingAdminForm

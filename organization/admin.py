@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, User
 from django.urls import path
 from django.shortcuts import render
+from Butikken.models import MealPlan, TeamMealPlan
 from organization.models import Team, TeamMembership, TeamEventMembership, EventMembership, Event
 from django.db.models import Min
 from datetime import date
@@ -36,6 +37,20 @@ class TeamEventMembershipInline(admin.TabularInline):
     model = TeamEventMembership
     extra = 1
 
+def create_team_meal_plans(modeladmin, request, queryset):
+    meal_plans = MealPlan.objects.all()
+    created_count = 0
+    for team in queryset:
+        for meal_plan in meal_plans:
+            # Check if the TeamMealPlan already exists
+            if not TeamMealPlan.objects.filter(team=team, meal_plan=meal_plan).exists():
+                TeamMealPlan.objects.create(team=team, meal_plan=meal_plan)
+                created_count += 1
+    modeladmin.message_user(request, f"{created_count} TeamMealPlan objects created successfully.")
+
+create_team_meal_plans.short_description = "Create TeamMealPlan for each MealPlan"
+
+
 class TeamAdmin(admin.ModelAdmin):
     form = TeamAdminForm
     #inlines = [TeamEventMembershipInline]
@@ -51,6 +66,7 @@ class TeamAdmin(admin.ModelAdmin):
         "last_updated",
         "created",
     ]
+    actions = [create_team_meal_plans]
     #def display_events(self, obj):
     #    return ", ".join([event.name for event in obj.events.all()])
 
