@@ -13,8 +13,10 @@ class AktivitetsTeamItemForm(forms.ModelForm):
     class Meta:
         model = models.AktivitetsTeamItem
         fields = [
-            "description",
             "name",
+            "description",
+            "youtube_link",
+            "short_description",
         ]
 
 

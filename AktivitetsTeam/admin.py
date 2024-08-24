@@ -25,6 +25,9 @@ class AktivitetsTeamItemAdmin(admin.ModelAdmin):
         "name",
         "description",
         "created",
+        "youtube_link",
+        "description_aktiverede",
+        "description_flow",
         "last_updated",
     ]
     readonly_fields = [

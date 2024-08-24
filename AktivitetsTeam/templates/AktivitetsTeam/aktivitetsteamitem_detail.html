@@ -2,19 +2,54 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+{% load embed_video_tags %}
     
-<p>
-    <a class="btn btn-light" href="{% url 'AktivitetsTeam_AktivitetsTeamItem_list' %}">
-    AktivitetsTeamItem Listing
-    </a>
-</p>
-    
-<table class="table">
-    <tr><td>description</td><td>{{ object.description }}</td></tr>
-    <tr><td>created</td><td>{{ object.created }}</td></tr>
-    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
-    <tr><td>name</td><td>{{ object.name }}</td></tr>
-</table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'AktivitetsTeam_AktivitetsTeamItem_list' %}"> Aktivitetsteam Katalog</a></li>
+      <li class="breadcrumb-item active" aria-current="page"> {{ object.name }}</li>
+    </ol>
+</nav>
+<br>
+
+<div class="card mb-3 center" style="max-width: 750px;">
+    <!-- <img src="..." class="card-img-top" alt="..."> -->
+    <div class="card-body">
+        <h2 class="card-title">
+            {{ object.name }}
+        </H2>
+        <p class="card-text"> 
+            {{ object.description }}
+        </p>
+
+    </div>
+    <ul class="list-group list-group-flush">
+        {% if object.description_flow %}
+            <li class="list-group-item">Flow: {{ object.description_flow}} </li>
+        {% endif %}
+        {% if object.description_aktiverede %}
+            <li class="list-group-item">Aktiverede deltagere: {{object.description_aktiverede}} </li>
+        {% endif %}
+        {% if object.youtube_link %}
+            <li class="list-group-item">
+                
+                    <div class="ratio ratio-16x9">
+                        {% video object.youtube_link as my_video %}
+                            {% video my_video '100% x 100%' %}
+                        {% endvideo %}
+                    </div>
+                
+            </li>
+        {% endif %}
+        <li class="list-group-item"><a class="btn btn-primary disabled" href="{{object.get_update_url}}">Rediger</a></li>
+    </ul>
+    <div class="card-footer">
+        <small class="text-body-secondary">Sidst opdateret {{ object.last_updated }}</small>
+      </div>
+</div>
+
+
 
 {% endblock %}

@@ -4,16 +4,21 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator
-
+from embed_video.fields import EmbedVideoField
 
 
 class AktivitetsTeamItem(models.Model):
 
     # Fields
     description = models.TextField(max_length=2000)
+    short_description = models.TextField(max_length=200)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
+    youtube_link = EmbedVideoField(blank=True)
+    description_flow = models.TextField(max_length=200, blank=True)
+    description_aktiverede = models.TextField(max_length=200, blank=True)
     name = models.CharField(max_length=100)
+
 
     class Meta:
         pass

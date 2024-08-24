@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'template_partials',
     'django_bootstrap5',
+    'embed_video',
     'Teknik',
     'Sjak',
     'AktivitetsTeam',
@@ -104,7 +105,9 @@ TEMPLATES = [
         },
     },
 ]
-
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.template.context_processors.request',
+)
 
 
 WSGI_APPLICATION = 'SKSBooking2023.wsgi.application'
