@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.utils.decorators import method_decorator
 from django.urls import reverse
+from django.contrib.auth.decorators import user_passes_test
 
 from . import models
 from . import forms
@@ -94,7 +95,24 @@ class SjakBookingDetailView(generic.DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+    
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def approve_booking(request, pk):
+    booking = get_object_or_404(models.SjakBooking, pk=pk)
+    booking.status = 'Approved'
+    booking.save()
+    next_url = request.GET.get('next', 'Sjak_SjakBooking_detail')
+    return redirect(next_url, pk=pk)
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def reject_booking(request, pk):
+    booking = get_object_or_404(models.SjakBooking, pk=pk)
+    booking.status = 'Rejected'
+    booking.save()
+    next_url = request.GET.get('next', 'Sjak_SjakBooking_detail')
+    return redirect(next_url, pk=pk)
 
 class SjakBookingUpdateView(generic.UpdateView):
     model = models.SjakBooking
