@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.admin.models import LogEntry, ADDITION
+from django.contrib.contenttypes.models import ContentType
+from django.utils.timezone import now
 from django.http import Http404
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -30,6 +33,14 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            LogEntry.objects.log_action(
+                user_id=user.pk,
+                content_type_id=ContentType.objects.get_for_model(user).pk,
+                object_id=user.pk,
+                object_repr=str(user),
+                action_flag=ADDITION,
+                change_message=f'User {user.username} logged in at {now()}.',
+            )
             return redirect('home')
         else:
             messages.error(request, "There was an error logging in. Please try again.")

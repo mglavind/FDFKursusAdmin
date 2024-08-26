@@ -79,17 +79,17 @@
     </tr>
 </table>
 <a class="btn btn-primary" href="{{object.get_update_url}}">Rediger</a>
-
+ <!--
 <div class="container ">
 
-    <!-- Comments -->
+
         {% get_comment_count for object as comment_count %}
         <div class="comment mt-3 mb-5">  
         <div class="card pt-4">
             <div class="card-body">
             <h5 class="card-title">Kommentarer</h5>
 
-            <!-- Kommentar træet -->
+
 
             {% if comment_count %}
                 <ul class="media-list">
@@ -97,11 +97,11 @@
                 </ul>
             {% endif %}
 
-            <!-- Skrivefelt -->
+
 
             {% render_comment_form for object %}
 
-            <!-- Optælling -->
+
             <div class="py-4 card-text">
                 <a href="{% url 'Teknik_TeknikBooking_list' %}">Tilbage til oversigt</a>
                 &nbsp;&sdot;&nbsp;
@@ -112,4 +112,5 @@
         </div>
 
     </div>
+-->
 {% endblock %}
