@@ -1,11 +1,16 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django import forms
 from django.db.models import Q
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import formats
+from organization.models import Volunteer
 from icalendar import Calendar, Event
 from datetime import datetime
+from django.contrib.admin import SimpleListFilter
+from django.urls import path, URLPattern
+from django.shortcuts import render
+from typing import List
 import csv
 
 from . import models
@@ -18,22 +23,117 @@ class AktivitetsTeamItemAdminForm(forms.ModelForm):
         model = models.AktivitetsTeamItem
         fields = "__all__"
 
+class CsvImportForm(forms.Form):
+    csv_upload = forms.FileField()
 
 class AktivitetsTeamItemAdmin(admin.ModelAdmin):
     form = AktivitetsTeamItemAdminForm
     list_display = [
         "name",
         "description",
-        "created",
         "youtube_link",
         "description_aktiverede",
+        "description_eksempel",
         "description_flow",
+        "created",
         "last_updated",
     ]
     readonly_fields = [
         "created",
         "last_updated",
     ]
+    search_fields = ['name', 'description']
+    actions = ["export_to_csv"]
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=aktivitetsteam_items.csv"
+        response.write(u'\ufeff'.encode('utf8'))
+
+        writer = csv.writer(response, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        
+        writer.writerow([
+            "name",
+            "description",
+            "short_description",
+            "youtube_link",
+            "description_aktiverede",
+            "description_eksempel",
+            "description_flow",
+        ])
+
+        for booking in queryset:
+            writer.writerow([
+                booking.name,
+                booking.description,
+                booking.short_description,
+                booking.youtube_link,
+                booking.description_aktiverede,
+                booking.description_eksempel,
+                booking.description_flow,
+            ])
+
+        return response
+    export_to_csv.short_description = "Eksporter valgte til CSV"
+
+    def get_urls(self) -> List[URLPattern]:
+        urls = super().get_urls()
+        new_urls = [path('upload-csv/', self.upload_csv),]
+        return new_urls + urls
+    
+    def upload_csv(self, request):
+        if request.method == "POST":
+            csv_file = request.FILES["csv_upload"]
+
+            if not csv_file.name.endswith(".csv"):
+                messages.warning(request, "Wrong file type was uploaded. Please upload a CSV file.")
+                return HttpResponseRedirect(request.path_info)
+
+            file_data = csv_file.read().decode("utf-8")
+            csv_data = file_data.split("\n")
+
+            for line in csv_data:
+                fields = line.split(";")
+                name = fields[0]
+                description = fields[1]
+                short_description = fields[2]
+                youtube_link = fields[3]
+                description_aktiverede = fields[4]
+                description_eksempel = fields[5]
+                description_flow = fields[6]
+
+                # Check if the name is unique
+                if models.AktivitetsTeamItem.objects.filter(name=name).exists():
+                    messages.warning(request, f"Item with name '{name}' already exists.")
+                    continue
+
+                form_data = {
+                    "name": name,
+                    "description": description,
+                    "short_description": short_description,
+                    "youtube_link": youtube_link,
+                    "description_aktiverede": description_aktiverede,
+                    "description_eksempel": description_eksempel,
+                    "description_flow": description_flow,
+                }
+
+                # Create a LocationItemAdminForm instance with the modified form_data
+                form = AktivitetsTeamItemAdminForm(form_data)
+
+                if form.is_valid():
+                    # Save the LocationItem instance
+                    location_item = form.save()
+
+                else:
+                    error_messages = []
+                    for field, errors in form.errors.items():
+                        error_messages.append(f"Field '{field}': {'; '.join(map(str, errors))}")
+                    error_message = "; ".join(error_messages)
+                    messages.warning(request, f"Invalid data in CSV: {error_message}")
+
+        form = CsvImportForm()
+        data = {"form": form}
+        return render(request, "admin/csv_upload.html", data)
 
 
 class AktivitetsTeamBookingAdminForm(forms.ModelForm):
@@ -44,13 +144,27 @@ class AktivitetsTeamBookingAdminForm(forms.ModelForm):
 
 class AssignedInline(admin.TabularInline):
     model = models.AktivitetsTeamBooking.assigned_aktivitetsteam.through
+    verbose_name = "Tilknyttedet Aktivitettøs"
+    verbose_name_plural = "Tilknyttede Aktivitettøser"
 
-    def get_queryset(self, request):
-        queryset = super().get_queryset(request)
-        # Filter the queryset to only include volunteers from a specific team
-        queryset = queryset.filter(volunteer__teams='8')
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "volunteer":
+            kwargs["queryset"] = Volunteer.objects.filter(teams='8')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+class AssignedAktivitetsteamFilter(SimpleListFilter):
+    title = 'Assigned Aktivitetsteam'
+    parameter_name = 'assigned_aktivitetsteam'
+
+    def lookups(self, request, model_admin):
+        # Provide the filter options
+        volunteers = Volunteer.objects.filter(teams='8')
+        return [(volunteer.id, volunteer.first_name) for volunteer in volunteers]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(assigned_aktivitetsteam__id=self.value())
         return queryset
-
 
 class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
     form = AktivitetsTeamBookingAdminForm
@@ -105,7 +219,7 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
         ('status', ChoiceDropdownFilter),
         ('item', RelatedDropdownFilter),
         ('team', RelatedDropdownFilter),
-        ('assigned_aktivitetsteam', RelatedDropdownFilter)
+        AssignedAktivitetsteamFilter,
     )
     actions = ["approve_bookings", "reject_bookings", "export_to_csv", "export_selected_to_ical"]
     search_fields = ['item__name', 'team__name'] 
@@ -158,6 +272,10 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
 
         return response
     export_to_csv.short_description = "Export selected bookings to CSV"
+
+
+
+
 
 
     def export_selected_to_ical(self, request, queryset):

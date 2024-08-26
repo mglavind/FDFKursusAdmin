@@ -16,6 +16,7 @@ class AktivitetsTeamItem(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     youtube_link = EmbedVideoField(blank=True)
     description_flow = models.TextField(max_length=200, blank=True)
+    description_eksempel = models.TextField(max_length=200, blank=True)
     description_aktiverede = models.TextField(max_length=200, blank=True)
     name = models.CharField(max_length=100)
 
