@@ -251,6 +251,7 @@ class VolunteerAdmin(admin.ModelAdmin):
 
             for line in csv_data:
                 fields = line.split(",")
+
                 form_data = {
                     "first_name": fields[0],
                     "last_name": fields[1],
@@ -269,16 +270,16 @@ class VolunteerAdmin(admin.ModelAdmin):
 
                 form = VolunteerAdminForm(form_data)
                 
-
-                
-                
                 # Check if user with the same email already exists
                 existing_user = models.Volunteer.objects.filter(email=form_data["email"]).first()
                 
                 if existing_user:
                     # Delete existing TeamMembership and EventMembership objects where member is the user
-                    TeamMembership.objects.filter(member=existing_user).delete()
-                    EventMembership.objects.filter(volunteer=existing_user).delete()
+                    try:
+                        TeamMembership.objects.filter(member=existing_user).delete()
+                        EventMembership.objects.filter(volunteer=existing_user).delete()
+                    except Exception as e:
+                        messages.warning(request, f"Error: {e}")
 
                     # Assign "Medarbejder" auth group
                     medarbejder_group, _ = Group.objects.get_or_create(name="Medarbejder")
@@ -287,6 +288,7 @@ class VolunteerAdmin(admin.ModelAdmin):
                     # Create TeamMembership for each team
                     team = Team.objects.get(id=form_data["team"])  # assuming team_id is the ID of the team
                     TeamMembership.objects.create(team=team, member=existing_user)
+                    EventMembership.objects.create(volunteer=existing_user, event=Event.objects.filter(start_date__gte=date.today()).order_by('start_date').first())
 
                     messages.success(request, f"Updated: {existing_user.first_name} {existing_user.last_name} to {team.name} ")
 
@@ -308,6 +310,7 @@ class VolunteerAdmin(admin.ModelAdmin):
                     # Create TeamMembership for each team
                     team = Team.objects.get(id=form_data["team"])  # assuming team_id is the ID of the team
                     TeamMembership.objects.create(team=team, member=volunteer)
+                    EventMembership.objects.create(volunteer=volunteer, event=Event.objects.filter(start_date__gte=date.today()).order_by('start_date').first())
 
 
                     messages.success(request, f"Created: {user.first_name} {user.last_name} to {team.name} ")
