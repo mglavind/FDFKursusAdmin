@@ -331,7 +331,9 @@ class VolunteerAdmin(admin.ModelAdmin):
 
         for volunteer in queryset:
             subject = "Velkommen til Seniorkursus Slettens booking system"
-            context = {'volunteer': volunteer}
+            first_team = volunteer.teams.first()  # Get the first team of the volunteer
+            context = {'volunteer': volunteer,
+                       'first_team': first_team}
             message = render_to_string(email_template, context)
             plain_message = strip_tags(message)
 
