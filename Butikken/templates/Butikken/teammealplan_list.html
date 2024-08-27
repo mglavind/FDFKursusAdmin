@@ -3,12 +3,13 @@
 {% block content %}
 {% load bootstrap_icons %}
 
-<h2>Team Meal Plans</h2>
+<br>
+<h2>Måltider</h2>
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
-    <li class="breadcrumb-item current">Måltids bookinger</li>
+    <li class="breadcrumb-item current">Måltids bestillinger</li>
   
   </ol>
 </nav>
@@ -53,9 +54,11 @@
                 <a href="{% url 'Butikken_TeamMealPlan_update' TeamMealPlan.pk %}" class="btn btn-outline-warning btn-sm">
                     {% bs_icon 'pencil' %}  
                 </a>
-                <a href="{% url 'Butikken_TeamMealPlan_delete' TeamMealPlan.pk %}" class="btn btn-outline-danger btn-sm">
-                    {% bs_icon 'trash' %}  
-                </a>
+                {% if user.is_staff %}
+                  <a href="{% url 'Butikken_TeamMealPlan_delete' TeamMealPlan.pk %}" class="btn btn-outline-danger btn-sm">
+                      {% bs_icon 'trash' %}  
+                  </a>
+                {% endif %}
         
             </td class="align-middle">
         
