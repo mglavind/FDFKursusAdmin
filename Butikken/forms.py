@@ -8,6 +8,9 @@ from . import models
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.forms import inlineformset_factory, BaseInlineFormSet
+from django.utils import timezone
+from datetime import time
+
 
 
 from django import forms
@@ -109,17 +112,44 @@ class ButikkenItemForm(forms.ModelForm):
         self.fields["type"].queryset = ButikkenItemType.objects.all()
 
 class ButikkenBookingForm(forms.ModelForm):
-    start = forms.DateField(
-        widget=TextInput(attrs={"type": "date"}),
-        initial=Event.objects.filter(is_active=True).first().start_date
-    )
-    start_time = forms.TimeField(
-        widget=TextInput(attrs={"type": "time"}),
-        initial=Event.objects.filter(is_active=True).first().start_date
-    )
     class Meta:
         model = models.ButikkenBooking
-        fields = fields = '__all__' 
+        fields =[
+            "item",
+            "team",
+            "team_contact",
+            "start",
+            "start_time",
+            "status",
+            "quantity",
+            "unit",
+            "for_meal",
+            "remarks",
+        ]
+        widgets = {
+            "item": forms.Select(attrs={"class": "form-control"}),
+            "team": forms.Select(attrs={"class": "form-control"}),
+            "team_contact": forms.Select(attrs={"class": "form-control"}),
+            "status": forms.TextInput(attrs={"class": "form-control"}),
+            "start": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "start_time": forms.TimeInput(attrs={"class": "form-control", "type": "time"}),
+            "quantity": forms.NumberInput(attrs={"class": "form-control"}),
+            "unit": forms.TextInput(attrs={"class": "form-control"}),
+            "for_meal": forms.Select(attrs={"class": "form-control"}),
+            "remarks": forms.Textarea(attrs={"class": "form-control"}),
+        }
+        labels = {
+            "item": "Vare",
+            "team": "Team",
+            "team_contact": "Kontaktperson",
+            "start": "Startdato",
+            "start_time": "Starttidspunkt",
+            "status": "Status",
+            "quantity": "Antal",
+            "unit": "Enhed",
+            "for_meal": "Måltid",
+            "remarks": "Bemærkninger",
+        }
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -130,11 +160,9 @@ class ButikkenBookingForm(forms.ModelForm):
     
     def __init__(self, *args, user=None, **kwargs):
         super(ButikkenBookingForm, self).__init__(*args, **kwargs)
-        self.fields["item"].queryset = ButikkenItem.objects.all().order_by("name")
-        self.fields["team_contact"].queryset = Volunteer.objects.all().order_by("first_name")
-        self.fields["team"].queryset = Team.objects.all().order_by("name")
-        print("user", user)
-        self.fields["team_contact"].initial = user
+        self.fields["item"].queryset = ButikkenItem.objects.all()
+        self.fields["team"].queryset = Team.objects.all()
+        self.fields["team_contact"].queryset = Volunteer.objects.all()
         if user:
             print("A user exists")
             team_membership = TeamMembership.objects.get(member=user)
@@ -143,6 +171,20 @@ class ButikkenBookingForm(forms.ModelForm):
                 teammembership__team=team_membership.team
             )
             self.fields["team_contact"].initial = user
+        
+        # Function to get the next event
+        def get_next_event():
+            now = timezone.now()
+            next_event = Event.objects.filter(start_date__gt=now).order_by('start_date').first()
+            return next_event
+        
+        next_event = get_next_event()
+        if next_event:
+            print(next_event.start_date)  # Debugging line to ensure next_event is not None
+            self.fields["start"].initial = next_event.start_date.strftime('%Y-%m-%d')
+            self.fields["start_time"].initial = time(8, 0)  # Set default time to 08:00 AM
+
+
 
 
 class OldButikkenBookingForm(forms.ModelForm):

@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from organization.models import Team, Volunteer
+from datetime import date
 
 class ButikkenItem(models.Model):
 
@@ -51,6 +52,7 @@ class ButikkenBooking(models.Model):
     start = models.DateField(verbose_name='Start')
     start_time = models.TimeField(verbose_name='Start_time')
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    unit = models.CharField(max_length=100)  # Blank allows for an empty value
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     remarks = models.TextField(blank=True)  # Blank allows for an empty value
@@ -227,7 +229,7 @@ class MealPlan(models.Model):
 
     # Fields
     name = models.CharField(max_length=100, blank=True)
-    meal_date = models.DateField(default=timezone.now().date)
+    meal_date = models.DateField(default=date.today)
     open_date = models.DateTimeField(default=timezone.now)
     close_date = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True, editable=False)

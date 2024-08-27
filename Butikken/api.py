@@ -16,7 +16,6 @@ class ButikkenBookingViewSet(viewsets.ModelViewSet):
     """ViewSet for the ButikkenBooking class"""
 
     queryset = models.ButikkenBooking.objects.all()
-    serializer_class = serializers.ButikkenBookingSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
