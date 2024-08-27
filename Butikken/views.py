@@ -296,7 +296,12 @@ class TeamMealPlanListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['TeamMealPlans'] = TeamMealPlan.objects.all().order_by('meal_plan__name')
+        user = self.request.user
+        print(user)
+        if user.is_staff:
+            context['TeamMealPlans'] = TeamMealPlan.objects.all().order_by('meal_plan__name')
+        else:
+            context['TeamMealPlans'] = TeamMealPlan.objects.filter(team__teammembership__member=user).order_by('meal_plan__name')
         return context
         
 

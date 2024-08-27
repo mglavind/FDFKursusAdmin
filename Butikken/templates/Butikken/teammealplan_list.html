@@ -19,6 +19,7 @@
   <thead>
       <tr>
         <th>Måltid</th>
+        <th>Dato</th>
         <th>Valgt pakke</th>
         <th>Team</th>
         <th>Kontaktperson</th>
@@ -27,37 +28,40 @@
       </tr>
   </thead>
   <tbody id="TeamMealPlan-list">
-      {% for TeamMealPlan in TeamMealPlans %}
-        <tr>
-          <td class="align-middle">{{ TeamMealPlan.meal_plan }}</td>
-          <td class="align-middle">{{ TeamMealPlan.meal_option }}</td>
-          <td class="align-middle">{{ TeamMealPlan.team }}</td>
-          <td class="align-middle">{{ TeamMealPlan.team_contact }}</td>
-          <td class="align-middle">
-              {% if TeamMealPlan.status == 'Pending' %}
-                  <span class="badge bg-warning text-dark">
-                  Afventer
-                  </span>
-              {% elif TeamMealPlan.status == 'Approved' %}
-                  <span class="badge bg-success">
-                  Godkendt
-                  </span>
-              {% elif TeamMealPlan.status == 'Rejected' %}
-                  <span class="badge bg-danger">
-                  Afvist
-                  </span>
-              {% endif %}
-              <a href="{% url 'Butikken_TeamMealPlan_update' TeamMealPlan.pk %}" class="btn btn-outline-warning btn-sm">
-                  {% bs_icon 'pencil' %}  
-              </a>
-              <a href="{% url 'Butikken_TeamMealPlan_delete' TeamMealPlan.pk %}" class="btn btn-outline-danger btn-sm">
-                  {% bs_icon 'trash' %}  
-              </a>
-      
-          </td class="align-middle">
-      
-      </tr>
-      {% endfor %}
+
+        {% for TeamMealPlan in TeamMealPlans %}
+          <tr>
+            <td class="align-middle">{{ TeamMealPlan.meal_plan }}</td>
+            <td class="align-middle">{{ TeamMealPlan.meal_plan.meal_date }}</td> <!-- Accessing date from MealPlan -->
+            <td class="align-middle">{{ TeamMealPlan.meal_option }}</td>
+            <td class="align-middle">{{ TeamMealPlan.team }}</td>
+            <td class="align-middle">{{ TeamMealPlan.team_contact }}</td>
+            <td class="align-middle">
+                {% if TeamMealPlan.status == 'Pending' %}
+                    <span class="badge bg-warning text-dark">
+                    Afventer
+                    </span>
+                {% elif TeamMealPlan.status == 'Approved' %}
+                    <span class="badge bg-success">
+                    Godkendt
+                    </span>
+                {% elif TeamMealPlan.status == 'Rejected' %}
+                    <span class="badge bg-danger">
+                    Afvist
+                    </span>
+                {% endif %}
+                <a href="{% url 'Butikken_TeamMealPlan_update' TeamMealPlan.pk %}" class="btn btn-outline-warning btn-sm">
+                    {% bs_icon 'pencil' %}  
+                </a>
+                <a href="{% url 'Butikken_TeamMealPlan_delete' TeamMealPlan.pk %}" class="btn btn-outline-danger btn-sm">
+                    {% bs_icon 'trash' %}  
+                </a>
+        
+            </td class="align-middle">
+        
+        </tr>
+        {% endfor %}
+
     
   </tbody>
 </table>

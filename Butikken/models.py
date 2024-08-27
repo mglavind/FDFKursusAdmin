@@ -227,7 +227,7 @@ class MealPlan(models.Model):
 
     # Fields
     name = models.CharField(max_length=100, blank=True)
-    meal_date = models.DateTimeField(default=timezone.now)
+    meal_date = models.DateField(default=timezone.now().date)
     open_date = models.DateTimeField(default=timezone.now)
     close_date = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True, editable=False)
