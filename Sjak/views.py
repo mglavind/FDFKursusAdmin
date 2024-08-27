@@ -102,8 +102,8 @@ def approve_booking(request, pk):
     booking = get_object_or_404(models.SjakBooking, pk=pk)
     booking.status = 'Approved'
     booking.save()
-    next_url = request.GET.get('next', 'Sjak_SjakBooking_detail')
-    return redirect(next_url, pk=pk)
+    next_url = request.GET.get('next', 'Sjak_SjakBooking_list')  # Ensure this is the correct URL name
+    return redirect(next_url)
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
@@ -111,8 +111,8 @@ def reject_booking(request, pk):
     booking = get_object_or_404(models.SjakBooking, pk=pk)
     booking.status = 'Rejected'
     booking.save()
-    next_url = request.GET.get('next', 'Sjak_SjakBooking_detail')
-    return redirect(next_url, pk=pk)
+    next_url = request.GET.get('next', 'Sjak_SjakBooking_list')
+    return redirect(next_url)
 
 class SjakBookingUpdateView(generic.UpdateView):
     model = models.SjakBooking
