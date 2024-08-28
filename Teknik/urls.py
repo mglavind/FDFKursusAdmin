@@ -14,6 +14,7 @@ urlpatterns = (
     path("api/v1/", include(router.urls)),
     path("Teknik/TeknikBooking/", views.TeknikBookingListView.as_view(), name="Teknik_TeknikBooking_list"),
     path("Teknik/TeknikBooking/create/", views.TeknikBookingCreateView.as_view(), name="Teknik_TeknikBooking_create"),
+    path("Teknik/TeknikBooking/create/<int:item_id>/", views.TeknikBookingCreateView.as_view(), name="Teknik_TeknikBooking_create_with_item"),
     path("Teknik/TeknikBooking/detail/<int:pk>/", views.TeknikBookingDetailView.as_view(), name="Teknik_TeknikBooking_detail"),
     path("Teknik/TeknikBooking/update/<int:pk>/", views.TeknikBookingUpdateView.as_view(), name="Teknik_TeknikBooking_update"),
     path("Teknik/TeknikBooking/delete/<int:pk>/", views.TeknikBookingDeleteView.as_view(), name="Teknik_TeknikBooking_delete"),

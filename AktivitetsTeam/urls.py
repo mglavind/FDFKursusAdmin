@@ -20,6 +20,7 @@ urlpatterns = (
     path("AktivitetsTeam/AktivitetsTeamBooking/", views.AktivitetsTeamBookingListView.as_view(), 
     name="AktivitetsTeam_AktivitetsTeamBooking_list"),
     path("AktivitetsTeam/AktivitetsTeamBooking/create/", views.AktivitetsTeamBookingCreateView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_create"),
+    path("AktivitetsTeam/AktivitetsTeamBooking/create/<int:item_id>/", views.AktivitetsTeamBookingCreateView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_create_with_item"),
     path("AktivitetsTeam/AktivitetsTeamBooking/detail/<int:pk>/", views.AktivitetsTeamBookingDetailView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_detail"),
     path("AktivitetsTeam/AktivitetsTeamBooking/update/<int:pk>/", views.AktivitetsTeamBookingUpdateView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_update"),
     path("AktivitetsTeam/AktivitetsTeamBooking/delete/<int:pk>/", views.AktivitetsTeamBookingDeleteView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_delete"),

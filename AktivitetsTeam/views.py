@@ -87,6 +87,8 @@ class AktivitetsTeamBookingCreateView(LoginRequiredMixin, generic.CreateView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         event = Event.objects.filter(is_active=True).first()
+        self.item_id = kwargs.get('item_id')
+
         if event and event.deadline_aktivitetsteam < timezone.now().date():
             messages.error(request, 'Deadline for booking overskredet')
             return redirect('AktivitetsTeam_AktivitetsTeamBooking_list')  # replace with the name of your list view url
@@ -95,6 +97,9 @@ class AktivitetsTeamBookingCreateView(LoginRequiredMixin, generic.CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
+        if self.item_id:
+            item = get_object_or_404(models.AktivitetsTeamItem, id=self.item_id)
+            kwargs['initial'] = {'item': item}
         return kwargs
     
     def get_context_data(self, **kwargs):

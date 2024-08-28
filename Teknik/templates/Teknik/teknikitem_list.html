@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="accordion accordion-flush" id="accordionFlushExample">
-  {% for object in object_list %}
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ object.pk }}" aria-expanded="false" aria-controls="collapse{{ object.pk }}">
-          {{ object.name }}
-        </button>
-      </h2>
-      <div id="collapse{{ object.pk }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">
-          {{ object.description }} 
+</br>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for object in object_list %}
+    <div class="col">
+      <div class="card h-100">
+        <!-- <img src="..." class="card-img-top" alt="..."> -->
+        <div class="card-body"> 
+          <h5 class="card-title">
+            {{ object.name }}
+          </h5>
+          <p class="card-text">
+            {{ object.description }} 
+          </p>
+          <a href="{% url 'Teknik_TeknikBooking_create_with_item' object.id %}" class="btn btn-primary">Book mig!</a>
         </div>
       </div>
     </div>
@@ -18,3 +21,4 @@
 </div>
 <br>
 {% endblock %}
+

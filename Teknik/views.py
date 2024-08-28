@@ -50,6 +50,7 @@ class TeknikBookingCreateView(LoginRequiredMixin, generic.CreateView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         event = Event.objects.filter(is_active=True).first()
+        self.item_id = kwargs.get('item_id')
         
         if not self.request.user.is_staff and event and event.deadline_teknik < timezone.now().date():
             messages.error(request, 'booking deadline overskredet')
@@ -60,6 +61,9 @@ class TeknikBookingCreateView(LoginRequiredMixin, generic.CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
+        if self.item_id:
+            item = get_object_or_404(models.TeknikItem, id=self.item_id)
+            kwargs['initial'] = {'item': item}
         return kwargs
     
     def get_context_data(self, **kwargs):
