@@ -120,7 +120,6 @@ class ButikkenBookingForm(forms.ModelForm):
             "team_contact",
             "start",
             "start_time",
-            "status",
             "quantity",
             "unit",
             "for_meal",
@@ -130,7 +129,6 @@ class ButikkenBookingForm(forms.ModelForm):
             "item": forms.Select(attrs={"class": "form-control"}),
             "team": forms.Select(attrs={"class": "form-control"}),
             "team_contact": forms.Select(attrs={"class": "form-control"}),
-            "status": forms.TextInput(attrs={"class": "form-control"}),
             "start": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
             "start_time": forms.TimeInput(attrs={"class": "form-control", "type": "time"}),
             "quantity": forms.NumberInput(attrs={"class": "form-control"}),
@@ -144,7 +142,6 @@ class ButikkenBookingForm(forms.ModelForm):
             "team_contact": "Kontaktperson",
             "start": "Startdato",
             "start_time": "Starttidspunkt",
-            "status": "Status",
             "quantity": "Antal",
             "unit": "Enhed",
             "for_meal": "Måltid",
@@ -172,17 +169,23 @@ class ButikkenBookingForm(forms.ModelForm):
             )
             self.fields["team_contact"].initial = user
         
-        # Function to get the next event
+# Function to get the next event
         def get_next_event():
             now = timezone.now()
             next_event = Event.objects.filter(start_date__gt=now).order_by('start_date').first()
             return next_event
         
-        next_event = get_next_event()
-        if next_event:
-            print(next_event.start_date)  # Debugging line to ensure next_event is not None
-            self.fields["start"].initial = next_event.start_date.strftime('%Y-%m-%d')
-            self.fields["start_time"].initial = time(8, 0)  # Set default time to 08:00 AM
+        # Check if the form is being initialized with an instance
+        if self.instance and self.instance.pk:
+            # Use the existing value from the instance
+            self.fields["start"].initial = self.instance.start.strftime('%Y-%m-%d')
+            print(self.instance.start.strftime('%Y-%m-%d'))
+        else:
+            # Use the next event's start date if no instance or new instance
+            next_event = get_next_event()
+            if next_event:
+                self.fields["start"].initial = next_event.start_date.strftime('%Y-%m-%d')
+                self.fields["start_time"].initial = time(8, 0)  # Set default time to 08:00 AM
 
 
 

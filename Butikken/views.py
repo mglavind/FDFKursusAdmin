@@ -86,7 +86,6 @@ class ButikkenBookingCreateView(generic.CreateView):
             messages.error(request, 'Deadline for booking overskredet')
             return redirect('Butikken_ButikkenBooking_list')  # replace with the name of your list view url
         return super().dispatch(request, *args, **kwargs)
-    
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
