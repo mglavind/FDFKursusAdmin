@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+from django.utils import timezone
 
 class FotoItem(models.Model):
 
@@ -38,8 +38,10 @@ class FotoBooking(models.Model):
     )
 
     # Fields
-    start = models.DateTimeField()
-    end = models.DateTimeField()
+    start_time = models.TimeField(default=timezone.now)
+    end_time = models.TimeField(default=timezone.now)
+    start_date = models.DateField(default=timezone.now)
+    end_date = models.DateField(default=timezone.now)
     remarks = models.TextField(max_length=500)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     location = models.CharField(max_length=100)

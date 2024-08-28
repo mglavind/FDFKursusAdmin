@@ -38,8 +38,10 @@ class FotoBookingAdmin(admin.ModelAdmin):
     list_display = [
         "item",
         "location",
-        "start",
-        "end",
+        "start_time",
+        "end_time",
+        "start_date",
+        "end_date",
         "remarks",
         "status",
         "created",
@@ -75,8 +77,8 @@ class FotoBookingAdmin(admin.ModelAdmin):
             ical_event = Event()
             summary = f"{booking.item} - {booking.team} - {booking.team_contact}"
             ical_event.add('summary', summary)
-            ical_event.add('dtstart', booking.start)
-            ical_event.add('dtend', booking.end)
+            ical_event.add('dtstart', booking.start_date)
+            ical_event.add('dtend', booking.end_date)
             ical_event.add('description', booking.remarks)
             # Add more properties as needed
 
