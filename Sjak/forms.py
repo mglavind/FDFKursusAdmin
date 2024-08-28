@@ -5,6 +5,7 @@ from Sjak.models import SjakItem, SjakBooking, SjakItemType
 from django.contrib.auth.models import Group
 from django.forms import BaseFormSet, TextInput, formset_factory
 import datetime
+from datetime import time
 from django.utils import timezone
 
 from . import models
@@ -40,18 +41,36 @@ class SjakBookingForm(forms.ModelForm):
     quantity = forms.DecimalField(max_digits=10, decimal_places=1, required=True)
 
     class Meta:
-       model = models.SjakBooking
-       fields = [
-            "start",
-            "start_time",
-            "end",
-            "end_time",
-            "team_contact",
-            "item",
-            "team",
-            "remarks",
-            "quantity",
-       ] # list of fields you want from model
+        model = models.SjakBooking
+        fields = [
+                "start",
+                "start_time",
+                "end",
+                "end_time",
+                "team_contact",
+                "item",
+                "team",
+                "remarks",
+                "quantity",
+        ] # list of fields you want from model
+        widgets = {
+            "item": forms.Select(attrs={"class": "form-select"}),
+            "team": forms.Select(attrs={"class": "form-select"}),
+            "team_contact": forms.Select(attrs={"class": "form-select"}),
+            "quantity": forms.NumberInput(attrs={"class": "form-control"}),
+            "start": forms.DateInput(attrs={"class": "form-control"}),
+            "start_time": forms.TimeInput(attrs={"class": "form-control"}),
+            "end": forms.DateInput(attrs={"class": "form-control"}),
+            "end_time": forms.TimeInput(attrs={"class": "form-control"}),
+            "remarks": forms.Textarea(attrs={"class": "form-control"}),
+        }
+        labels = {
+            "quantity": "Antal",
+            "team": "Team",
+            "item": "Sjak ting",
+            "start": "Start Dato",
+            "start_time": "Start tidspunkt",
+        }
 
     def save(self, commit=True):
         print("Begin save")
@@ -80,13 +99,28 @@ class SjakBookingForm(forms.ModelForm):
                 teammembership__team=team_membership.team
             )
             self.fields["team_contact"].initial = user
-
-    
+# Function to get the next event
+        def get_next_event():
+            now = timezone.now()
+            next_event = Event.objects.filter(start_date__gt=now).order_by('start_date').first()
+            return next_event
         
-
-    
-    
-
+        # Set initial values from instance
+        instance = kwargs.get('instance')
+        if instance:
+            self.fields["quantity"].initial = instance.quantity
+            self.fields["start"].initial = instance.start
+            self.fields["end"].initial = instance.end
+            self.fields["start_time"].initial = instance.start_time
+            self.fields["end_time"].initial = instance.end_time
+        else:
+            # Use the next event's start date if no instance or new instance
+            next_event = get_next_event()
+            if next_event:
+                self.fields["start"].initial = next_event.start_date.strftime('%Y-%m-%d')
+                self.fields["start_time"].initial = time(8, 0)  # Set default time to 08:00 AM
+                self.fields["end_time"].initial = time(8, 0)  # Set default time to 08:00 AM
+                self.fields["end"].initial = next_event.end_date.strftime('%Y-%m-%d')
 
             
 class SjakItemForm(forms.ModelForm):

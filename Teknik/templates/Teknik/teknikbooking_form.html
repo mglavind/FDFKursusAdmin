@@ -28,46 +28,35 @@
 
     {% bootstrap_form_errors form type='non_fields' %}
 
-    <div class="mb-3">
-        <label class="form-label" for="item">Teknik ting:</label>
-        
-        <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
-        
-        <datalist id="datalistOptions">
-            {% for teknik_item in teknik_items %}
-                <option value="{{ teknik_item.id }}" label="{{teknik_item.name}} " data-id="{{ teknik_item.id }}"> 
-                </option>
-            {% endfor %}
-        </datalist>
-    </div>
+        {% bootstrap_field form.item%}
 
         <!-- Quantity -->
-        {% bootstrap_label "Antal " %}
-        {% bootstrap_field form.quantity  show_label=False  %}
+
+        {% bootstrap_field form.quantity %}
 
         <!-- Start date -->
-        {% bootstrap_label "Start dato"  label_for="start_date"  %}
-        {% bootstrap_field form.start_date show_label=False  id="start_date" %}
+
+        {% bootstrap_field form.start_date  id="start_date" %}
     
         <!-- Start time -->
-        {% bootstrap_label "Start tidspunkt" %}
-        {% bootstrap_field form.start_time show_label=False %}
+      
+        {% bootstrap_field form.start_time  %}
     
         <!-- End date -->
-        {% bootstrap_label "Slut dato"  label_for="end_date"  %}
-        {% bootstrap_field form.end_date  show_label=False   id="end_date"  %}
+    
+        {% bootstrap_field form.end_date     id="end_date"  %}
     
         <!-- End time -->
-        {% bootstrap_label "Slut tidspunt" %}
-        {% bootstrap_field form.end_time show_label=False %}
+   
+        {% bootstrap_field form.end_time  %}
     
         <!-- Team -->
-        {% bootstrap_label "Team" %}
-        {% bootstrap_field form.team  show_label=False  %}
+
+        {% bootstrap_field form.team    %}
 
         <!-- Team Contact -->
-        {% bootstrap_label "Kontaktperson " %}
-        {% bootstrap_field form.team_contact  show_label=False  %}
+
+        {% bootstrap_field form.team_contact    %}
 
 
     <div class="form-group row mb-2">
@@ -103,33 +92,6 @@
         </div>
     </div>
 </form>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("item").addEventListener("input", function () { 
-            let input = this.value.toLowerCase();
-            let options = document.querySelectorAll("#datalistOptions option");
-        
-            options.forEach(function (option) {
-        
-                if (option.value.toLowerCase() === input) {
-                    document.getElementById("item").value = option.value + " - " + option.label;
-                    //document.getElementById("item_id").value = option.getAttribute("data-id");
-                }
-            });
-        }); 
-
-        document.getElementById("form").addEventListener("submit", function() {
-            let item = document.getElementById("item")
-            item.value = item.value.split(" - ")[0]
-        });
-        
-        document.getElementById("form").addEventListener("submit", function() {
-            let item = document.getElementById("item")
-            item.value = item.value.split(" - ")[0]
-        });
-    });
-</script>
 
 
 {% endblock %}

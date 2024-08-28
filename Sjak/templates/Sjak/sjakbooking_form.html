@@ -33,21 +33,7 @@
 
     {% bootstrap_form_errors form type='non_fields' %}
 
-
-    <!-- Item -->
-    <div class="mb-3">
-        <label class="form-label" for="item">Sjak ting:</label>
-        
-        <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
-        
-        <datalist id="datalistOptions">
-            {% for sjak_item in sjak_items %}
-                <option value="{{ sjak_item.id }}" label="{{sjak_item.name}} " data-id="{{ sjak_item.id }}"> 
-                </option>
-            {% endfor %}
-        </datalist>
-    </div>
-
+    {% bootstrap_field form.item id="item" %}
 
     <!-- Start date -->
     {% bootstrap_label "Start dato"  label_for="start_date"  %}

@@ -26,18 +26,9 @@
 
     {% bootstrap_form_errors form type='non_fields' %}
 
-    <div class="mb-3">
-        <label class="form-label" for="item">Aktivitet:</label>
-        
-        <input class="form-control" list="datalistOptions" id="item" name="item" placeholder="Type to search..." value="{{ form.item.value}}" >
-        
-        <datalist id="datalistOptions">
-            {% for aktivitetsteam_item in aktivitetsteam_items %}
-                <option value="{{ aktivitetsteam_item.id }}" label="{{aktivitetsteam_item.name}} " data-id="{{ aktivitetsteam_item.id }}"> 
-                </option>
-            {% endfor %}
-        </datalist>
-    </div>
+
+        <!-- Item -->
+        {% bootstrap_field form.item id="item" %}
 
         <!-- Quantity -->
         {% bootstrap_label "Location " %}
@@ -70,9 +61,6 @@
         <!--Remarks  -->
         {% bootstrap_label "Bemærkninger " %}
         {% bootstrap_field form.remarks placeholder='bemærkninger'  show_label=False %}
-
-        <!-- Status -->
-        {% bootstrap_field form.status  show_label=False  value="Pending"  %}
 
         {% buttons submit='Insend' reset="Nulstil" %}
         {% endbuttons %}
