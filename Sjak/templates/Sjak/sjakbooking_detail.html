@@ -84,7 +84,7 @@
         </div>
         <div class="col col-4">
             {% if user.is_staff %}
-            <form method="post" action="{% url 'Sjak_SjakBooking_approve' object.pk %}?next=Sjak_SjakBooking_detail">
+            <form method="post" action="{% url 'Sjak_SjakBooking_approve' object.pk %}?next={% url 'Sjak_SjakBooking_detail' object.pk %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success btn-block" style="width: 100%">Godkend</button>
             </form>
@@ -92,7 +92,7 @@
         </div>
         <div class="col col-4">
             {% if user.is_staff %}
-            <form method="post" action="{% url 'Sjak_SjakBooking_reject' object.pk %}?next=Sjak_SjakBooking_detail">
+            <form method="post" action="{% url 'Sjak_SjakBooking_reject' object.pk %}?next={% url 'Sjak_SjakBooking_detail' object.pk %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger btn-block" style="width: 100%">Afvis</button>
             </form>

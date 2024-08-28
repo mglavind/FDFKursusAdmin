@@ -16,10 +16,14 @@ urlpatterns = (
     path("AktivitetsTeam/AktivitetsTeamItem/detail/<int:pk>/", views.AktivitetsTeamItemDetailView.as_view(), name="AktivitetsTeam_AktivitetsTeamItem_detail"),
     path("AktivitetsTeam/AktivitetsTeamItem/update/<int:pk>/", views.AktivitetsTeamItemUpdateView.as_view(), name="AktivitetsTeam_AktivitetsTeamItem_update"),
     path("AktivitetsTeam/AktivitetsTeamItem/delete/<int:pk>/", views.AktivitetsTeamItemDeleteView.as_view(), name="AktivitetsTeam_AktivitetsTeamItem_delete"),
-    path("AktivitetsTeam/AktivitetsTeamBooking/", views.AktivitetsTeamBookingListView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_list"),
+
+    path("AktivitetsTeam/AktivitetsTeamBooking/", views.AktivitetsTeamBookingListView.as_view(), 
+    name="AktivitetsTeam_AktivitetsTeamBooking_list"),
     path("AktivitetsTeam/AktivitetsTeamBooking/create/", views.AktivitetsTeamBookingCreateView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_create"),
     path("AktivitetsTeam/AktivitetsTeamBooking/detail/<int:pk>/", views.AktivitetsTeamBookingDetailView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_detail"),
     path("AktivitetsTeam/AktivitetsTeamBooking/update/<int:pk>/", views.AktivitetsTeamBookingUpdateView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_update"),
     path("AktivitetsTeam/AktivitetsTeamBooking/delete/<int:pk>/", views.AktivitetsTeamBookingDeleteView.as_view(), name="AktivitetsTeam_AktivitetsTeamBooking_delete"),
+    path("AktivitetsTeam/AktivitetsTeamBooking/approve/<int:pk>/", views.approve_booking, name="AktivitetsTeam_AktivitetsTeamBooking_approve"),
+    path("AktivitetsTeam/AktivitetsTeamBooking/reject/<int:pk>/", views.reject_booking, name="AktivitetsTeam_AktivitetsTeamBooking_reject"),
 
 )

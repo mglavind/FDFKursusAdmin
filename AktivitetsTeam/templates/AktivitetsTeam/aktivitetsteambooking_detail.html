@@ -77,8 +77,29 @@
         <td>{{ object.last_updated }}</td>
     </tr>
 </table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
-
+<div class="container">
+    <div class="row align-items-start">
+        <div class="col col-4">
+            <a class="btn btn-primary btn-block" style="width: 100%" href="{{object.get_update_url}}">Rediger</a>
+        </div>
+        <div class="col col-4">
+            {% if user.is_staff %}
+            <form method="post" action="{% url 'AktivitetsTeam_AktivitetsTeamBooking_approve' object.pk %}?next={% url 'AktivitetsTeam_AktivitetsTeamBooking_detail' object.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-block" style="width: 100%">Godkend</button>
+            </form>
+            {% endif %}
+        </div>
+        <div class="col col-4">
+            {% if user.is_staff %}
+            <form method="post" action="{% url 'AktivitetsTeam_AktivitetsTeamBooking_reject' object.pk %}?next={% url 'AktivitetsTeam_AktivitetsTeamBooking_detail' object.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-block" style="width: 100%">Afvis</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
 <div class="container ">
 

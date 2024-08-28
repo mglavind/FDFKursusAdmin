@@ -23,43 +23,25 @@ from organization.models import Event  # Import the Event model
 from django.utils import timezone
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class SjakBookingListView(generic.ListView):
+class SjakBookingListView(LoginRequiredMixin, generic.ListView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
+    context_object_name = 'object_list'
     template_name = 'Sjak/SjakBooking_list.html'
-    
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = self.request.user
-
         # Filter events by user and is_active
-        events = Event.objects.filter(user=user, is_active=True).first()  # Define the "events" variable
-        if events.deadline_sjak < timezone.now():
-            messages.error(self.request, "Tilmeldingsfristen er overskredet")
-            before_deadline = False
-        else:
-            before_deadline = True
-
-        context = {
-            'events': events,  # Add the "events" variable to the context
-            'before_deadline': before_deadline,
-        }
         return context
 
-    def get(self, request):
-        context = self.get_context_data()
-        return render(request, self.template_name, context)
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
     
-class SjakBookingCreateView(generic.CreateView):
+class SjakBookingCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
 
@@ -88,7 +70,7 @@ class SjakBookingCreateView(generic.CreateView):
 
 
 
-class SjakBookingDetailView(generic.DetailView):
+class SjakBookingDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
 
@@ -102,7 +84,7 @@ def approve_booking(request, pk):
     booking = get_object_or_404(models.SjakBooking, pk=pk)
     booking.status = 'Approved'
     booking.save()
-    next_url = request.GET.get('next', 'Sjak_SjakBooking_list')  # Ensure this is the correct URL name
+    next_url = request.GET.get('next', 'Sjak_SjakBooking_list')
     return redirect(next_url)
 
 @login_required
@@ -114,7 +96,7 @@ def reject_booking(request, pk):
     next_url = request.GET.get('next', 'Sjak_SjakBooking_list')
     return redirect(next_url)
 
-class SjakBookingUpdateView(generic.UpdateView):
+class SjakBookingUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
     pk_url_kwarg = "pk"
@@ -154,7 +136,7 @@ class SjakBookingUpdateView(generic.UpdateView):
         return form
 
 
-class SjakBookingDeleteView(generic.DeleteView):
+class SjakBookingDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.SjakBooking
     success_url = reverse_lazy("Sjak_SjakBooking_list")
 
@@ -195,27 +177,6 @@ class SjakItemUpdateView(generic.UpdateView):
 class SjakItemDeleteView(generic.DeleteView):
     model = models.SjakItem
     success_url = reverse_lazy("Sjak_SjakItem_list")
-
-
-class SjakBookingListView(generic.ListView):
-    model = models.SjakBooking
-    form_class = forms.SjakBookingForm
-
-
-class SjakBookingDetailView(generic.DetailView):
-    model = models.SjakBooking
-    form_class = forms.SjakBookingForm
-
-
-class SjakBookingUpdateView(generic.UpdateView):
-    model = models.SjakBooking
-    form_class = forms.SjakBookingForm
-    pk_url_kwarg = "pk"
-
-
-class SjakBookingDeleteView(generic.DeleteView):
-    model = models.SjakBooking
-    success_url = reverse_lazy("Sjak_SjakBooking_list")
 
 
 

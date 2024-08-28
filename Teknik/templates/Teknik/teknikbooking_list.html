@@ -86,22 +86,35 @@
                     </span>
                 {% endif %}
             </td>
-              <td>
-                <a href="{% url 'Teknik_TeknikBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
-                  {% bs_icon 'pencil' %}  
+            <td>
+                <a href="{% url 'Teknik_TeknikBooking_detail' object.pk %}" class="btn btn-primary btn-sm">
+                    {% bs_icon 'eye-fill' %}
                 </a>
                 <a href="{% url 'Teknik_TeknikBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-                  {% bs_icon 'trash' %}  
+                    {% bs_icon 'trash' %}
                 </a>
-
-                {% get_comment_count for object as comment_count %}
-                {% if comment_count %}
-                  <a href="{{object.get_absolute_url}}" class="btn btn-outline-secondary btn-sm">
-                    {{ comment_count }}  {% bs_icon 'chat-left-dots' %} 
-                  </a>
-                {% endif %}
-              
             </td>
+            <td>
+              <div class="d-flex gap-2 align-items-center">
+                  <form method="post" action="{% url 'Teknik_TeknikBooking_reject' object.pk %}?next=Teknik_TeknikBooking_list" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center">{% bs_icon 'x-lg' %}</button>
+                  </form>
+                  <form method="post" action="{% url 'Teknik_TeknikBooking_approve' object.pk %}?next=Teknik_TeknikBooking_list" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-success btn-sm d-flex align-items-center">{% bs_icon 'check-circle-fill' %}</button>
+                  </form>
+              </div>
+          </td>    
+          <td>
+            {% get_comment_count for object as comment_count %}
+            {% if comment_count %}
+                <a href="{{object.get_absolute_url}}" class="btn btn-outline-secondary btn-sm">
+                    {{ comment_count }} {% bs_icon 'chat-left-dots' %}
+                </a>
+            {% endif %}
+          </td>
+
             </tr>
           {% endif %}
         {% endfor %}

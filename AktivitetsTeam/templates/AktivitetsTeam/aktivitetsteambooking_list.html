@@ -1,81 +1,135 @@
+
 {% extends "base.html" %}
 {% block content %}
 {% load bootstrap_icons %}
-<h5> Herunder kan du se alle gruppers aktivitetsteam bookinger </h5>
+{% load comments %}
 <br>
+{% if request.user.is_authenticated %}
+      <h5>Booking oversigt for team: {% with volunteer_team_memberships=request.user.teammembership_set.all %}
+          {% if volunteer_team_memberships %}
+              {{ volunteer_team_memberships.first.team.name }}
+          {% endif %}
+          {% endwith %}</h5>
+  {% endif %}
 <table class="table">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Aktivitet</th>
-      <th scope="col">Fra dato</th>
-      <th scope="col">Fra tid</th>
-      <th scope="col">Til dato</th>
-      <th scope="col">Til tid</th>
-      <th scope="col">Kontaktperson</th>
-      <th scope="col">Gruppe</th>
+      <th scope="col">Item</th>
+      <th scope="col">Fra</th>
+      <th scope="col">Til</th>
+      <th scope="col">Booket af</th>
       <th scope="col">Status</th>
-      <th scope="col">Handlinger</th>
+      <th scope="col">Actions</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
-    {% for object in object_list %}
-      <tr>
-        <th scope="row">{{ object.id}}</th>
-        <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
-        <td>{{object.start_date}}</td>
-        <td>{{object.start_time}}</td>
-        <td>{{object.end_date}}</td>
-        <td>{{object.end_time}}</td>
-        <td>{{object.team_contact}}</td>
-        <td>{{ object.team.name }}</td>
-        <td>
-          {% if object.status == 'Pending' %}
-              <span class="badge bg-warning text-dark">
-                  <small>Afventer</small>
-              </span>
-          {% elif object.status == 'Approved' %}
-              <span class="badge bg-success">
-                  <small>Godkendt</small>
-              </span>
-          {% elif object.status == 'Rejected' %}
-              <span class="badge bg-danger">
-                  <small>Afvist</small>
-              </span>
-          {% endif %}
-      </td>
-        <td>
-          
-          {% with user_team_membership=request.user.teammembership_set.first %}
-            {% if user_team_membership %}
-                {% if user_team_membership.team.name and object.team == user_team_membership.team %}
-
-                <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
-                  {% bs_icon 'pencil' %}  
-                </a>
-
-          
-                <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-                  {% bs_icon 'trash' %}  
-                </a>
-          
-                {% endif %}
+    {% with user_team_membership=request.user.teammembership_set.first %}
+      {% if user_team_membership %}
+        {% for object in object_list %}
+          {% if not user.is_staff %}
+            {% if user_team_membership.team.name and object.team == user_team_membership.team %}
+              <tr>
+                <td>
+                  {{ object.id}}
+                </td>
+                <td>
+                  <a href="{{object.get_absolute_url}}">{{object.item}}</a>
+                </td>
+                <td>{{object.start_date}}</td>
+                <td>{{object.end_date}}</td>
+                <td>{{object.team_contact}}</td>
+                <td>
+                  {% if object.status == 'Pending' %}
+                      <span class="badge bg-warning text-dark">
+                          <small>Afventer</small>
+                      </span>
+                  {% elif object.status == 'Approved' %}
+                      <span class="badge bg-success">
+                          <small>Godkendt</small>
+                      </span>
+                  {% elif object.status == 'Rejected' %}
+                      <span class="badge bg-danger">
+                          <small>Afvist</small>
+                      </span>
+                  {% endif %}
+              </td>
+                <td>
+                  <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+                    {% bs_icon 'pencil' %}  
+                  </a>
+                  <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                    {% bs_icon 'trash' %}  
+                  </a>
+              </td>
+              </tr>
             {% endif %}
-          {% endwith %}
-          
-      </td>
-      </tr>
-    {% endfor %}
+
+          {% else %}
+            <tr>
+              <th scope="row">{{ object.id}}</th>
+              <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
+              <td>{{object.start_date}}</td>
+              <td>{{object.end_date}}</td>
+              <td>{{object.team_contact}}</td>
+              <td>
+                {% if object.status == 'Pending' %}
+                    <span class="badge bg-warning text-dark">
+                        <small>Afventer</small>
+                    </span>
+                {% elif object.status == 'Approved' %}
+                    <span class="badge bg-success">
+                        <small>Godkendt</small>
+                    </span>
+                {% elif object.status == 'Rejected' %}
+                    <span class="badge bg-danger">
+                        <small>Afvist</small>
+                    </span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_detail' object.pk %}" class="btn btn-primary btn-sm">
+                    {% bs_icon 'eye-fill' %}
+                </a>
+                <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                    {% bs_icon 'trash' %}
+                </a>
+            </td>
+            <td>
+              <div class="d-flex gap-2 align-items-center">
+                  <form method="post" action="{% url 'AktivitetsTeam_AktivitetsTeamBooking_reject' object.pk %}?next=AktivitetsTeam_AktivitetsTeamBooking_list" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center">{% bs_icon 'x-lg' %}</button>
+                  </form>
+                  <form method="post" action="{% url 'AktivitetsTeam_AktivitetsTeamBooking_approve' object.pk %}?next=AktivitetsTeam_AktivitetsTeamBooking_list" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-success btn-sm d-flex align-items-center">{% bs_icon 'check-circle-fill' %}</button>
+                  </form>
+              </div>
+          </td>    
+          <td>
+            {% get_comment_count for object as comment_count %}
+            {% if comment_count %}
+                <a href="{{object.get_absolute_url}}" class="btn btn-outline-secondary btn-sm">
+                    {{ comment_count }} {% bs_icon 'chat-left-dots' %}
+                </a>
+            {% endif %}
+          </td>
+
+            </tr>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
   </tbody>
 </table>
 
 <div>
   <a class="btn btn-primary"
     href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_create' %}">
-  Ny aktivitetsteam booking
+  Ny AktivitetsTeam booking
   </a>
 </div>
-
-<br>
-
 {% endblock %}
