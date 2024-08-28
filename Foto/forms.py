@@ -41,6 +41,16 @@ class FotoBookingForm(forms.ModelForm):
             "end_date": forms.DateInput(attrs={"class": "form-control"}),
             "end_time": forms.TimeInput(attrs={"class": "form-control"}),            
         }
+        labels = {
+            "team": "Team",
+            "item": "Teknik ting",
+            "start_date": "Start Dato",
+            "start_time": "Start tidspunkt",
+            "end_date": "Slut dato",
+            "end_time": "Slut tidspunkt",
+            "team_contact": "Kontaktperson",
+            "remarks": "Bemærkninger",
+        }
 
     
     def save(self, commit=True):

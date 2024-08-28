@@ -26,40 +26,32 @@
     {% csrf_token %}
     {{ form.errors }}
         <!-- Item -->
-        {% bootstrap_label "Item " %}
-        {% bootstrap_field form.item  show_label=False  %}
+        {% bootstrap_field form.item %}
 
         <!-- Quantity -->
-        {% bootstrap_label "Antal " %}
-        {% bootstrap_field form.quantity  show_label=False  %}
+        {% bootstrap_field form.quantity   %}
 
         <!-- Start date -->
-        {% bootstrap_label "Start dato"  label_for="start_date"  %}
-        {% bootstrap_field form.start_date show_label=False  id="start_date" %}
+        {% bootstrap_field form.start_date  id="start_date" %}
     
         <!-- Start time -->
-        {% bootstrap_label "Start tidspunkt" %}
-        {% bootstrap_field form.start_time show_label=False %}
+        {% bootstrap_field form.start_time %}
     
         <!-- End date -->
-        {% bootstrap_label "Slut dato"  label_for="end_date"  %}
-        {% bootstrap_field form.end_date  show_label=False   id="end_date"  %}
+        {% bootstrap_field form.end_date    id="end_date"  %}
     
         <!-- End time -->
-        {% bootstrap_label "Slut tidspunt" %}
-        {% bootstrap_field form.end_time show_label=False %}
+        {% bootstrap_field form.end_time %}
     
         <!-- Team -->
-        {% bootstrap_label "Team" %}
-        {% bootstrap_field form.team  show_label=False  %}
+        {% bootstrap_field form.team   %}
 
         <!-- Team Contact -->
-        {% bootstrap_label "Kontaktperson " %}
-        {% bootstrap_field form.team_contact  show_label=False  %}
+        {% bootstrap_field form.team_contact   %}
 
 
     <div class="form-group row mb-2">
-        <div class="col-sm-2 col-form-label">Assistance:</div>
+        <div class="col-sm-2 col-form-label">{{ form.assistance_needed.label}}</div>
         <div class="col-sm-10">
             <div class="form-check">
                 {{ form.assistance_needed }}
@@ -69,7 +61,7 @@
     </div>
 
     <div class="form-group row mb-2">
-        <div class="col-sm-2 col-form-label">Levering:</div>
+        <div class="col-sm-2 col-form-label">{{ form.delivery_needed.label}}</div>
         <div class="col-sm-10">
             <div class="form-check">
                 {{ form.delivery_needed }}
@@ -91,23 +83,5 @@
         </div>
     </div>
 </form>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const setPredefinedStartButton = document.getElementById("set-predefined-start");
-        const setPredefinedEndButton = document.getElementById("set-predefined-end");
-        const startField = document.getElementById("start");
-        const endField = document.getElementById("end");
-
-        setPredefinedStartButton.addEventListener("click", function () {
-            startField.value = "2023-10-14T08:00"; // Replace with your predefined value for start
-        });
-
-        setPredefinedEndButton.addEventListener("click", function () {
-            endField.value = "2023-10-21T16:00"; // Replace with your predefined value for end
-        });
-    });
-</script>
-
 
 {% endblock %}

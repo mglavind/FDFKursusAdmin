@@ -23,7 +23,7 @@
     {% csrf_token %}
     {{ form.errors }}
     <div class="form-group row mb-2">
-        <label class="col-sm-2 col-form-label" for="item">Aktivitet:</label>
+        <label class="col-sm-2 col-form-label" for="item">{{ form.item.label }}</label>
         <div class="col-sm-10">
             {{ form.item }}
         </div>
