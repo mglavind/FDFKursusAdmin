@@ -120,50 +120,78 @@
 </form>
 
 
-
 <script>
-    // Initialize object
-    let objectElement = document.getElementById('object_json');
-    let object = objectElement && objectElement.textContent ? JSON.parse(objectElement.textContent) : { latitude: null, longitude: null };
-    console.log(object);
-
-    var defaultLat = 56.114951;
-    var defaultLng = 9.655592;
-
-    // Ensure latitude and longitude are correctly formatted
-    var initialLat = object.latitude !== null ? parseFloat(object.latitude.toString().replace(',', '.')) : defaultLat;
-    var initialLng = object.longitude !== null ? parseFloat(object.longitude.toString().replace(',', '.')) : defaultLng;
-
-    var map = L.map('map').setView([initialLat, initialLng], 15);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-
-    // Add a marker at the initial location
-    var marker = L.marker([initialLat, initialLng]).addTo(map);
-
-    // Update form fields with marker's initial position
-    document.getElementById('latitude').value = initialLat;
-    document.getElementById('longitude').value = initialLng;
-
-    // Update marker and form fields on map click
-    map.on('click', function(e) {
-        e.originalEvent.preventDefault(); // Prevent default form submission behavior
-        e.originalEvent.stopPropagation(); // Stop event propagation
-
-        var lat = e.latlng.lat;
-        var lng = e.latlng.lng;
-
-        // Update marker position
-        marker.setLatLng([lat, lng]);
-
-        // Update form fields
-        document.getElementById('latitude').value = lat;
-        document.getElementById('longitude').value = lng;
-
-        return false; // Prevent any default behavior
+    (g => {
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => {
+            await (a = m.createElement("script"));
+            e.set("libraries", [...r] + "");
+            for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+            e.set("callback", c + ".maps." + q);
+            a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+            d[q] = f;
+            a.onerror = () => h = n(Error(p + " could not load."));
+            a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+            m.head.append(a)
+        }));
+        d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+    })({
+        key: "AIzaSyB_gCWQdMQ5CGrarZge8VqOeXzdeuoV-7Q", v: "weekly"
     });
 
+    let map, marker;
+
+    async function initMap() {
+        const objectDict = JSON.parse(document.getElementById('object_json').textContent);
+        const defaultLat = 56.114951;  // Replace with your default latitude
+        const defaultLng = 9.655592;  // Replace with your default longitude
+
+        const initialLat = objectDict.latitude !== 'default_latitude' ? parseFloat(objectDict.latitude) : defaultLat;
+        const initialLng = objectDict.longitude !== 'default_longitude' ? parseFloat(objectDict.longitude) : defaultLng;
+
+        const position = { lat: initialLat, lng: initialLng };
+
+        const { Map } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+        map = new Map(document.getElementById("map"), {
+            zoom: 15,
+            center: position,
+            mapId: "DEMO_MAP_ID",
+        });
+
+        marker = new AdvancedMarkerElement({
+            map: map,
+            position: position,
+            title: "Initial Location",
+        });
+
+        // Update form fields with marker's initial position
+        document.getElementById('latitude').value = initialLat;
+        document.getElementById('longitude').value = initialLng;
+
+        // Update marker and form fields on map click
+        map.addListener("click", (e) => {
+            const lat = e.latLng.lat();
+            const lng = e.latLng.lng();
+
+            // Remove the old marker
+            marker.setMap(null);
+
+            // Create a new marker
+            marker = new AdvancedMarkerElement({
+                map: map,
+                position: { lat, lng },
+                title: "New Location",
+            });
+
+            // Update form fields
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+        });
+    }
+
+    initMap();
 </script>
     {% endblock %}

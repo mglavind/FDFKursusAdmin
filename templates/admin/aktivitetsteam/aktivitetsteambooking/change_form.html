@@ -10,44 +10,78 @@
     {{ block.super }}
     <div id="map" style="height: 40em;"></div>
     <a id="redirect-to-google-maps"  class="button" >Open in Google Maps</a>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
+
+        <script>
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => {
+                    await (a = m.createElement("script"));
+                    e.set("libraries", [...r] + "");
+                    for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                    e.set("callback", c + ".maps." + q);
+                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                    d[q] = f;
+                    a.onerror = () => h = n(Error(p + " could not load."));
+                    a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                    m.head.append(a)
+                }));
+                d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+            })({
+                key: "AIzaSyB_gCWQdMQ5CGrarZge8VqOeXzdeuoV-7Q", v: "weekly"
+            });
+        
+            let map, marker;
             var latitude = "{{ latitude }}".replace(',', '.');
             var longitude = "{{ longitude }}".replace(',', '.');
-            var name = "{{ name }}";
+        
+            async function initMap() {
 
-            var map = L.map('map').setView([parseFloat(latitude), parseFloat(longitude)], 15);
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
+                const defaultLat = 56.114951;  // Replace with your default latitude
+                const defaultLng = 9.655592;  // Replace with your default longitude
+        
+                const initialLat = latitude !== 'default_latitude' ? parseFloat(latitude) : defaultLat;
+                const initialLng = longitude !== 'default_longitude' ? parseFloat(longitude) : defaultLng;
+        
+                const position = { lat: initialLat, lng: initialLng };
+        
+                const { Map } = await google.maps.importLibrary("maps");
+                const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        
+                map = new Map(document.getElementById("map"), {
+                    zoom: 15,
+                    center: position,
+                    mapId: "DEMO_MAP_ID",
+                });
+        
+                marker = new AdvancedMarkerElement({
+                    map: map,
+                    position: position,
+                    title: "Initial Location",
+                });
 
-            var marker = L.marker([parseFloat(latitude), parseFloat(longitude)], {draggable: true}).addTo(map)
-                .bindPopup(name)
-                .openPopup();
-
-            // Update latitude and longitude fields on marker drag end
-            marker.on('dragend', function(e) {
-                var latLng = marker.getLatLng();
-                updateLatLngFields(latLng.lat, latLng.lng);
-            });
-
-            // Update marker position and fields on map click
-            map.on('click', function(e) {
-                var latLng = e.latlng;
-                marker.setLatLng(latLng).update();
-                updateLatLngFields(latLng.lat, latLng.lng);
-            });
-
-            function updateLatLngFields(lat, lng) {
-                document.getElementById('id_latitude').value = lat.toFixed(6);
-                document.getElementById('id_longitude').value = lng.toFixed(6);
+        
+                // Update marker and form fields on map click
+                map.addListener("click", (e) => {
+                    const lat = e.latLng.lat();
+                    const lng = e.latLng.lng();
+        
+                    // Remove the old marker
+                    marker.setMap(null);
+        
+                    // Create a new marker
+                    marker = new AdvancedMarkerElement({
+                        map: map,
+                        position: { lat, lng },
+                        title: "New Location",
+                    });
+        
+                    // Update form fields
+                    document.getElementById('id_latitude').value = lat.toFixed(6);
+                    document.getElementById('id_longitude').value = lng.toFixed(6);
+                });
             }
-            // Handle button click to redirect to Google Maps
-            document.getElementById('redirect-to-google-maps').addEventListener('click', function() {
-                var googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-                window.open(googleMapsUrl, '_blank');
-            });
-        });
-    </script>
+        
+            initMap();
+        </script>
 {% endblock %}
