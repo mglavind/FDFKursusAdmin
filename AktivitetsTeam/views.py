@@ -107,8 +107,16 @@ class AktivitetsTeamBookingCreateView(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         aktivitetsteam_items = models.AktivitetsTeamItem.objects.all()
-        context['object_dict'] = self.object.to_dict()
-        context['aktivitetsteam_items'] = aktivitetsteam_items
+            # Check if self.object exists
+        if hasattr(self, 'object') and self.object is not None:
+            context['object_dict'] = self.object.to_dict()
+        else:
+            # Provide default values for object_dict
+            context['object_dict'] = {
+                'latitude': '56.114951',  # Replace with your default latitude
+                'longitude': '9.655592'  # Replace with your default longitude
+            }
+            context['aktivitetsteam_items'] = aktivitetsteam_items
         return context
     
     def form_valid(self, form):
