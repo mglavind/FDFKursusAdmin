@@ -1,0 +1,53 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+
+{% block after_related_objects %}
+    {{ block.super }}
+    <div id="map" style="height: 40em;"></div>
+    <a id="redirect-to-google-maps"  class="button" >Open in Google Maps</a>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var latitude = "{{ latitude }}".replace(',', '.');
+            var longitude = "{{ longitude }}".replace(',', '.');
+            var name = "{{ name }}";
+
+            var map = L.map('map').setView([parseFloat(latitude), parseFloat(longitude)], 15);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            var marker = L.marker([parseFloat(latitude), parseFloat(longitude)], {draggable: true}).addTo(map)
+                .bindPopup(name)
+                .openPopup();
+
+            // Update latitude and longitude fields on marker drag end
+            marker.on('dragend', function(e) {
+                var latLng = marker.getLatLng();
+                updateLatLngFields(latLng.lat, latLng.lng);
+            });
+
+            // Update marker position and fields on map click
+            map.on('click', function(e) {
+                var latLng = e.latlng;
+                marker.setLatLng(latLng).update();
+                updateLatLngFields(latLng.lat, latLng.lng);
+            });
+
+            function updateLatLngFields(lat, lng) {
+                document.getElementById('id_latitude').value = lat.toFixed(6);
+                document.getElementById('id_longitude').value = lng.toFixed(6);
+            }
+            // Handle button click to redirect to Google Maps
+            document.getElementById('redirect-to-google-maps').addEventListener('click', function() {
+                var googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                window.open(googleMapsUrl, '_blank');
+            });
+        });
+    </script>
+{% endblock %}

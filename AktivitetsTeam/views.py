@@ -12,6 +12,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from geopy.geocoders import Nominatim
 
 
 class AktivitetsTeamItemListView(LoginRequiredMixin, generic.ListView):
@@ -101,12 +102,27 @@ class AktivitetsTeamBookingCreateView(LoginRequiredMixin, generic.CreateView):
             item = get_object_or_404(models.AktivitetsTeamItem, id=self.item_id)
             kwargs['initial'] = {'item': item}
         return kwargs
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         aktivitetsteam_items = models.AktivitetsTeamItem.objects.all()
+        context['object_dict'] = self.object.to_dict()
         context['aktivitetsteam_items'] = aktivitetsteam_items
         return context
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        print(form.cleaned_data)
+        latitude = form.cleaned_data['latitude']
+        longitude = form.cleaned_data['longitude']
+        geolocator = Nominatim(user_agent="SKSBooking/1.0 (slettenbooking@gmail.com)")
+        location = geolocator.reverse((latitude, longitude))
+        print(location)
+        if location:
+            self.object.address = location.address
+        self.object.save()
+        return redirect('AktivitetsTeam_AktivitetsTeamBooking_detail', pk=self.object.pk)
 
 
 class AktivitetsTeamBookingDetailView(LoginRequiredMixin, generic.DetailView):
@@ -116,6 +132,21 @@ class AktivitetsTeamBookingDetailView(LoginRequiredMixin, generic.DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_dict'] = self.object.to_dict()
+        latitude = context['object_dict'].get('latitude')
+        longitude = context['object_dict'].get('longitude')
+        
+        if latitude:
+            context['object_dict']['latitude'] = str(latitude).replace(',', '.')
+        if longitude:
+            context['object_dict']['longitude'] = str(longitude).replace(',', '.')
+        
+        print(context['object_dict']['latitude'])
+        print(context['object_dict']['longitude'])
+        return context
 
 
 class AktivitetsTeamBookingUpdateView(LoginRequiredMixin, generic.UpdateView):
@@ -146,7 +177,37 @@ class AktivitetsTeamBookingUpdateView(LoginRequiredMixin, generic.UpdateView):
         form.fields["team_contact"].initial = form.instance.team_contact
         
         return form
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        print(form.cleaned_data)
+        latitude = form.cleaned_data['latitude']
+        longitude = form.cleaned_data['longitude']
+        latitude = str(latitude).replace(',', '.')
+        longitude = str(longitude).replace(',', '.')
+        geolocator = Nominatim(user_agent="SKSBooking/1.0 (slettenbooking@gmail.com)")
+        
+        try:
+            location = geolocator.reverse((latitude, longitude))
+            print(location)
+            if location:
+                self.object.address = location.address
+        except Exception as e:
+            messages.error(self.request, 'Geolocation lookup failed: {}'.format(e))
+            return self.form_invalid(form)
+        
+        self.object.save()
+        messages.success(self.request, 'Booking updated successfully')
+        return redirect('AktivitetsTeam_AktivitetsTeamBooking_detail', pk=self.object.pk)
 
+    def form_invalid(self, form):
+        messages.error(self.request, 'There was an error updating the booking')
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        instance = self.get_object()
+        context['object_dict'] = instance.to_dict()  # Ensure your model has a to_dict method
+        return context
 
 
 class AktivitetsTeamBookingDeleteView(LoginRequiredMixin, generic.DeleteView):

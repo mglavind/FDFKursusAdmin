@@ -56,6 +56,9 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
             "start_time",
             "end_date",
             "end_time",
+            "latitude",
+            "longitude",
+            "address",
         ]
         widgets = {
             "item": forms.Select(attrs={"class": "form-select"}),
@@ -64,10 +67,13 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
             "quantity": forms.NumberInput(attrs={"class": "form-control"}),
             "remarks": forms.Textarea(attrs={"class": "form-control"}),
             "location": forms.TextInput(attrs={"class": "form-control"}),
-            "start_date": forms.DateInput(attrs={"class": "form-control"}),
-            "start_time": forms.TimeInput(attrs={"class": "form-control"}),
-            "end_date": forms.DateInput(attrs={"class": "form-control"}),
-            "end_time": forms.TimeInput(attrs={"class": "form-control"}),            
+            "start_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "start_time": forms.TimeInput(attrs={"class": "form-control", "type": "time"}),
+            "end_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "end_time": forms.TimeInput(attrs={"class": "form-control", "type": "time"}),
+            "latitude": forms.TextInput(attrs={"class": "form-control"}),
+            "longitude": forms.TextInput(attrs={"class": "form-control"}),
+            "address": forms.TextInput(attrs={"class": "form-control"}),            
         }
         labels = {
             "item": "Aktivitet",
@@ -78,6 +84,10 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
             "location": "Lokation",
             "start_date": "Start Dato",
             "start_time": "Start tidspunkt",
+            "latitude" : "latitude",
+            "longitude": "longitude",
+            "address": "Addresse",
+
         }
     def save(self, commit=True):
         instance = super().save(commit=False)

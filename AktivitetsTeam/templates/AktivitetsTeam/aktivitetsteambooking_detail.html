@@ -57,6 +57,19 @@
         <td>{{ object.remarks }}</td>
     </tr>
     <tr>
+        <td>Position</td>
+        <td>{{ object_dict.latitude }}. {{ object_dict.longitude }}
+        </br>
+        </br>
+                
+            <a href="https://www.google.com/maps?q={{ object_dict.latitude }},{{ object_dict.longitude }}" target="_blank" class="btn btn-primary">
+                Open in Google Maps
+            </a>
+        </td>
+        
+    </tr>
+    
+    <tr>
         <td>Status</td>
         <td>
             {% if object.status == 'Pending' %}
@@ -77,6 +90,12 @@
         <td>{{ object.last_updated }}</td>
     </tr>
 </table>
+
+</br>
+{{ object_dict|json_script:"object_json" }}
+<div id="map" style="height: 40em;" ></div>
+
+</br>
 <div class="container">
     <div class="row align-items-start">
         <div class="col col-4">
@@ -133,6 +152,25 @@
         </div>
 
     </div>
+
+    <script>
+        // initialize object
+        let object = JSON.parse(document.getElementById('object_json').textContent);
+    
+        // initialize map
+        var map = L.map('map').setView([object.latitude, object.longitude], 15);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+    
+        // add marker for object
+        L.marker([object.latitude, object.longitude]).addTo(map)
+            .bindPopup(object.name)
+            .openPopup();
+    </script>
+
+    
 {% endblock %}
 
 

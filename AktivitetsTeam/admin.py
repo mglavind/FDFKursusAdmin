@@ -8,6 +8,7 @@ from organization.models import Volunteer
 from icalendar import Calendar, Event
 from datetime import datetime
 from django.contrib.admin import SimpleListFilter
+from geopy.geocoders import Nominatim
 from django.urls import path, URLPattern
 from django.shortcuts import render
 from typing import List
@@ -273,6 +274,24 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
         return response
     export_to_csv.short_description = "Export selected bookings to CSV"
 
+        # Override the save_model method to add geolocation logic
+    def save_model(self, request, obj, form, change):
+        latitude = form.cleaned_data['latitude']
+        longitude = form.cleaned_data['longitude']
+        geolocator = Nominatim(user_agent="SKSBooking/1.0 (slettenbooking@gmail.com)")
+        location = geolocator.reverse((latitude, longitude))
+        if location:
+            obj.address = location.address
+        obj.save()
+
+    # Override the change_view method to add map context
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        object = self.get_object(request, object_id)
+        extra_context['latitude'] = object.latitude if object.latitude is not None else 56.1145
+        extra_context['longitude'] = object.longitude if object.longitude is not None else 9.66427
+        return super().change_view(request, object_id, form_url, extra_context=extra_context)
+   
 
 
 

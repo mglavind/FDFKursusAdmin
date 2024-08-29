@@ -32,6 +32,14 @@ class AktivitetsTeamItem(models.Model):
 
     def get_update_url(self):
         return reverse("AktivitetsTeam_AktivitetsTeamItem_update", args=(self.pk,))
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            # Add other fields as necessary
+        }
+
 
 
 
@@ -63,6 +71,9 @@ class AktivitetsTeamBooking(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     remarks_internal = models.TextField(blank=True, max_length=500)  # Set an appropriate max length
+    latitude = models.FloatField(blank=True)
+    longitude = models.FloatField(blank=True)
+    address = models.CharField(max_length=300, blank=True)
 
     class Meta:
         pass
@@ -113,4 +124,15 @@ class AktivitetsTeamBooking(models.Model):
         queryset.update(status="Rejected")
 
     reject_bookings.short_description = "Reject selected bookings"
+    
+    def to_dict(self):
+        return {
+            'name': self.item.name,
+            'last_updated': self.last_updated.isoformat(),
+            'created': self.created.isoformat(),
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            # Add other fields as necessary
+        }
+
 
