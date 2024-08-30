@@ -1,0 +1,87 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+
+{% block after_related_objects %}
+    {{ block.super }}
+    <div id="map" style="height: 40em;"></div>
+    <a id="redirect-to-google-maps"  class="button" >Open in Google Maps</a>
+
+        <script>
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => {
+                    await (a = m.createElement("script"));
+                    e.set("libraries", [...r] + "");
+                    for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                    e.set("callback", c + ".maps." + q);
+                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                    d[q] = f;
+                    a.onerror = () => h = n(Error(p + " could not load."));
+                    a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                    m.head.append(a)
+                }));
+                d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+            })({
+                key: "AIzaSyB_gCWQdMQ5CGrarZge8VqOeXzdeuoV-7Q", v: "weekly"
+            });
+        
+            let map, marker;
+            var latitude = "{{ latitude }}".replace(',', '.');
+            var longitude = "{{ longitude }}".replace(',', '.');
+        
+            async function initMap() {
+
+                const defaultLat = 56.114951;  // Replace with your default latitude
+                const defaultLng = 9.655592;  // Replace with your default longitude
+        
+                const initialLat = latitude !== 'default_latitude' ? parseFloat(latitude) : defaultLat;
+                const initialLng = longitude !== 'default_longitude' ? parseFloat(longitude) : defaultLng;
+        
+                const position = { lat: initialLat, lng: initialLng };
+        
+                const { Map } = await google.maps.importLibrary("maps");
+                const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        
+                map = new Map(document.getElementById("map"), {
+                    zoom: 15,
+                    center: position,
+                    mapId: "DEMO_MAP_ID",
+                });
+        
+                marker = new AdvancedMarkerElement({
+                    map: map,
+                    position: position,
+                    title: "Initial Location",
+                });
+
+        
+                // Update marker and form fields on map click
+                map.addListener("click", (e) => {
+                    const lat = e.latLng.lat();
+                    const lng = e.latLng.lng();
+        
+                    // Remove the old marker
+                    marker.setMap(null);
+        
+                    // Create a new marker
+                    marker = new AdvancedMarkerElement({
+                        map: map,
+                        position: { lat, lng },
+                        title: "New Location",
+                    });
+        
+                    // Update form fields
+                    document.getElementById('id_latitude').value = lat.toFixed(6);
+                    document.getElementById('id_longitude').value = lng.toFixed(6);
+                });
+            }
+        
+            initMap();
+        </script>
+{% endblock %}

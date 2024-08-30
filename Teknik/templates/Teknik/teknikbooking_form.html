@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% load bootstrap5 %}
 {% load bootstrap_icons %}
 
 {% block content %}
@@ -24,40 +23,62 @@
     
 <form id="form" role="form" method="post">
     {% csrf_token %}
-
-
-    {% bootstrap_form_errors form type='non_fields' %}
-
-        {% bootstrap_field form.item%}
-
-        <!-- Quantity -->
-
-        {% bootstrap_field form.quantity %}
-
-        <!-- Start date -->
-
-        {% bootstrap_field form.start_date  id="start_date" %}
     
-        <!-- Start time -->
-      
-        {% bootstrap_field form.start_time  %}
+    {{ form.non_field_errors }}
     
-        <!-- End date -->
+    <div class="mb-3">
+        {{ form.item.label_tag }}
+        {{ form.item }}
+        {{ form.item.errors }}
+    </div>
     
-        {% bootstrap_field form.end_date     id="end_date"  %}
+    <div class="mb-3">
+        {{ form.team.label_tag }}
+        {{ form.team }}
+        {{ form.team.errors }}
+    </div>
     
-        <!-- End time -->
-   
-        {% bootstrap_field form.end_time  %}
+    <div class="mb-3">
+        {{ form.team_contact.label_tag }}
+        {{ form.team_contact }}
+        {{ form.team_contact.errors }}
+    </div>
     
-        <!-- Team -->
-
-        {% bootstrap_field form.team    %}
-
-        <!-- Team Contact -->
-
-        {% bootstrap_field form.team_contact    %}
-
+    <div class="mb-3">
+        {{ form.quantity.label_tag }}
+        {{ form.quantity }}
+        {{ form.quantity.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.location.label_tag }}
+        {{ form.location }}
+        {{ form.location.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.start_date.label_tag }}
+        {{ form.start_date }}
+        {{ form.start_date.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.start_time.label_tag }}
+        {{ form.start_time }}
+        {{ form.start_time.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.end_date.label_tag }}
+        {{ form.end_date }}
+        {{ form.end_date.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.end_time.label_tag }}
+        {{ form.end_time }}
+        {{ form.end_time.errors }}
+    </div>
 
     <div class="form-group row mb-2">
         <div class="col-sm-2 col-form-label">Assistance:</div>
@@ -86,12 +107,114 @@
         </div>
     </div>
 
+    
+    <div class="mb-3">
+        <label class="col-sm-2 col-form-label" for="latitude">Lat: </label>
+        <input class="form-control"
+        id="latitude" 
+        name="latitude"
+        type="text"
+        value="{{ object.latitude}}">
+    </div>
+
+    <div class="mb-3">
+        <label class="col-sm-2 col-form-label" for="longitude">Long: </label>
+        <input class="form-control "
+        type="text" 
+        id="longitude" 
+        name="longitude" 
+        value="{{ object.longitude }}">
+    </div>
+    
+    <div class="mb-3">
+        {{ form.address.label_tag }}
+        {{ form.address }}
+        {{ form.address.errors }}
+    </div>
+    {{ object_dict|json_script:"object_json" }}
+    <div id="map" style="height: 40em;" ></div>
+    </br>
+
+
     <div class="form-group row">
-        <div class="col-sm-10 offset-sm-2">
-            <input type="submit" value="Indsend" class="btn btn-primary">
+        <div class="col-12">
+            <input type="submit" value="Indsend" class="btn btn-primary btn-block">
         </div>
     </div>
 </form>
 
+<script>
+    (g => {
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => {
+            await (a = m.createElement("script"));
+            e.set("libraries", [...r] + "");
+            for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+            e.set("callback", c + ".maps." + q);
+            a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+            d[q] = f;
+            a.onerror = () => h = n(Error(p + " could not load."));
+            a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+            m.head.append(a)
+        }));
+        d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+    })({
+        key: "AIzaSyB_gCWQdMQ5CGrarZge8VqOeXzdeuoV-7Q", v: "weekly"
+    });
 
+    let map, marker;
+
+    async function initMap() {
+        const objectDict = JSON.parse(document.getElementById('object_json').textContent);
+        const defaultLat = 56.114951;  // Replace with your default latitude
+        const defaultLng = 9.655592;  // Replace with your default longitude
+
+        const initialLat = objectDict.latitude !== 'default_latitude' ? parseFloat(objectDict.latitude) : defaultLat;
+        const initialLng = objectDict.longitude !== 'default_longitude' ? parseFloat(objectDict.longitude) : defaultLng;
+
+        const position = { lat: initialLat, lng: initialLng };
+
+        const { Map } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+        map = new Map(document.getElementById("map"), {
+            zoom: 15,
+            center: position,
+            mapId: "DEMO_MAP_ID",
+        });
+
+        marker = new AdvancedMarkerElement({
+            map: map,
+            position: position,
+            title: "Initial Location",
+        });
+
+        // Update form fields with marker's initial position
+        document.getElementById('latitude').value = initialLat;
+        document.getElementById('longitude').value = initialLng;
+
+        // Update marker and form fields on map click
+        map.addListener("click", (e) => {
+            const lat = e.latLng.lat();
+            const lng = e.latLng.lng();
+
+            // Remove the old marker
+            marker.setMap(null);
+
+            // Create a new marker
+            marker = new AdvancedMarkerElement({
+                map: map,
+                position: { lat, lng },
+                title: "New Location",
+            });
+
+            // Update form fields
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+        });
+    }
+
+    initMap();
+</script>
 {% endblock %}

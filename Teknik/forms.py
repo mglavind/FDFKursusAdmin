@@ -25,6 +25,10 @@ class TeknikBookingForm(forms.ModelForm):
             "remarks",
             "delivery_needed",
             "assistance_needed",
+            "latitude",
+            "longitude",
+            "address",
+
         ]
         widgets = {
             "item": forms.Select(attrs={"class": "form-select"}),
@@ -38,6 +42,9 @@ class TeknikBookingForm(forms.ModelForm):
             "remarks": forms.Textarea(attrs={"class": "form-control"}),
             "delivery_needed": forms.CheckboxInput(attrs={"class": "form-check-input"}),
             "assistance_needed": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "latitude": forms.TextInput(attrs={"class": "form-control"}),
+            "longitude": forms.TextInput(attrs={"class": "form-control"}),
+            "address": forms.TextInput(attrs={"class": "form-control"}),   
         }
         labels = {
             "quantity": "Antal",
@@ -51,6 +58,9 @@ class TeknikBookingForm(forms.ModelForm):
             "remarks": "Bemærkninger",
             "delivery_needed": "Levering nødvendig",
             "assistance_needed": "Vi ønsker assistance",
+            "latitude" : "latitude",
+            "longitude": "longitude",
+            "address": "Addresse",
         }
 
 

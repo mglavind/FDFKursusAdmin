@@ -30,6 +30,11 @@ class TeknikBooking(models.Model):
     assistance_needed = models.BooleanField(default=False, blank=True)
     delivery_needed = models.BooleanField(default=False, blank=True)
 
+    latitude = models.FloatField(blank=True, default="56.114951")
+    longitude = models.FloatField(blank=True, default="9.655592")
+    address = models.CharField(max_length=300, blank=True)
+
+
 
 
     class Meta:
@@ -53,6 +58,15 @@ class TeknikBooking(models.Model):
         queryset.update(status="Rejected")
 
     reject_bookings.short_description = "Rejected selected bookings"
+    def to_dict(self):
+        return {
+            'name': self.item.name,
+            'last_updated': self.last_updated.isoformat(),
+            'created': self.created.isoformat(),
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            # Add other fields as necessary
+        }
 
 
 

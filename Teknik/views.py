@@ -12,6 +12,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from geopy.geocoders import Nominatim
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
@@ -68,9 +69,31 @@ class TeknikBookingCreateView(LoginRequiredMixin, generic.CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        teknik_items = models.TeknikItem.objects.all()
-        context['teknik_items'] = teknik_items
+        items = models.TeknikItem.objects.all()
+            # Check if self.object exists
+        if hasattr(self, 'object') and self.object is not None:
+            context['object_dict'] = self.object.to_dict()
+        else:
+            # Provide default values for object_dict
+            context['object_dict'] = {
+                'latitude': '56.114951',  # Replace with your default latitude
+                'longitude': '9.655592'  # Replace with your default longitude
+            }
+            context['items'] = items
         return context
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        print(form.cleaned_data)
+        latitude = form.cleaned_data['latitude']
+        longitude = form.cleaned_data['longitude']
+        geolocator = Nominatim(user_agent="SKSBooking/1.0 (slettenbooking@gmail.com)")
+        location = geolocator.reverse((latitude, longitude))
+        print(location)
+        if location:
+            self.object.address = location.address
+        self.object.save()
+        return redirect('Teknik_TeknikBooking_detail', pk=self.object.pk)
 
 
 class TeknikBookingDetailView(LoginRequiredMixin, generic.DetailView):
@@ -80,6 +103,21 @@ class TeknikBookingDetailView(LoginRequiredMixin, generic.DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_dict'] = self.object.to_dict()
+        latitude = context['object_dict'].get('latitude')
+        longitude = context['object_dict'].get('longitude')
+        
+        if latitude:
+            context['object_dict']['latitude'] = str(latitude).replace(',', '.')
+        if longitude:
+            context['object_dict']['longitude'] = str(longitude).replace(',', '.')
+        
+        print(context['object_dict']['latitude'])
+        print(context['object_dict']['longitude'])
+        return context
 
 
 class TeknikBookingUpdateView(LoginRequiredMixin, generic.UpdateView):
@@ -107,7 +145,43 @@ class TeknikBookingUpdateView(LoginRequiredMixin, generic.UpdateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
         form.instance = self.get_object()  # Pre-populate the form with object's values
+        
+        # Add the following lines to ensure related fields are initialized
+        form.fields["team"].initial = form.instance.team
+        form.fields["item"].initial = form.instance.item
+        form.fields["team_contact"].initial = form.instance.team_contact
         return form
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        print(form.cleaned_data)
+        latitude = form.cleaned_data['latitude']
+        longitude = form.cleaned_data['longitude']
+        latitude = str(latitude).replace(',', '.')
+        longitude = str(longitude).replace(',', '.')
+        geolocator = Nominatim(user_agent="SKSBooking/1.0 (slettenbooking@gmail.com)")
+        
+        try:
+            location = geolocator.reverse((latitude, longitude))
+            print(location)
+            if location:
+                self.object.address = location.address
+        except Exception as e:
+            messages.error(self.request, 'Geolocation lookup failed: {}'.format(e))
+            return self.form_invalid(form)
+        
+        self.object.save()
+        messages.success(self.request, 'Booking updated successfully')
+        return redirect('Teknik_TeknikBooking_detail', pk=self.object.pk)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'There was an error updating the booking')
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        instance = self.get_object()
+        context['object_dict'] = instance.to_dict()  # Ensure your model has a to_dict method
+        return context
 
 class TeknikBookingDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.TeknikBooking
