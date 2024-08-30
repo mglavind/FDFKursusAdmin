@@ -8,6 +8,7 @@ from . import models
 from . import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import MealBooking, Meal, Day, Option, Recipe, MealPlan, MealOption, TeamMealPlan, MealBooking, TeamMealPlan
+from organization.models import Event
 import logging
 
 logger = logging.getLogger(__name__)
@@ -77,7 +78,7 @@ class ButikkenBookingCreateView(LoginRequiredMixin, generic.CreateView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        event = models.Event.objects.filter(is_active=True).first()
+        event = Event.objects.filter(is_active=True).first()
         if event and event.deadline_mad < timezone.now().date():
             messages.error(request, 'Deadline for booking overskredet')
             return redirect('Butikken_ButikkenBooking_list')  # replace with the name of your list view url
@@ -118,7 +119,7 @@ class ButikkenBookingUpdateView(LoginRequiredMixin, generic.UpdateView):
     pk_url_kwarg = "pk"
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        event = models.Event.objects.filter(is_active=True).first()
+        event = Event.objects.filter(is_active=True).first()
         if event and event.deadline_mad < timezone.now().date():
             messages.error(request, 'Deadline for booking overskredet')
             return redirect('Butikken_ButikkenBooking_list')  # replace with the name of your list view url
