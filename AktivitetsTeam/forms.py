@@ -65,7 +65,18 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
             "team": forms.Select(attrs={"class": "form-select"}),
             "team_contact": forms.Select(attrs={"class": "form-select"}),
             "quantity": forms.NumberInput(attrs={"class": "form-control"}),
-            "remarks": forms.Textarea(attrs={"class": "form-control"}),
+            "remarks": forms.Textarea(attrs={
+                "class": "form-control",
+                "placeholder": (
+                    "Hvad er jeres formål med denne aktivitet? Er der en temaramme det passer ind i? Skal vi spille en rolle? "
+                    "Hvor mange deltagere? Kommer I på én gang eller i mindre hold? Hvor store hold? "
+                    "Hvis der skal bruges materialer, giver I os dem? Eller forventer I at vi finder hvad der skal bruges? "
+                    "Falder jeres program uden denne aktivitet, eller er det noget vi kan finde et alternativ til, eller et andet tidspunkt til, hvis nødvendigt? "
+                    "Har I snakket med en fra Support om denne booking? Hvem, og giv gerne et recap. De husker ikke så godt 🙂 "
+                    "Vil der være en instruktør til stede? "
+                    "Er der andet vi skal være opmærksomme på?"
+                )
+            }),
             "location": forms.TextInput(attrs={"class": "form-control"}),
             "start_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
             "start_time": forms.TimeInput(attrs={"class": "form-control", "type": "time"}),
