@@ -114,9 +114,6 @@ class SjakBookingUpdateView(LoginRequiredMixin, generic.UpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
-    def form_valid(self, form):
-        form.instance.event = self.request.user.event_set.filter(is_active=True).first()  # Set the active event based on the user
-        return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
