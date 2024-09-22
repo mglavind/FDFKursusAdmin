@@ -47,6 +47,7 @@ class SjakBookingListView(LoginRequiredMixin, generic.ListView):
         ).only(
             'id', 'team_id', 'team_contact_id', 'event_id', 'start', 'start_time', 'end', 'end_time', 'item_id', 'quantity', 'status'
         ).order_by('id')
+        logger.info(f"Fetched {queryset.count()} bookings for user {user.id}")
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -59,6 +60,7 @@ class SjakBookingListView(LoginRequiredMixin, generic.ListView):
         cached_context = cache.get(cache_key)
 
         if cached_context:
+            logger.info(f"Using cached context for user {user.id} on page {page}")
             context.update(cached_context)
             return context
 
@@ -91,8 +93,10 @@ class SjakBookingListView(LoginRequiredMixin, generic.ListView):
         try:
             # Cache the serializable context data
             cache.set(cache_key, serializable_context, 60 * 15)  # Cache for 15 minutes
+            logger.info(f"Cached context for user {user.id} on page {page}")
         except Exception as e:
             logger.error(f"Error caching context for user {user.id} on page {page}: {e}")
+
         return context
 
     def get(self, request, *args, **kwargs):
