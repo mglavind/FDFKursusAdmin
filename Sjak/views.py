@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.utils.decorators import method_decorator
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test
-
+import logging
 from . import models
 from . import forms
 from organization.models import EventMembership, Event
@@ -16,7 +16,8 @@ from django.views.decorators.http import require_POST, require_http_methods
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
-
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from django.views.generic import FormView
 from django.contrib.messages.views import SuccessMessageMixin
 from organization.models import Event  # Import the Event model
@@ -24,23 +25,63 @@ from django.utils import timezone
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+logger = logging.getLogger(__name__)
 
 class SjakBookingListView(LoginRequiredMixin, generic.ListView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm
     context_object_name = 'object_list'
     template_name = 'Sjak/SjakBooking_list.html'
+    paginate_by = 15  # Display 10 items per page
+
+    @method_decorator(cache_page(60 * 15))  # Cache page for 15 minutes
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = models.SjakBooking.objects.filter(team__in=user.teammembership_set.values('team')).select_related('team').prefetch_related('team_contact')
+        logger.info(f"Fetched {queryset.count()} bookings for user {user.id}")
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = self.request.user
+        page = self.request.GET.get('page', 1)
+
+        # Cache key based on user ID and page number
+        cache_key = f'user_{user.id}_context_data_page_{page}'
+        cached_context = cache.get(cache_key)
+
+        if cached_context:
+            logger.info(f"Using cached context for user {user.id} on page {page}")
+            context.update(cached_context)
+            return context
+
         # Filter events by user and is_active
+        volunteer_team_memberships = list(user.teammembership_set.select_related('team').values('team__name'))
+        events = list(user.events.filter(is_active=True).values('name', 'deadline_sjak'))
+
+        serializable_context = {
+            'volunteer_team_memberships': volunteer_team_memberships,
+            'events': events,
+        }
+
+        context.update(serializable_context)
+
+        try:
+            # Cache the serializable context data
+            cache.set(cache_key, serializable_context, 60 * 15)  # Cache for 15 minutes
+            logger.info(f"Cached context for user {user.id} on page {page}")
+        except Exception as e:
+            logger.error(f"Error caching context for user {user.id} on page {page}: {e}")
+
         return context
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
-
-
     
+
 class SjakBookingCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.SjakBooking
     form_class = forms.SjakBookingForm

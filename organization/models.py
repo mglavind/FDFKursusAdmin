@@ -7,10 +7,10 @@ from django.urls import reverse
 class Event(models.Model):
 
     # Fields
-    name = models.CharField(max_length=30)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(max_length=30, db_index=True)
+    start_date = models.DateField(db_index=True)
+    end_date = models.DateField(db_index=True)
+    is_active = models.BooleanField(default=True, db_index=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     deadline_sjak = models.DateField()
@@ -38,9 +38,9 @@ class Event(models.Model):
 class Team(models.Model):
 
     # Fields
-    name = models.CharField(max_length=30)
-    short_name = models.CharField(max_length=30)   
-    events = models.ManyToManyField(Event, through='TeamEventMembership') 
+    name = models.CharField(max_length=30, db_index=True)
+    short_name = models.CharField(max_length=30, db_index=True)   
+    events = models.ManyToManyField(Event, through='TeamEventMembership', db_index=True) 
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
@@ -62,15 +62,15 @@ class Team(models.Model):
 class Volunteer(AbstractUser):
 
     # Fields
-    username = models.CharField(max_length=30, unique=True)
-    first_name = models.CharField(max_length=30)
+    username = models.CharField(max_length=30, unique=True, db_index=True)
+    first_name = models.CharField(max_length=30, db_index=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30, db_index=True)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=30, blank=True)
-    events = models.ManyToManyField(Event, through='EventMembership',blank=True)
-    teams = models.ManyToManyField(Team, through='TeamMembership', blank=True)
+    email = models.EmailField(unique=True, db_index=True)
+    phone = models.CharField(max_length=30, blank=True, db_index=True)
+    events = models.ManyToManyField(Event, through='EventMembership',blank=True, db_index=True)
+    teams = models.ManyToManyField(Team, through='TeamMembership', blank=True, db_index=True)
 
     class Meta:
         pass
@@ -98,8 +98,8 @@ class Todo(models.Model):
 class EventMembership(models.Model):
 
     # Relationships
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, db_index=True)
+    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE, db_index=True)
 
     # Fields
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -126,8 +126,8 @@ class EventMembership(models.Model):
 class TeamEventMembership(models.Model):
 
     # Relationships
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, db_index=True)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, db_index=True)
 
     # Fields
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -149,8 +149,8 @@ class TeamEventMembership(models.Model):
 class TeamMembership(models.Model):
 
     # Relationships
-    team = models.ForeignKey("organization.Team", on_delete=models.CASCADE)
-    member = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE)
+    team = models.ForeignKey("organization.Team", on_delete=models.CASCADE, db_index=True)
+    member = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE, db_index=True)
 
     # Fields
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -175,7 +175,7 @@ class TeamMembership(models.Model):
 class Key(models.Model):
 
     # Relationships
-    current_user = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE, blank=True, null=True)
+    current_user = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE, blank=True, null=True, db_index=True)
 
     # Fields
     description = models.TextField(max_length=100, blank=True)

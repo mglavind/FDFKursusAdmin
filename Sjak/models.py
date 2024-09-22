@@ -34,8 +34,8 @@ class SjakItem(models.Model):
 
    
     # Fields
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length=500, blank=True)
+    name = models.CharField(max_length=100, db_index=True)
+    description = models.TextField(max_length=500, blank=True, db_index=True)
     quantity_lager = models.CharField(max_length=100, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -57,10 +57,10 @@ class SjakItem(models.Model):
 class SjakBooking(models.Model):
 
     # Relationships
-    team = models.ForeignKey("organization.Team", on_delete=models.CASCADE)
-    item = models.ForeignKey("Sjak.SjakItem", on_delete=models.CASCADE)
-    team_contact = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True)
+    team = models.ForeignKey("organization.Team", on_delete=models.CASCADE, db_index=True)
+    item = models.ForeignKey("Sjak.SjakItem", on_delete=models.CASCADE, db_index=True)
+    team_contact = models.ForeignKey("organization.Volunteer", on_delete=models.CASCADE, db_index=True)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True, db_index=True)
        
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
