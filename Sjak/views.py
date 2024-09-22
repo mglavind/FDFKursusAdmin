@@ -40,7 +40,15 @@ class SjakBookingListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = models.SjakBooking.objects.filter(team__in=user.teammembership_set.values('team')).select_related('team').prefetch_related('team_contact').order_by('id')
+        queryset = models.SjakBooking.objects.filter(
+            team__in=user.teammembership_set.values('team')
+        ).select_related(
+            'team', 'team_contact'
+        ).prefetch_related(
+            'event'
+        ).only(
+            'id', 'team_id', 'team_contact_id', 'event_id', 'start', 'end'
+        ).order_by('id')
         logger.info(f"Fetched {queryset.count()} bookings for user {user.id}")
         return queryset
 
@@ -79,7 +87,7 @@ class SjakBookingListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get(self, request, *args, **kwargs):
-        logger.info(f"Handling GET request for user {request.user.id}")
+        logger.info(f"Handling GET request for user {request.user.id} on page {self.request.GET.get('page', 1)}")
         return super().get(request, *args, **kwargs)
     
 
