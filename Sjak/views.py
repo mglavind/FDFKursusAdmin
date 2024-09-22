@@ -32,77 +32,62 @@ class SjakBookingListView(LoginRequiredMixin, generic.ListView):
     form_class = forms.SjakBookingForm
     context_object_name = 'object_list'
     template_name = 'Sjak/SjakBooking_list.html'
-    paginate_by = 15  # Display 15 items per page
-
-    @method_decorator(cache_page(60 * 15))  # Cache page for 15 minutes
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    paginate_by = 16  # Display 15 items per page
 
     def get_queryset(self):
         user = self.request.user
-        queryset = models.SjakBooking.objects.filter(
-            team__in=user.teammembership_set.values('team')
-        ).select_related(
+        if user.is_staff:
+            queryset = models.SjakBooking.objects.all()
+        else:
+            queryset = models.SjakBooking.objects.filter(
+                team__in=user.teammembership_set.values('team')
+            )
+        
+        queryset = queryset.select_related(
             'team', 'team_contact', 'event', 'item__item_type'
         ).only(
             'id', 'team_id', 'team_contact_id', 'event_id', 'start', 'start_time', 'end', 'end_time', 'item_id', 'quantity', 'status'
         ).order_by('id')
+        
         logger.info(f"Fetched {queryset.count()} bookings for user {user.id}")
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        page = self.request.GET.get('page', 1)
-
-        # Cache key based on user ID and page number
-        cache_key = f'user_{user.id}_context_data_page_{page}'
-        cached_context = cache.get(cache_key)
-
-        if cached_context:
-            logger.info(f"Using cached context for user {user.id} on page {page}")
-            context.update(cached_context)
-            return context
 
         # Fetch the user's team membership
         user_team_membership = user.teammembership_set.select_related('team').first()
         is_staff = user.is_staff
 
         # Filter the object list based on the user's team membership and staff status
-        filtered_object_list = [
+        if is_staff:
+            filtered_object_list = context['object_list']
+        else:
+            filtered_object_list = [
             obj for obj in context['object_list']
-            if (is_staff or (user_team_membership and obj.team == user_team_membership.team))
-        ]
+            if user_team_membership and obj.team == user_team_membership.team
+            ]
 
-        # Fetch user events and cache them
+        # Fetch user events
         user_events = list(user.events.filter(is_active=True).values('name', 'deadline_sjak'))
 
-        # Fetch volunteer team memberships and cache them
+        # Fetch volunteer team memberships
         volunteer_team_memberships = list(user.teammembership_set.select_related('team').values('team__name'))
 
-        serializable_context = {
+        context.update({
             'filtered_object_list': filtered_object_list,
             'is_staff': is_staff,
             'user_team_membership': user_team_membership,
             'user_events': user_events,
             'volunteer_team_memberships': volunteer_team_memberships,
-        }
-
-        context.update(serializable_context)
-
-        try:
-            # Cache the serializable context data
-            cache.set(cache_key, serializable_context, 60 * 15)  # Cache for 15 minutes
-            logger.info(f"Cached context for user {user.id} on page {page}")
-        except Exception as e:
-            logger.error(f"Error caching context for user {user.id} on page {page}: {e}")
+        })
 
         return context
 
     def get(self, request, *args, **kwargs):
         logger.info(f"Handling GET request for user {request.user.id} on page {self.request.GET.get('page', 1)}")
         return super().get(request, *args, **kwargs)
-    
 
 class SjakBookingCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.SjakBooking

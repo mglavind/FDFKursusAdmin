@@ -2,7 +2,7 @@
 {% block content %}
 {% load bootstrap_icons %}
 {% load comments %}
-{% load cache %}
+
 <br>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
@@ -14,23 +14,19 @@
 <br>
 
 {% if request.user.is_authenticated %}
-  {% cache 900 volunteer_team_memberships %}
-      <h5>Booking oversigt for team: 
-          {% if volunteer_team_memberships %}
-              {{ volunteer_team_memberships.0.team__name }}
-          {% endif %}
-      </h5>
-  {% endcache %}
+  <h5>Booking oversigt for team: 
+      {% if volunteer_team_memberships %}
+          {{ volunteer_team_memberships.0.team__name }}
+      {% endif %}
+  </h5>
 {% endif %}
 
 <div>
-  {% cache 900 user_events %}
-    {% if user_events %}
-        Deadline for Sjak bookinger: {{ user_events.0.deadline_sjak }}
-    {% else %}
-        No events found for the user.
-    {% endif %}
-  {% endcache %}
+  {% if user_events %}
+      Deadline for Sjak bookinger: {{ user_events.0.deadline_sjak }}
+  {% else %}
+      No events found for the user.
+  {% endif %}
 </div>
   
 <table class="table">
@@ -76,19 +72,14 @@
           </td>
           <td>
             {% if is_staff %}
-              <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
-                {% bs_icon 'pencil' %}
-              </a>
-              <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-                {% bs_icon 'trash' %}
-              </a>
-            {% else %}
               <a href="{% url 'Sjak_SjakBooking_detail' object.pk %}" class="btn btn-primary btn-sm">
                 {% bs_icon 'eye-fill' %}
               </a>
               <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
                 {% bs_icon 'trash' %}
               </a>
+            </td>
+            <td>
               <div class="d-flex gap-2 align-items-center">
                 <form method="post" action="{% url 'Sjak_SjakBooking_reject' object.pk %}?next=Sjak_SjakBooking_list" class="d-inline">
                   {% csrf_token %}
@@ -104,7 +95,21 @@
                 <a href="{{ object.get_absolute_url }}" class="btn btn-outline-secondary btn-sm">
                   {{ comment_count }} {% bs_icon 'chat-left-dots' %}
                 </a>
+
               {% endif %}
+            </td>
+
+
+
+            {% else %}
+          
+              <a href="{% url 'Sjak_SjakBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+                {% bs_icon 'pencil' %}
+              </a>
+              <a href="{% url 'Sjak_SjakBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                {% bs_icon 'trash' %}
+              </a>
+              
             {% endif %}
           </td>
         </tr>
@@ -121,47 +126,39 @@
         <li class="page-item">
           <a class="page-link" href="?page=1" aria-label="First">
             <span aria-hidden="true">&laquo;&laquo;</span>
-            <span class="sr-only">Første</span>
+            <span aria-hidden="true">Første</span>
           </a>
         </li>
         <li class="page-item">
           <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">Forrige</span>
+            <span aria-hidden="true">Forrige</span>
           </a>
         </li>
       {% endif %}
-
       {% for num in page_obj.paginator.page_range %}
         {% if page_obj.number == num %}
-          <li class="page-item active">
-            <span class="page-link">{{ num }}</span>
-          </li>
+          <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-          </li>
+          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
         {% endif %}
       {% endfor %}
-
       {% if page_obj.has_next %}
         <li class="page-item">
           <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-            <span class="sr-only">Næste</span>
+            <span aria-hidden="true">Næste</span>
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
         <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Sidste">
-            <span class="sr-only">Sidste</span>
+          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+            <span aria-hidden="true">Sidste ({{ page_obj.paginator.num_pages }})</span>
             <span aria-hidden="true">&raquo;&raquo;</span>
           </a>
         </li>
       {% endif %}
     {% endif %}
   </ul>
-  <a class="btn btn-primary ml-3" href="{% url 'Sjak_SjakBooking_create' %}">
-    Ny booking
-  </a>
+  <p class="text-center">Side {{ page_obj.number }} af {{ page_obj.paginator.num_pages }}</p>
 </nav>
 {% endblock %}
