@@ -32,7 +32,7 @@ class SjakBookingListView(LoginRequiredMixin, generic.ListView):
     form_class = forms.SjakBookingForm
     context_object_name = 'object_list'
     template_name = 'Sjak/SjakBooking_list.html'
-    paginate_by = 15  # Display 10 items per page
+    paginate_by = 15  # Display 15 items per page
 
     @method_decorator(cache_page(60 * 15))  # Cache page for 15 minutes
     def dispatch(self, *args, **kwargs):
@@ -40,7 +40,7 @@ class SjakBookingListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = models.SjakBooking.objects.filter(team__in=user.teammembership_set.values('team')).select_related('team').prefetch_related('team_contact')
+        queryset = models.SjakBooking.objects.filter(team__in=user.teammembership_set.values('team')).select_related('team').prefetch_related('team_contact').order_by('id')
         logger.info(f"Fetched {queryset.count()} bookings for user {user.id}")
         return queryset
 
@@ -79,6 +79,7 @@ class SjakBookingListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get(self, request, *args, **kwargs):
+        logger.info(f"Handling GET request for user {request.user.id}")
         return super().get(request, *args, **kwargs)
     
 
