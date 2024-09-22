@@ -189,10 +189,6 @@ LOGGING = {
     },
 }
 
-# Debug Toolbar settings
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: True,  # Always show toolbar for simplicity
-}
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
