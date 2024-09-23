@@ -33,15 +33,27 @@ def reject_booking(request, pk):
     return redirect(next_url)
 
 
-
 class TeknikBookingListView(LoginRequiredMixin, generic.ListView):
     model = models.TeknikBooking
     form_class = forms.TeknikBookingForm
+    context_object_name = 'object_list'
+    template_name = 'Teknik/teknikbooking_list.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
-    
+
+    def get_queryset(self):
+        return models.TeknikBooking.objects.select_related(
+            'team', 'team_contact', 'item'
+        ).order_by('item', 'start_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        user_team_membership = user.teammembership_set.select_related('team').first()
+        context['user_team_membership'] = user_team_membership
+        return context
 
 
 class TeknikBookingCreateView(LoginRequiredMixin, generic.CreateView):

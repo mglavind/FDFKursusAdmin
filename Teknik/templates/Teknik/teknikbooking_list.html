@@ -1,16 +1,15 @@
-
 {% extends "base.html" %}
 {% block content %}
 {% load bootstrap_icons %}
 {% load comments %}
 <br>
 {% if request.user.is_authenticated %}
-      <h5>Booking oversigt for team: {% with volunteer_team_memberships=request.user.teammembership_set.all %}
-          {% if volunteer_team_memberships %}
-              {{ volunteer_team_memberships.first.team.name }}
-          {% endif %}
-          {% endwith %}</h5>
-  {% endif %}
+  <h5>Booking oversigt for team: 
+    {% if user_team_membership %}
+      {{ user_team_membership.team.name }}
+    {% endif %}
+  </h5>
+{% endif %}
 <table class="table">
   <thead>
     <tr>
@@ -25,108 +24,80 @@
     </tr>
   </thead>
   <tbody>
-    {% with user_team_membership=request.user.teammembership_set.first %}
-      {% if user_team_membership %}
-        {% for object in object_list %}
-          {% if not user.is_staff %}
-            {% if user_team_membership.team.name and object.team == user_team_membership.team %}
-              <tr>
-                <th scope="row">{{ object.id}}</th>
-                <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
-                <td>{{object.quantity}}</td>
-                <td>{{object.start}}</td>
-                <td>{{object.end}}</td>
-                <td>{{object.team_contact}}</td>
-                <td>
-                  {% if object.status == 'Pending' %}
-                      <span class="badge bg-warning text-dark">
-                          <small>Afventer</small>
-                      </span>
-                  {% elif object.status == 'Approved' %}
-                      <span class="badge bg-success">
-                          <small>Godkendt</small>
-                      </span>
-                  {% elif object.status == 'Rejected' %}
-                      <span class="badge bg-danger">
-                          <small>Afvist</small>
-                      </span>
-                  {% endif %}
-              </td>
-                <td>
-                  <a href="{% url 'Teknik_TeknikBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
-                    {% bs_icon 'pencil' %}  
-                  </a>
-                  <a href="{% url 'Teknik_TeknikBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-                    {% bs_icon 'trash' %}  
-                  </a>
-              </td>
-              </tr>
-            {% endif %}
-
-          {% else %}
-            <tr>
-              <th scope="row">{{ object.id}}</th>
-              <td><a href="{{object.get_absolute_url}}">{{object.item}}</a>  </td>
-              <td>{{object.quantity}}</td>
-              <td>{{object.start}}</td>
-              <td>{{object.end}}</td>
-              <td>{{object.team_contact}}</td>
-              <td>
-                {% if object.status == 'Pending' %}
-                    <span class="badge bg-warning text-dark">
-                        <small>Afventer</small>
-                    </span>
-                {% elif object.status == 'Approved' %}
-                    <span class="badge bg-success">
-                        <small>Godkendt</small>
-                    </span>
-                {% elif object.status == 'Rejected' %}
-                    <span class="badge bg-danger">
-                        <small>Afvist</small>
-                    </span>
-                {% endif %}
+    {% for object in object_list %}
+      {% if not user.is_staff %}
+        {% if user_team_membership.team.name and object.team == user_team_membership.team %}
+          <tr>
+            <th scope="row">{{ object.id }}</th>
+            <td><a href="{{ object.get_absolute_url }}">{{ object.item }}</a></td>
+            <td>{{ object.quantity }}</td>
+            <td>{{ object.start_date }} {{ object.start_time }}</td>
+            <td>{{ object.end_date }} {{ object.end_time }}</td>
+            <td>{{ object.team_contact }}</td>
+            <td>
+              {% if object.status == 'Pending' %}
+                <span class="badge bg-warning text-dark">
+                  <small>Afventer</small>
+                </span>
+              {% elif object.status == 'Approved' %}
+                <span class="badge bg-success">
+                  <small>Godkendt</small>
+                </span>
+              {% elif object.status == 'Rejected' %}
+                <span class="badge bg-danger">
+                  <small>Afvist</small>
+                </span>
+              {% endif %}
             </td>
             <td>
-                <a href="{% url 'Teknik_TeknikBooking_detail' object.pk %}" class="btn btn-primary btn-sm">
-                    {% bs_icon 'eye-fill' %}
-                </a>
-                <a href="{% url 'Teknik_TeknikBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-                    {% bs_icon 'trash' %}
-                </a>
+              <a href="{% url 'Teknik_TeknikBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+                {% bs_icon 'pencil' %}
+              </a>
+              <a href="{% url 'Teknik_TeknikBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                {% bs_icon 'trash' %}
+              </a>
             </td>
-            <td>
-              <div class="d-flex gap-2 align-items-center">
-                  <form method="post" action="{% url 'Teknik_TeknikBooking_reject' object.pk %}?next=Teknik_TeknikBooking_list" class="d-inline">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center">{% bs_icon 'x-lg' %}</button>
-                  </form>
-                  <form method="post" action="{% url 'Teknik_TeknikBooking_approve' object.pk %}?next=Teknik_TeknikBooking_list" class="d-inline">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-success btn-sm d-flex align-items-center">{% bs_icon 'check-circle-fill' %}</button>
-                  </form>
-              </div>
-          </td>    
+          </tr>
+        {% endif %}
+      {% else %}
+        <tr>
+          <th scope="row">{{ object.id }}</th>
+          <td><a href="{{ object.get_absolute_url }}">{{ object.item }}</a></td>
+          <td>{{ object.quantity }}</td>
+          <td>{{ object.start_date }} {{ object.start_time }}</td>
+          <td>{{ object.end_date }} {{ object.end_time }}</td>
+          <td>{{ object.team_contact }}</td>
           <td>
-            {% get_comment_count for object as comment_count %}
-            {% if comment_count %}
-                <a href="{{object.get_absolute_url}}" class="btn btn-outline-secondary btn-sm">
-                    {{ comment_count }} {% bs_icon 'chat-left-dots' %}
-                </a>
+            {% if object.status == 'Pending' %}
+              <span class="badge bg-warning text-dark">
+                <small>Afventer</small>
+              </span>
+            {% elif object.status == 'Approved' %}
+              <span class="badge bg-success">
+                <small>Godkendt</small>
+              </span>
+            {% elif object.status == 'Rejected' %}
+              <span class="badge bg-danger">
+                <small>Afvist</small>
+              </span>
             {% endif %}
           </td>
-
-            </tr>
-          {% endif %}
-        {% endfor %}
+          <td>
+            <a href="{% url 'Teknik_TeknikBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+              {% bs_icon 'pencil' %}
+            </a>
+            <a href="{% url 'Teknik_TeknikBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+              {% bs_icon 'trash' %}
+            </a>
+          </td>
+        </tr>
       {% endif %}
-    {% endwith %}
+    {% endfor %}
   </tbody>
 </table>
-
 <div>
-  <a class="btn btn-primary"
-    href="{% url 'Teknik_TeknikBooking_create' %}">
-  Ny teknik booking
+  <a class="btn btn-primary" href="{% url 'Teknik_TeknikBooking_create' %}">
+    Ny teknik bestilling
   </a>
 </div>
 {% endblock %}

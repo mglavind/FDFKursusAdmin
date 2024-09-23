@@ -67,9 +67,33 @@ class DepotLocationDeleteView(generic.DeleteView):
 class DepotBookingListView(generic.ListView):
     model = models.DepotBooking
     form_class = forms.DepotBookingForm
+    context_object_name = 'object_list'
+    template_name = 'Depot/depotbooking_list.html'
 
     def get_queryset(self):
-        return models.DepotBooking.objects.order_by(F('item'),F('start') )
+        user = self.request.user
+        if user.is_staff:
+            queryset = models.DepotBooking.objects.all()
+        else:
+            queryset = models.DepotBooking.objects.filter(
+                team__in=user.teammembership_set.values('team')
+            )
+        
+        queryset = queryset.select_related(
+            'team', 'team_contact', 'item'
+        ).only(
+            'id', 'team_id', 'team_contact_id', 'start', 'start_time', 'end', 'end_time', 'item_id', 'quantity', 'status'
+        ).order_by('id')
+        
+        return queryset
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        user_team_membership = user.teammembership_set.select_related('team').first()
+        context['user_team_membership'] = user_team_membership
+        return context
 
 
 class DepotBookingCreateView(generic.CreateView):

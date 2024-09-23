@@ -64,12 +64,33 @@ class ButikkenItemDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("Butikken_ButikkenItem_list")
 
 
+from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from . import models, forms
+
 class ButikkenBookingListView(LoginRequiredMixin, generic.ListView):
     model = models.ButikkenBooking
     form_class = forms.ButikkenBookingForm
+    context_object_name = 'object_list'
+    template_name = 'Butikken/butikkenbooking_list.html'
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        return models.ButikkenBooking.objects.select_related(
+            'team', 'team_contact', 'item'
+        ).order_by('item', 'start')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        user_team_membership = user.teammembership_set.select_related('team').first()
+        context['user_team_membership'] = user_team_membership
+        return context
 
 
 class ButikkenBookingCreateView(LoginRequiredMixin, generic.CreateView):

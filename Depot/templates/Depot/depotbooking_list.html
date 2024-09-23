@@ -3,7 +3,7 @@
 {% block content %}
 {% load bootstrap_icons %}
 <br>
-      <h5>Depotets booking oversigt for alle teams: </h5>
+<h5>Depotets booking oversigt for alle teams: </h5>
 <table class="table">
   <thead>
     <tr>
@@ -18,62 +18,69 @@
     </tr>
   </thead>
   <tbody>
-    
-      {% for object in object_list %}
-        
-      <tr>
-        <th scope="row">{{ object.id}}</th>
-        <td>{{object.item}}</a>  </td>
-        <td>{{object.quantity}}</td>
-        <td>{{object.start}}</td>
-        <td>{{object.end}}</td>
-        <td>{{object.team_contact}}</td>
-        <td>
-          {% if object.status == 'Pending' %}
-              <span class="badge bg-warning text-dark">
-                  <small>Afventer</small>
-              </span>
-          {% elif object.status == 'Approved' %}
-              <span class="badge bg-success">
-                  <small>Godkendt</small>
-              </span>
-          {% elif object.status == 'Rejected' %}
-              <span class="badge bg-danger">
-                  <small>Afvist</small>
-              </span>
-          {% endif %}
+    {% for object in object_list %}
+    <tr>
+      <th scope="row">{{ object.id }}</th>
+      <td> 
+        {% if user.is_staff %}
+        <a href="{{ object.get_absolute_url }}">{{ object.item }}</a>
+        {% elif user_team_membership.team.name and object.team == user_team_membership.team %}
+        <a href="{{ object.get_absolute_url }}">{{ object.item }}</a>
+        {% else %}
+        {{ object.item }}
+        {% endif %}
       </td>
-        <td>
-          
+      <td>{{ object.quantity }}</td>
+      <td>{{ object.start }}</td>
+      <td>{{ object.end }}</td>
+      <td>{{ object.team_contact }}</td>
+      <td>
+        {% if object.status == 'Pending' %}
+          <span class="badge bg-warning text-dark">
+            <small>Afventer</small>
+          </span>
+        {% elif object.status == 'Approved' %}
+          <span class="badge bg-success">
+            <small>Godkendt</small>
+          </span>
+        {% elif object.status == 'Rejected' %}
+          <span class="badge bg-danger">
+            <small>Afvist</small>
+          </span>
+        {% endif %}
+      </td>
+      <td>
 
-          {% with user_team_membership=request.user.teammembership_set.first %}
-            {% if user_team_membership %}
-              {% if user_team_membership.team.name and object.team == user_team_membership.team %}
+          {% if user_team_membership %}
+            {% if user.is_staff %}
+              <a href="{% url 'Depot_DepotBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+                {% bs_icon 'pencil' %}
+              </a>
+              <a href="{% url 'Depot_DepotBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                {% bs_icon 'trash' %}
+              </a>
+            {% elif user_team_membership.team.name and object.team == user_team_membership.team %}
+              <a href="{% url 'Depot_DepotBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
+                {% bs_icon 'pencil' %}
+              </a>
+              <a href="{% url 'Depot_DepotBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+                {% bs_icon 'trash' %}
+              </a>
+            {% else %}
 
-                <a href="{% url 'Depot_DepotBooking_update' object.pk %}" class="btn btn-outline-warning btn-sm">
-                  {% bs_icon 'pencil' %}  
-                </a>
-                
-                <a href="{% url 'Depot_DepotBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
-                  {% bs_icon 'trash' %}  
-                </a>
-
-              {% endif %}
             {% endif %}
-          {% endwith %}
-          
+          {% endif %}
+
+
       </td>
-      </tr>
-      
-      {% endfor %}
-    
+    </tr>
+    {% endfor %}
   </tbody>
 </table>
 
 <div>
-  <a class="btn btn-primary"
-    href="{% url 'Depot_DepotBooking_create' %}">
-  Ny depot bestilling
+  <a class="btn btn-primary" href="{% url 'Depot_DepotBooking_create' %}">
+    Ny depot bestilling
   </a>
 </div>
 {% endblock %}
