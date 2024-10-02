@@ -7,21 +7,44 @@ from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib import messages
 from organization.models import Todo, Team, Event, TeamMembership, EventMembership
 from organization.forms import TodoForm
+from Butikken.models import ButikkenBooking
+from Teknik.models import TeknikBooking
+from Sjak.models import SjakBooking
+from Foto.models import FotoBooking
+from Depot.models import DepotBooking
+from AktivitetsTeam.models import AktivitetsTeamBooking
+from Support.models import SupportBooking
 
 
 @login_required
 def index(request):
 
-    team = TeamMembership.objects.filter(member=request.user).first().team
-    event = EventMembership.objects.filter(volunteer=request.user).first().event
-    print('team:', team),
-    print('event:', event),
+    team_membership = TeamMembership.objects.filter(member=request.user).select_related('team').first()
+    event_membership = EventMembership.objects.filter(volunteer=request.user).select_related('event').first()
+    team = team_membership.team if team_membership else None
+    event = event_membership.event if event_membership else None
+
+    butikken_bookings = ButikkenBooking.objects.select_related('team', 'team_contact', 'item').all()
+    teknik_bookings = TeknikBooking.objects.select_related('team', 'team_contact', 'item').all()
+    sjak_bookings = SjakBooking.objects.select_related('team', 'team_contact', 'item').all()
+    foto_bookings = FotoBooking.objects.select_related('team', 'team_contact', 'item').all()
+    depot_bookings = DepotBooking.objects.select_related('team', 'team_contact', 'item').all()
+    aktivitets_team_bookings = AktivitetsTeamBooking.objects.select_related('team', 'team_contact', 'item').all()
+    support_bookings = SupportBooking.objects.select_related('team', 'team_contact', 'item').all()
+
 
     context = {
         'todos': Todo.objects.filter(user=request.user),
         'form': TodoForm(),
         'team': team,
         'event': event,
+        'butikken_bookings': butikken_bookings,
+        'teknik_bookings': teknik_bookings,
+        'sjak_bookings': sjak_bookings,
+        'foto_bookings': foto_bookings,
+        'depot_bookings': depot_bookings,
+        'aktivitets_team_bookings': aktivitets_team_bookings,
+        'support_bookings': support_bookings,
         
     }
     return render(request, 'index.html', context)

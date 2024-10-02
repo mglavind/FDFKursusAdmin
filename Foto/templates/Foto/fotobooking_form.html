@@ -37,13 +37,6 @@
     </div>
 
     <div class="form-group row mb-2">
-        <label class="col-sm-2 col-form-label" for="{{ form.start_time.id_for_label }}">slut tid:</label>
-        <div class="col-sm-10">
-            {{ form.start_time}}
-        </div>
-    </div>
-
-    <div class="form-group row mb-2">
         <label class="col-sm-2 col-form-label" for="{{ form.start_date.id_for_label }}">Start dato:</label>
         <div class="col-sm-10">
             {{ form.start_date}}
@@ -51,9 +44,9 @@
     </div>
 
     <div class="form-group row mb-2">
-        <label class="col-sm-2 col-form-label" for="{{ form.end_time.id_for_label }}">slut tid:</label>
+        <label class="col-sm-2 col-form-label" for="{{ form.start_time.id_for_label }}">Start tid:</label>
         <div class="col-sm-10">
-            {{ form.end_time}}
+            {{ form.start_time}}
         </div>
     </div>
 
@@ -63,6 +56,16 @@
             {{ form.end_date}}
         </div>
     </div>
+
+
+    <div class="form-group row mb-2">
+        <label class="col-sm-2 col-form-label" for="{{ form.end_time.id_for_label }}">Slut tid:</label>
+        <div class="col-sm-10">
+            {{ form.end_time}}
+        </div>
+    </div>
+
+
       
 
     <div class="form-group row mb-2">

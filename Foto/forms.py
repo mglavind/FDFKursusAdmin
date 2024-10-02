@@ -43,7 +43,7 @@ class FotoBookingForm(forms.ModelForm):
         }
         labels = {
             "team": "Team",
-            "item": "Teknik ting",
+            "item": "Foto item",
             "start_date": "Start Dato",
             "start_time": "Start tidspunkt",
             "end_date": "Slut dato",

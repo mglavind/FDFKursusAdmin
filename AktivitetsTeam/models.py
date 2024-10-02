@@ -63,7 +63,7 @@ class AktivitetsTeamBooking(models.Model):
     # Fields
     location = models.CharField(max_length=100)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
-    remarks = models.TextField(blank=True, max_length=500)  # Set an appropriate max length
+    remarks = models.TextField(blank=True, max_length=2000)  # Set an appropriate max length
     start_date = models.DateField(default=timezone.now)
     start_time = models.TimeField(default=timezone.now)
     end_date = models.DateField(default=timezone.now)
