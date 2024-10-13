@@ -14,6 +14,8 @@ from django.shortcuts import render
 from typing import List
 import csv
 
+from django.contrib.auth.models import Group
+
 from . import models
 from .models import AktivitetsTeamBooking
 
@@ -141,7 +143,23 @@ class AktivitetsTeamBookingAdminForm(forms.ModelForm):
 
     class Meta:
         model = models.AktivitetsTeamBooking
-        fields = "__all__"
+        fields = [
+            "item",
+            "team",
+            "team_contact",
+            "status",
+            "start_date",
+            "start_time",
+            "end_date",
+            "end_time",
+            "location",
+            "remarks",
+            "remarks_internal",
+            "latitude",
+            "longitude",
+            "address",
+
+        ]
 
 class AssignedInline(admin.TabularInline):
     model = models.AktivitetsTeamBooking.assigned_aktivitetsteam.through
@@ -150,8 +168,12 @@ class AssignedInline(admin.TabularInline):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "volunteer":
-            kwargs["queryset"] = Volunteer.objects.filter(teams='8')
+            # Get the group
+            group = Group.objects.get(name="AktivitetstTeamBookingTildeling")
+            # Filter volunteers based on group membership and active status
+            kwargs["queryset"] = Volunteer.objects.filter(groups=group, is_active=True)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 class AssignedAktivitetsteamFilter(SimpleListFilter):
     title = 'Assigned Aktivitetsteam'
@@ -159,7 +181,7 @@ class AssignedAktivitetsteamFilter(SimpleListFilter):
 
     def lookups(self, request, model_admin):
         # Provide the filter options
-        volunteers = Volunteer.objects.filter(teams='8')
+        volunteers = Volunteer.objects.filter(groups__name="AktivitetstTeamBookingTildeling", is_active=True)
         return [(volunteer.id, volunteer.first_name) for volunteer in volunteers]
 
     def queryset(self, request, queryset):
@@ -171,8 +193,6 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
     form = AktivitetsTeamBookingAdminForm
     list_max_show_all = 500  # Set the maximum number of items per page to 100
     list_per_page = 25  # Set the default number of items per page to 25
-    # ...
-
 
     def formatted_team_contact(self, obj):
         return obj.team_contact.first_name

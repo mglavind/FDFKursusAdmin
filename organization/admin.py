@@ -206,7 +206,7 @@ class VolunteerAdmin(admin.ModelAdmin):
         "created",
         "last_updated",
     ]
-    actions = ["export_to_csv", "send_email_action", "deactivate_volunteers", "activate_volunteers", "create_event_membership"]
+    actions = ["export_to_csv", "send_email_action", "deactivate_volunteers", "activate_volunteers", "create_event_membership", "assign_to_aktivitetsteam_group"]
     search_fields = ['first_name', 'last_name', 'email', 'username'] 
     list_filter = (
         ('is_active', ChoiceDropdownFilter),
@@ -237,6 +237,13 @@ class VolunteerAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         new_urls = [path('upload-csv/', self.upload_csv),]
         return new_urls + urls
+    
+    def assign_to_aktivitetsteam_group(self, request, queryset):
+        group, created = Group.objects.get_or_create(name="AktivitetstTeamBookingTildeling")
+        for volunteer in queryset:
+            volunteer.groups.add(group)
+        self.message_user(request, f"Selected volunteers have been assigned to the group 'AktivitetstTeamBookingTildeling'.")
+    assign_to_aktivitetsteam_group.short_description = "Assign selected volunteers to AktivitetstTeamBookingTildeling group"
     
     def upload_csv(self, request):
         if request.method == "POST":
