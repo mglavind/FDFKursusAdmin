@@ -41,7 +41,7 @@ def login_user(request):
                 action_flag=ADDITION,
                 change_message=f'User {user.username} logged in at {now()}.',
             )
-            return redirect('home')
+            return redirect('index')
         else:
             messages.error(request, "There was an error logging in. Please try again.")
             return redirect('login_user')
