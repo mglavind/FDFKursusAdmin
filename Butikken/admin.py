@@ -176,6 +176,7 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
         "formatted_team_contact",
         "remarks",
         "quantity",
+        "unit",
         "formatted_start_date",
         "status",
         "created",
@@ -225,12 +226,13 @@ class ButikkenBookingAdmin(admin.ModelAdmin):
         response.write(u'\ufeff'.encode('utf8'))
 
         writer = csv.writer(response)
-        writer.writerow(["Item", "Quantity", "Team", "Team Contact", "Start", "start tid", "Status","Remarks","last updated", "remarks internal", "for meal"])
+        writer.writerow(["Item", "Quantity", "Unit", "Team", "Team Contact", "Start", "start tid", "Status","Remarks","last updated", "remarks internal", "for meal"])
 
         for booking in queryset:
             writer.writerow([
                 booking.item,
                 booking.quantity,
+                booking.unit,
                 booking.team,
                 booking.team_contact,
                 booking.start,

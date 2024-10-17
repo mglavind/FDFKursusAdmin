@@ -123,7 +123,7 @@ class TeknikBookingAdmin(admin.ModelAdmin):
 
         def convert_to_ical(booking):
             ical_event = Event()
-            summary = f"{booking.item} - {booking.team} - {booking.team_contact}"
+            summary = f"{booking.item} - {booking.quantity} - {booking.team} - {booking.team_contact}"
             ical_event.add('summary', summary)
 
             # Wrap date and time fields into datetime objects
