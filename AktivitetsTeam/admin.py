@@ -243,11 +243,9 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
         "team_contact",
         "status",
         "start_date",
+        "start_time",
         "end_date",
-        "remarks",
-        "location",
-        "remarks_internal",
-        "last_updated",
+        "end_time",
     ]
     readonly_fields = [
         "created",
