@@ -5,6 +5,7 @@ from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDrop
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import formats
 from organization.models import Volunteer
+from . import models
 from icalendar import Calendar, Event
 from datetime import datetime
 from django.contrib.admin import SimpleListFilter
@@ -12,6 +13,8 @@ from geopy.geocoders import Nominatim
 from django.urls import path, URLPattern
 from django.shortcuts import render
 from typing import List
+from django.utils import timezone
+from datetime import time
 import csv
 
 from django.contrib.auth.models import Group
@@ -160,6 +163,20 @@ class AktivitetsTeamBookingAdminForm(forms.ModelForm):
             "address",
 
         ]
+
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set initial values for latitude and longitude if not provided
+        if not self.instance.pk:
+            self.fields['latitude'].initial = '56.114951'  # Replace with your default latitude
+            self.fields['longitude'].initial = '9.655592'  # Replace with your default longitude
+            self.fields['status'].initial = 'Pending'
+            self.fields['address'].initial = 'FDF Friluftscenter Sletten, Bøgedalsvej, Bøgedal, Skanderborg Kommune, Region Midtjylland, Danmark'
+
+
+
+
 
 class AssignedInline(admin.TabularInline):
     model = models.AktivitetsTeamBooking.assigned_aktivitetsteam.through

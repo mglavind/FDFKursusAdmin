@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib import messages
-from organization.models import Todo, Team, Event, TeamMembership, EventMembership
+from organization.models import Todo, Team, Event, Key, TeamMembership, EventMembership
 from organization.forms import TodoForm
 from Butikken.models import ButikkenBooking
 from Teknik.models import TeknikBooking
@@ -22,15 +22,20 @@ def index(request):
     team_membership = TeamMembership.objects.filter(member=request.user).select_related('team').first()
     event_membership = EventMembership.objects.filter(volunteer=request.user).select_related('event').first()
     team = team_membership.team if team_membership else None
+    print(team)
     event = event_membership.event if event_membership else None
+    print(event)
 
-    butikken_bookings = ButikkenBooking.objects.select_related('team', 'team_contact', 'item').all()
-    teknik_bookings = TeknikBooking.objects.select_related('team', 'team_contact', 'item').all()
-    sjak_bookings = SjakBooking.objects.select_related('team', 'team_contact', 'item').all()
-    foto_bookings = FotoBooking.objects.select_related('team', 'team_contact', 'item').all()
-    depot_bookings = DepotBooking.objects.select_related('team', 'team_contact', 'item').all()
-    aktivitets_team_bookings = AktivitetsTeamBooking.objects.select_related('team', 'team_contact', 'item').all()
-    support_bookings = SupportBooking.objects.select_related('team', 'team_contact', 'item').all()
+    butikken_bookings = ButikkenBooking.objects.select_related('team', 'team_contact', 'item').filter(team=team)
+    teknik_bookings = TeknikBooking.objects.select_related('team', 'team_contact', 'item').filter(team=team)
+    sjak_bookings = SjakBooking.objects.select_related('team', 'team_contact', 'item').filter(team=team)
+    foto_bookings = FotoBooking.objects.select_related('team', 'team_contact', 'item').filter(team=team)
+    depot_bookings = DepotBooking.objects.select_related('team', 'team_contact', 'item').filter(team=team)
+    aktivitets_team_bookings = AktivitetsTeamBooking.objects.select_related('team', 'team_contact', 'item').filter(team=team)
+    support_bookings = SupportBooking.objects.select_related('team', 'team_contact', 'item').filter(team=team)
+
+        # Get all Key objects where the current_user has a foreign key to a user that has a foreign key relation to a TeamMembership object that also has a Team value with a foreign key to the same team as the current user
+    keys = Key.objects.filter(current_user__in=TeamMembership.objects.filter(team=team).values('member'))
 
 
     context = {
@@ -45,6 +50,7 @@ def index(request):
         'depot_bookings': depot_bookings,
         'aktivitets_team_bookings': aktivitets_team_bookings,
         'support_bookings': support_bookings,
+        'keys': keys,
         
     }
     return render(request, 'index.html', context)
