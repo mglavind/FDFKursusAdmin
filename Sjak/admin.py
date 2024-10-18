@@ -150,12 +150,7 @@ class SjakBookingAdmin(admin.ModelAdmin):
         "formatted_last_updated",
         "remarks",
         "remarks_internal",
-        "status_internal",
         
-    ]
-    readonly_fields = [
-        "last_updated",
-        "created",
     ]
     list_filter = (
         ('status', ChoiceDropdownFilter),

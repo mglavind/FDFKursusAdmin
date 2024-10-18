@@ -9,6 +9,27 @@ from django.utils import timezone
 from datetime import time
 
 class TeknikBookingForm(forms.ModelForm):
+    start_date = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().start_date,
+        label="Afhentning Dato:"
+    )
+    start_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().start_date,
+        label="Afhentning tidspunk:"
+    )
+    end_date = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().end_date,
+        label="Retur dato:"
+    )
+    end_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().end_date,
+        label="Retur tidspunkt:"
+    )
+    
 
     class Meta:
         model = models.TeknikBooking
@@ -35,10 +56,6 @@ class TeknikBookingForm(forms.ModelForm):
             "team": forms.Select(attrs={"class": "form-select"}),
             "team_contact": forms.Select(attrs={"class": "form-select"}),
             "quantity": forms.NumberInput(attrs={"class": "form-control"}),
-            "start_date": forms.DateInput(attrs={"class": "form-control"}),
-            "start_time": forms.TimeInput(attrs={"class": "form-control"}),
-            "end_date": forms.DateInput(attrs={"class": "form-control"}),
-            "end_time": forms.TimeInput(attrs={"class": "form-control"}),
             "remarks": forms.Textarea(attrs={"class": "form-control"}),
             "delivery_needed": forms.CheckboxInput(attrs={"class": "form-check-input"}),
             "assistance_needed": forms.CheckboxInput(attrs={"class": "form-check-input"}),
@@ -50,10 +67,6 @@ class TeknikBookingForm(forms.ModelForm):
             "quantity": "Antal",
             "team": "Team",
             "item": "Teknik ting",
-            "start_date": "Start Dato",
-            "start_time": "Start tidspunkt",
-            "end_date": "Slut dato",
-            "end_time": "Slut tidspunkt",
             "team_contact": "Kontaktperson",
             "remarks": "Bemærkninger",
             "delivery_needed": "Levering nødvendig",

@@ -1,26 +1,20 @@
 from django.contrib import admin, messages
 from django import forms
-from django.db.models import Q
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 from django.http import HttpResponseRedirect, HttpResponse
-from django.utils import formats
 from organization.models import Volunteer
 from . import models
-from icalendar import Calendar, Event
-from datetime import datetime
 from django.contrib.admin import SimpleListFilter
 from geopy.geocoders import Nominatim
 from django.urls import path, URLPattern
 from django.shortcuts import render
 from typing import List
-from django.utils import timezone
-from datetime import time
+from utils.ical_utils import convert_to_ical, export_selected_to_ical, send_ical_via_email
 import csv
 
 from django.contrib.auth.models import Group
 
 from . import models
-from .models import AktivitetsTeamBooking
 
 
 class AktivitetsTeamItemAdminForm(forms.ModelForm):
@@ -257,7 +251,7 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
         ('team', RelatedDropdownFilter),
         AssignedAktivitetsteamFilter,
     )
-    actions = ["approve_bookings", "reject_bookings", "export_to_csv", "export_selected_to_ical"]
+    actions = ["approve_bookings", "reject_bookings", "export_to_csv", 'export_selected_to_ical_action', 'send_ical_via_email_action']
     search_fields = ['item__name', 'team__name'] 
 
     inlines = [
@@ -329,41 +323,20 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
    
 
 
-
-
-
-    def export_selected_to_ical(self, request, queryset):
-        calendar = Calendar()
-
-        def convert_to_ical(booking):
-            ical_event = Event()
-            summary = f"{booking.item} - {booking.team} - {booking.team_contact}"
-            ical_event.add('summary', summary)
-
-            # Wrap date and time fields into datetime objects
-            start_datetime = datetime.combine(booking.start_date, booking.start_time)
-            end_datetime = datetime.combine(booking.end_date, booking.end_time)
-
-            ical_event.add('dtstart', start_datetime)
-            ical_event.add('dtend', end_datetime)
-            ical_event.add('description', booking.remarks)
-
-            # Add more properties as needed
-
-            # Add the team_contact name in the "description" field
-            description_with_contact = f"Kontaktperson: {booking.team_contact}\n{booking.remarks}"
-            ical_event.add('description', description_with_contact)
-
-            return ical_event
-
-        for booking in queryset:
-            ical_event = convert_to_ical(booking)
-            calendar.add_component(ical_event)
-
-        response = HttpResponse(calendar.to_ical(), content_type='text/calendar')
+    def export_selected_to_ical_action(self, request, queryset):
+        ical_content = export_selected_to_ical(queryset)
+        response = HttpResponse(ical_content, content_type='text/calendar')
         response['Content-Disposition'] = 'attachment; filename="bookings.ics"'
-
         return response
+
+    def send_ical_via_email_action(self, request, queryset):
+        email_template = "AktivitetsTeam/ical_email_template.html"
+        from_email = 'your_email@example.com'
+        send_ical_via_email(queryset, email_template, from_email)
+        self.message_user(request, f"Emails sent for {queryset.count()} bookings.")
+
+    export_selected_to_ical_action.short_description = "Export selected bookings to iCal"
+    send_ical_via_email_action.short_description = "Send iCal via email to assigned aktivitetsteam"
 
 
 

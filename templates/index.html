@@ -19,320 +19,334 @@
 {% load static %}
 
 <div class="container mx-auto">
-    <div class="mt-4">
-        <h1 class="display-4 mb-4">Hej {{ user.first_name }}!</h1>
-    </div>
-    <p> Så vidt vi ved er du en del af {{event.name}} hvor du er en del af {{team.name}}.
-    </p>
+		<div class="mt-4">
+				<h1 class="display-4 mb-4">Hej {{ user.first_name }}!</h1>
+		</div>
+		<p> Så vidt vi ved er du en del af {{event.name}} hvor du er en del af {{team.name}}.
+		</p>
 
 
-    <h2>Booking Overview</h2>
-      <div class="container py-2">
-        <div class="row" data-masonry='{"percentPosition": true }'>
-        
-               <!-- Aktivitets Team Bookings -->
-          
-        {% if keys %}
-        <div class="col-sm-12 col-md-4 py-4">
-          <div class="card">
-              <div class="card-body">
-                  <h3 class="card-title">Nøgler</h3>
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th scope="col">nummer</th>
-                              <th scope="col">navn</th>
-                              <th scope="col">Person</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for booking in keys %}
-                          <tr>
-                            <td>{{ booking.number }}</td>  
-                            <td>{{ booking.name }}</td>
-                            <td>{{booking.current_user}}</td>
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-        </div>
-        {% endif %}
+		<h2>Dit overblik</h2>
+			<div class="container py-2">
+				<div class="row" data-masonry='{"percentPosition": true }'>
+				
+							 <!-- Aktivitets Team Bookings -->
+				
+			{% if keys %}
+			<div class="col-sm-12 col-md-4 py-4">
+				<div class="card">
+						<div class="card-body">
+								<h3 class="card-title">Nøgler</h3>
+								<table class="table">
+										<thead>
+												<tr>
+														<th scope="col">nummer</th>
+														<th scope="col">navn</th>
+														<th scope="col">Person</th>
+												</tr>
+										</thead>
+										<tbody>
+												{% for booking in keys %}
+												<tr>
+													<td>{{ booking.number }}</td>  
+													<td>{{ booking.name }}</td>
+													<td>{{booking.current_user}}</td>
+												</tr>
+												{% endfor %}
+										</tbody>
+								</table>
+						</div>
+				</div>
+			</div>
+			{% endif %}
 
-             <!-- Aktivitets Team Bookings -->
-        <div class="col-sm-12 col-md-4 py-4">
-          <div class="card">
-              <div class="card-body">
-                  <h3 class="card-title">Aktivitetsteam</h3>
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th scope="col">Item</th>
-                              <th scope="col">Status</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for booking in aktivitets_team_bookings %}
-                          <tr>
-                              <td><a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_detail' booking.id %}">{{ booking.item }}</a></td>
-                              <td>
-                                  {% if booking.status == 'Pending' %}
-                                  <span class="badge bg-warning text-dark">
-                                      <small>Afventer</small>
-                                  </span>
-                                  {% elif booking.status == 'Approved' %}
-                                  <span class="badge bg-success">
-                                      <small>Godkendt</small>
-                                  </span>
-                                  {% elif booking.status == 'Rejected' %}
-                                  <span class="badge bg-danger">
-                                      <small>Afvist</small>
-                                  </span>
-                                  {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
+						<!-- Aktivitets Team Bookings -->
+						{% if aktivitets_team_bookings %}
+			<div class="col-sm-12 col-md-4 py-4">
+				<div class="card">
+						<div class="card-body">
+								<h3 class="card-title">Aktivitetsteam</h3>
+								<table class="table">
+										<thead>
+												<tr>
+														<th scope="col">Item</th>
+														<th scope="col">Status</th>
+												</tr>
+										</thead>
+										<tbody>
+												{% for booking in aktivitets_team_bookings %}
+												<tr>
+														<td><a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_detail' booking.id %}">{{ booking.item }}</a></td>
+														<td>
+																{% if booking.status == 'Pending' %}
+																<span class="badge bg-warning text-dark">
+																		<small>Afventer</small>
+																</span>
+																{% elif booking.status == 'Approved' %}
+																<span class="badge bg-success">
+																		<small>Godkendt</small>
+																</span>
+																{% elif booking.status == 'Rejected' %}
+																<span class="badge bg-danger">
+																		<small>Afvist</small>
+																</span>
+																{% endif %}
+														</td>
+												</tr>
+												{% endfor %}
+										</tbody>
+								</table>
+						</div>
+				</div>
+		</div>
+		{% endif %}
 
-      <!-- Butikken Bookings -->
-      <div class="col-sm-12 col-md-4 py-4">
-          <div class="card">
-              <div class="card-body">
-                  <h3 class="card-title">Butikken</h3>
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th scope="col">Item</th>
-                              <th scope="col">Status</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for booking in butikken_bookings %}
-                          <tr>
-                              <td><a href="{% url 'Butikken_ButikkenBooking_detail' booking.id %}">{{ booking.item }}</a></td>
-                              <td>
-                                  {% if booking.status == 'Pending' %}
-                                  <span class="badge bg-warning text-dark">
-                                      <small>Afventer</small>
-                                  </span>
-                                  {% elif booking.status == 'Approved' %}
-                                  <span class="badge bg-success">
-                                      <small>Godkendt</small>
-                                  </span>
-                                  {% elif booking.status == 'Rejected' %}
-                                  <span class="badge bg-danger">
-                                      <small>Afvist</small>
-                                  </span>
-                                  {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
+		<!-- Butikken Bookings -->
+		{% if butikken_bookings %}
+		<div class="col-sm-12 col-md-4 py-4">
+				<div class="card">
+						<div class="card-body">
+								<h3 class="card-title">Butikken</h3>
+								<table class="table">
+										<thead>
+												<tr>
+														<th scope="col">Item</th>
+														<th scope="col">Status</th>
+												</tr>
+										</thead>
+										<tbody>
+												{% for booking in butikken_bookings %}
+												<tr>
+														<td><a href="{% url 'Butikken_ButikkenBooking_detail' booking.id %}">{{ booking.item }}</a></td>
+														<td>
+																{% if booking.status == 'Pending' %}
+																<span class="badge bg-warning text-dark">
+																		<small>Afventer</small>
+																</span>
+																{% elif booking.status == 'Approved' %}
+																<span class="badge bg-success">
+																		<small>Godkendt</small>
+																</span>
+																{% elif booking.status == 'Rejected' %}
+																<span class="badge bg-danger">
+																		<small>Afvist</small>
+																</span>
+																{% endif %}
+														</td>
+												</tr>
+												{% endfor %}
+										</tbody>
+								</table>
+						</div>
+				</div>
+		</div>
+		{% endif %}
 
-      <!-- Teknik Bookings -->
-      <div class="col-sm-12 col-md-4 py-4">
-          <div class="card">
-              <div class="card-body">
-                  <h3 class="card-title">Teknik</h3>
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th scope="col">Item</th>
-                              <th scope="col">Status</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for booking in teknik_bookings %}
-                          <tr>
-                              <td><a href="{% url 'Teknik_TeknikBooking_detail' booking.id %}">{{ booking.item }}</a></td>
-                              <td>
-                                  {% if booking.status == 'Pending' %}
-                                  <span class="badge bg-warning text-dark">
-                                      <small>Afventer</small>
-                                  </span>
-                                  {% elif booking.status == 'Approved' %}
-                                  <span class="badge bg-success">
-                                      <small>Godkendt</small>
-                                  </span>
-                                  {% elif booking.status == 'Rejected' %}
-                                  <span class="badge bg-danger">
-                                      <small>Afvist</small>
-                                  </span>
-                                  {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
+		<!-- Teknik Bookings -->
+		{% if teknik_bookings %}
+		<div class="col-sm-12 col-md-4 py-4">
+				<div class="card">
+						<div class="card-body">
+								<h3 class="card-title">Teknik</h3>
+								<table class="table">
+										<thead>
+												<tr>
+														<th scope="col">Item</th>
+														<th scope="col">Status</th>
+												</tr>
+										</thead>
+										<tbody>
+												{% for booking in teknik_bookings %}
+												<tr>
+														<td><a href="{% url 'Teknik_TeknikBooking_detail' booking.id %}">{{ booking.item }}</a></td>
+														<td>
+																{% if booking.status == 'Pending' %}
+																<span class="badge bg-warning text-dark">
+																		<small>Afventer</small>
+																</span>
+																{% elif booking.status == 'Approved' %}
+																<span class="badge bg-success">
+																		<small>Godkendt</small>
+																</span>
+																{% elif booking.status == 'Rejected' %}
+																<span class="badge bg-danger">
+																		<small>Afvist</small>
+																</span>
+																{% endif %}
+														</td>
+												</tr>
+												{% endfor %}
+										</tbody>
+								</table>
+						</div>
+				</div>
+		</div>
+		{% endif %}
 
-      <!-- Sjak Bookings -->
-      <div class="col-sm-12 col-md-4 py-4">
-          <div class="card">
-              <div class="card-body">
-                  <h3 class="card-title">Sjak</h3>
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th scope="col">Item</th>
-                              <th scope="col">Status</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for booking in sjak_bookings %}
-                          <tr>
-                              <td><a href="{% url 'Sjak_SjakBooking_detail' booking.id %}">{{ booking.item }}</a></td>
-                              <td>
-                                  {% if booking.status == 'Pending' %}
-                                  <span class="badge bg-warning text-dark">
-                                      <small>Afventer</small>
-                                  </span>
-                                  {% elif booking.status == 'Approved' %}
-                                  <span class="badge bg-success">
-                                      <small>Godkendt</small>
-                                  </span>
-                                  {% elif booking.status == 'Rejected' %}
-                                  <span class="badge bg-danger">
-                                      <small>Afvist</small>
-                                  </span>
-                                  {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
+		<!-- Sjak Bookings -->
+		{% if sjak_bookings %}
+		<div class="col-sm-12 col-md-4 py-4">
+				<div class="card">
+						<div class="card-body">
+								<h3 class="card-title">Sjak</h3>
+								<table class="table">
+										<thead>
+												<tr>
+														<th scope="col">Item</th>
+														<th scope="col">Status</th>
+												</tr>
+										</thead>
+										<tbody>
+												{% for booking in sjak_bookings %}
+												<tr>
+														<td><a href="{% url 'Sjak_SjakBooking_detail' booking.id %}">{{ booking.item }}</a></td>
+														<td>
+																{% if booking.status == 'Pending' %}
+																<span class="badge bg-warning text-dark">
+																		<small>Afventer</small>
+																</span>
+																{% elif booking.status == 'Approved' %}
+																<span class="badge bg-success">
+																		<small>Godkendt</small>
+																</span>
+																{% elif booking.status == 'Rejected' %}
+																<span class="badge bg-danger">
+																		<small>Afvist</small>
+																</span>
+																{% endif %}
+														</td>
+												</tr>
+												{% endfor %}
+										</tbody>
+								</table>
+						</div>
+				</div>
+		</div>
+		{% endif %}
 
-      <!-- Foto Bookings -->
-      <div class="col-sm-12 col-md-4 py-4">
-          <div class="card">
-              <div class="card-body">
-                  <h3 class="card-title">Foto</h3>
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th scope="col">Item</th>
-                              <th scope="col">Status</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for booking in foto_bookings %}
-                          <tr>
-                              <td><a href="{% url 'Foto_FotoBooking_detail' booking.id %}">{{ booking.item }}</a></td>
-                              <td>
-                                  {% if booking.status == 'Pending' %}
-                                  <span class="badge bg-warning text-dark">
-                                      <small>Afventer</small>
-                                  </span>
-                                  {% elif booking.status == 'Approved' %}
-                                  <span class="badge bg-success">
-                                      <small>Godkendt</small>
-                                  </span>
-                                  {% elif booking.status == 'Rejected' %}
-                                  <span class="badge bg-danger">
-                                      <small>Afvist</small>
-                                  </span>
-                                  {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
+		<!-- Foto Bookings -->
+		{% if foto_bookings %}
+		<div class="col-sm-12 col-md-4 py-4">
+				<div class="card">
+						<div class="card-body">
+								<h3 class="card-title">Foto</h3>
+								<table class="table">
+										<thead>
+												<tr>
+														<th scope="col">Item</th>
+														<th scope="col">Status</th>
+												</tr>
+										</thead>
+										<tbody>
+												{% for booking in foto_bookings %}
+												<tr>
+														<td><a href="{% url 'Foto_FotoBooking_detail' booking.id %}">{{ booking.item }}</a></td>
+														<td>
+																{% if booking.status == 'Pending' %}
+																<span class="badge bg-warning text-dark">
+																		<small>Afventer</small>
+																</span>
+																{% elif booking.status == 'Approved' %}
+																<span class="badge bg-success">
+																		<small>Godkendt</small>
+																</span>
+																{% elif booking.status == 'Rejected' %}
+																<span class="badge bg-danger">
+																		<small>Afvist</small>
+																</span>
+																{% endif %}
+														</td>
+												</tr>
+												{% endfor %}
+										</tbody>
+								</table>
+						</div>
+				</div>
+		</div>
+		{% endif %}
 
-      <!-- Depot Bookings -->
-      <div class="col-sm-12 col-md-4 py-4">
-          <div class="card">
-              <div class="card-body">
-                  <h3 class="card-title">Depot</h3>
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th scope="col">Item</th>
-                              <th scope="col">Status</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for booking in depot_bookings %}
-                          <tr>
-                              <td><a href="{% url 'Depot_DepotBooking_detail' booking.id %}">{{ booking.item }}</a></td>
-                              <td>
-                                  {% if booking.status == 'Pending' %}
-                                  <span class="badge bg-warning text-dark">
-                                      <small>Afventer</small>
-                                  </span>
-                                  {% elif booking.status == 'Approved' %}
-                                  <span class="badge bg-success">
-                                      <small>Godkendt</small>
-                                  </span>
-                                  {% elif booking.status == 'Rejected' %}
-                                  <span class="badge bg-danger">
-                                      <small>Afvist</small>
-                                  </span>
-                                  {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
+		<!-- Depot Bookings -->
+		{% if depot_bookings %}
+		<div class="col-sm-12 col-md-4 py-4">
+				<div class="card">
+						<div class="card-body">
+								<h3 class="card-title">Depot</h3>
+								<table class="table">
+										<thead>
+												<tr>
+														<th scope="col">Item</th>
+														<th scope="col">Status</th>
+												</tr>
+										</thead>
+										<tbody>
+												{% for booking in depot_bookings %}
+												<tr>
+														<td><a href="{% url 'Depot_DepotBooking_detail' booking.id %}">{{ booking.item }}</a></td>
+														<td>
+																{% if booking.status == 'Pending' %}
+																<span class="badge bg-warning text-dark">
+																		<small>Afventer</small>
+																</span>
+																{% elif booking.status == 'Approved' %}
+																<span class="badge bg-success">
+																		<small>Godkendt</small>
+																</span>
+																{% elif booking.status == 'Rejected' %}
+																<span class="badge bg-danger">
+																		<small>Afvist</small>
+																</span>
+																{% endif %}
+														</td>
+												</tr>
+												{% endfor %}
+										</tbody>
+								</table>
+						</div>
+				</div>
+		</div>
+		{% endif %}
 
-      <!-- Support Bookings -->
-      <div class="col-sm-12 col-md-4 py-4">
-          <div class="card">
-              <div class="card-body">
-                  <h3 class="card-title">Support</h3>
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th scope="col">Item</th>
-                              <th scope="col">Status</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for booking in support_bookings %}
-                          <tr>
-                              <td><a href="{% url 'Support_SupportBooking_detail' booking.id %}">{{ booking.item }}</a></td>
-                              <td>
-                                  {% if booking.status == 'Pending' %}
-                                  <span class="badge bg-warning text-dark">
-                                      <small>Afventer</small>
-                                  </span>
-                                  {% elif booking.status == 'Approved' %}
-                                  <span class="badge bg-success">
-                                      <small>Godkendt</small>
-                                  </span>
-                                  {% elif booking.status == 'Rejected' %}
-                                  <span class="badge bg-danger">
-                                      <small>Afvist</small>
-                                  </span>
-                                  {% endif %}
-                              </td>
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
-  </div>
+	<!-- Support Bookings -->
+	{% if support_bookings %}
+		<div class="col-sm-12 col-md-4 py-4">
+			<div class="card">
+				<div class="card-body">
+					<h3 class="card-title">Support</h3>
+					<table class="table">
+							<thead>
+									<tr>
+											<th scope="col">Item</th>
+											<th scope="col">Status</th>
+									</tr>
+							</thead>
+							<tbody>
+									{% for booking in support_bookings %}
+									<tr>
+											<td><a href="{% url 'Support_SupportBooking_detail' booking.id %}">{{ booking.item }}</a></td>
+											<td>
+													{% if booking.status == 'Pending' %}
+													<span class="badge bg-warning text-dark">
+															<small>Afventer</small>
+													</span>
+													{% elif booking.status == 'Approved' %}
+													<span class="badge bg-success">
+															<small>Godkendt</small>
+													</span>
+													{% elif booking.status == 'Rejected' %}
+													<span class="badge bg-danger">
+															<small>Afvist</small>
+													</span>
+													{% endif %}
+											</td>
+									</tr>
+									{% endfor %}
+							</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+	</div>
 </div>
 {% endblock %}
 

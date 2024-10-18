@@ -112,6 +112,16 @@ class ButikkenItemForm(forms.ModelForm):
         self.fields["type"].queryset = ButikkenItemType.objects.all()
 
 class ButikkenBookingForm(forms.ModelForm):
+    start = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().start_date,
+        label="Afhentning Dato:"
+    )
+    start_time = forms.TimeField(
+        widget=TextInput(attrs={"type": "time"}),
+        initial=Event.objects.filter(is_active=True).first().start_date,
+        label="Afhentning tidspunk:"
+    )
     class Meta:
         model = models.ButikkenBooking
         fields =[
@@ -129,8 +139,6 @@ class ButikkenBookingForm(forms.ModelForm):
             "item": forms.Select(attrs={"class": "form-control"}),
             "team": forms.Select(attrs={"class": "form-control"}),
             "team_contact": forms.Select(attrs={"class": "form-control"}),
-            "start": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
-            "start_time": forms.TimeInput(attrs={"class": "form-control", "type": "time"}),
             "quantity": forms.NumberInput(attrs={"class": "form-control"}),
             "unit": forms.TextInput(attrs={"class": "form-control"}),
             "for_meal": forms.Select(attrs={"class": "form-control"}),
@@ -140,8 +148,6 @@ class ButikkenBookingForm(forms.ModelForm):
             "item": "Vare",
             "team": "Team",
             "team_contact": "Kontaktperson",
-            "start": "Startdato",
-            "start_time": "Starttidspunkt",
             "quantity": "Antal",
             "unit": "Enhed",
             "for_meal": "Måltid",

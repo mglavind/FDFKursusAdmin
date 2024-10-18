@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load bootstrap_icons %}
+{% load bootstrap5 %}
 {% block content %}
 
 <br>
@@ -83,15 +84,21 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="{{ form.start.id_for_label }}">{{ form.start.label }}</label>
         <div class="col-sm-10">
-            {{ form.start }}
+            <!-- Start date -->
+            {% bootstrap_field form.start show_label=False %}
+            {{ form.start.errors }}
+  
+
         </div>
     </div>
     </br>
     
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="start_time">Start Tid: </label>
+        <label class="col-sm-2 col-form-label" for="start_time"> {{form.start_time.label}} </label>
         <div class="col-sm-10">
-            <input class="form-control" id="start_time" type="time" name="start_time" value="{{ form.start_time.value }}">
+            <!-- Start time -->
+            {% bootstrap_field form.start_time show_label=False %}
+            {{ form.start_time.errors }}
         </div>
     </div>
     </br>

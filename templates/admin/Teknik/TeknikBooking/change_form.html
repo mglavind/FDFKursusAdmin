@@ -1,5 +1,8 @@
 {% extends "admin/change_form.html" %}
 
+{% load comments %}
+{% load comments_xtd %}
+
 {% block extrahead %}
     {{ block.super }}
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -10,6 +13,30 @@
     {{ block.super }}
     <div id="map" style="height: 40em;"></div>
     <a id="redirect-to-google-maps"  class="button" >Open in Google Maps</a>
+
+    <div class="container">
+        {% get_comment_count for original as comment_count %}
+        <div class="comment mt-3 mb-5">  
+            <div class="card pt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Kommentarer</h5>
+
+                    {% if comment_count %}
+                        <ul class="media-list">
+                            {% render_xtdcomment_tree for original %}
+                        </ul>
+                    {% endif %}
+
+                    {% render_comment_form for original %}
+
+                    <div class="py-4 card-text">
+                        <a href="{% url 'Teknik_TeknikBooking_list' %}">Tilbage til oversigt</a>
+                        &nbsp;&sdot;&nbsp;
+                        {{ comment_count }} komment{{ comment_count|pluralize:"ar,arer" }} er givet.
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script>
             (g => {

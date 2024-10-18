@@ -24,19 +24,23 @@ class AktivitetsTeamItemForm(forms.ModelForm):
 class AktivitetsTeamBookingForm(forms.ModelForm):
     start_date = forms.DateField(
         widget=TextInput(attrs={"type": "date"}),
-        initial=Event.objects.filter(is_active=True).first().start_date
+        initial=Event.objects.filter(is_active=True).first().start_date,
+        label="Start Dato:"
     )
     start_time = forms.TimeField(
         widget=TextInput(attrs={"type": "time"}),
-        initial=Event.objects.filter(is_active=True).first().start_date
+        initial=Event.objects.filter(is_active=True).first().start_date,
+        label="Start tidspunk:"
     )
     end_date = forms.DateField(
         widget=TextInput(attrs={"type": "date"}),
         initial=Event.objects.filter(is_active=True).first().end_date,
+        label="Slut dato:"
     )
     end_time = forms.TimeField(
         widget=TextInput(attrs={"type": "time"}),
-        initial=Event.objects.filter(is_active=True).first().end_date
+        initial=Event.objects.filter(is_active=True).first().end_date,
+        label="Slut tidspunkt:"
     )
     my_specific_team = Team.objects.get(id=8)
     assigned_aktivitetsteam = forms.ModelMultipleChoiceField(
@@ -78,10 +82,6 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
                 )
             }),
             "location": forms.TextInput(attrs={"class": "form-control"}),
-            "start_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
-            "start_time": forms.TimeInput(attrs={"class": "form-control", "type": "time"}),
-            "end_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
-            "end_time": forms.TimeInput(attrs={"class": "form-control", "type": "time"}),
             "latitude": forms.TextInput(attrs={"class": "form-control"}),
             "longitude": forms.TextInput(attrs={"class": "form-control"}),
             "address": forms.TextInput(attrs={"class": "form-control"}),            
@@ -93,12 +93,9 @@ class AktivitetsTeamBookingForm(forms.ModelForm):
             "quantity": "Antal",
             "remarks": "Bemærkninger",
             "location": "Lokation",
-            "start_date": "Start Dato",
-            "start_time": "Start tidspunkt",
             "latitude" : "latitude",
             "longitude": "longitude",
             "address": "Addresse",
-
         }
     def save(self, commit=True):
         instance = super().save(commit=False)

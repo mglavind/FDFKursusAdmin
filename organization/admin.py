@@ -214,6 +214,7 @@ class VolunteerAdmin(admin.ModelAdmin):
         ('events', RelatedDropdownFilter),
         ('teams', RelatedDropdownFilter),
     )
+    ordering = ['first_name', 'last_name']  # Sort alphabetically by first name and then by last name
 
     def display_events(self, obj):
         return ", ".join([event.name for event in obj.events.all()])
@@ -257,7 +258,7 @@ class VolunteerAdmin(admin.ModelAdmin):
             csv_data = file_data.split("\n")
 
             for line in csv_data:
-                fields = line.split(",")
+                fields = line.split(",") 
 
                 form_data = {
                     "first_name": fields[0],
