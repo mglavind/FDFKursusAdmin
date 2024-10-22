@@ -338,8 +338,5 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
     export_selected_to_ical_action.short_description = "Export selected bookings to iCal"
     send_ical_via_email_action.short_description = "Send iCal via email to assigned aktivitetsteam"
 
-
-
-
 admin.site.register(models.AktivitetsTeamItem, AktivitetsTeamItemAdmin)
 admin.site.register(models.AktivitetsTeamBooking, AktivitetsTeamBookingAdmin)
