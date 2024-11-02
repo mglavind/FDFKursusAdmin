@@ -21,7 +21,7 @@ django-htmx==1.15.0 # max for render.com
 django-phonenumber-field==7.0.2
 django-rosetta==0.10.0
 django-template-partials==23.4
-django-widget-tweaks==1.4.12
+django-widget-tweaks==1.4.12 # max for render.com
 django_debug_toolbar==3.8.1
 djangorestframework==3.14.0
 docutils==0.20.1
@@ -35,7 +35,7 @@ idna==3.4
 json5==0.9.6
 jsonschema==4.17.3
 packaging==23.1
-pillow==11.0.0
+pillow==9.5.0 # max for render.com
 pipenv==2022.4.8
 platformdirs==2.6.2
 polib==1.2.0
