@@ -262,6 +262,6 @@ COMMENTS_XTD_FROM_EMAIL = "webmaster@example.com"
 # Contact mail address to show in messages.
 COMMENTS_XTD_CONTACT_EMAIL = "helpdesk@example.com"
 
-# Media files (uploads)
+# Media files settings
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/media/'  # This should point to the mount path of your persistent disk
