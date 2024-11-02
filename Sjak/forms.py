@@ -15,8 +15,10 @@ from django.contrib.admin.widgets import AdminSplitDateTime
 from django.forms import BaseFormSet, TextInput, formset_factory
 
 from django_bootstrap5.widgets import RadioSelectButtonGroup
-
-
+from django.core.files.base import ContentFile
+from PIL import Image
+import io
+import uuid
 
 
 class SjakBookingForm(forms.ModelForm): 
@@ -155,6 +157,40 @@ class SjakItemForm(forms.ModelForm):
         super(SjakItemForm, self).__init__(*args, **kwargs)
         self.fields["item_type"].queryset = SjakItemType.objects.all().order_by("name")
         self.fields["location"].queryset = SjakItemLocation.objects.all().order_by("name")
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        image_field = self.cleaned_data.get('image')  # Replace 'image' with the actual field name
+
+        if image_field:
+            # Rename the image
+            new_filename = f"{instance.id}-{instance.name}-{uuid.uuid4()}.jpg"
+            image_field.name = new_filename
+
+            # Resize the image
+            image = Image.open(image_field)
+
+            # Convert image to RGB if it's not already (to handle PNG, etc.)
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+
+            # Define the maximum size
+            max_size = (800, 800)
+
+            # Resize the image while maintaining the aspect ratio
+            image.thumbnail(max_size, Image.ANTIALIAS)
+
+            # Save the resized image to a BytesIO object
+            image_io = io.BytesIO()
+            image.save(image_io, format='JPEG')
+            image_content = ContentFile(image_io.getvalue(), new_filename)
+
+            # Replace the image field with the new image
+            instance.image.save(new_filename, image_content, save=False)  # Replace 'image' with the actual field name
+
+        if commit:
+            instance.save()
+        return instance
 
 
 
