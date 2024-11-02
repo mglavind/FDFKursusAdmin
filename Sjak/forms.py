@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import SelectDateWidget
 from organization.models import Team, TeamMembership, Volunteer, Event, EventMembership
-from Sjak.models import SjakItem, SjakBooking, SjakItemType
+from Sjak.models import SjakItem, SjakBooking, SjakItemType, SjakItemLocation
 from django.contrib.auth.models import Group
 from django.forms import BaseFormSet, TextInput, formset_factory
 import datetime
@@ -130,14 +130,31 @@ class SjakItemForm(forms.ModelForm):
             "name",
             "description",
             "item_type",
+            "location",
+            "quantity_lager",
+            "image",
         ]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control"}),
+            "item_type": forms.Select(attrs={"class": "form-select"}),
+            "location": forms.Select(attrs={"class": "form-select"}),
+            "quantity_lager": forms.TextInput(attrs={"class": "form-control"}),
+            "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
+        }
+        labels = {
+            "name": "Navn",
+            "description": "Beskrivelse",
+            "item_type": "Type",
+            "location": "Placering",
+            "quantity_lager": "Antal på lager",
+            "image": "Billede",
+        }
 
     def __init__(self, *args, **kwargs):
         super(SjakItemForm, self).__init__(*args, **kwargs)
-        self.fields["item_type"].queryset = SjakItemType.objects.all()
-
-
-
+        self.fields["item_type"].queryset = SjakItemType.objects.all().order_by("name")
+        self.fields["location"].queryset = SjakItemLocation.objects.all().order_by("name")
 
 
 

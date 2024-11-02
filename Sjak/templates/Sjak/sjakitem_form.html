@@ -9,38 +9,52 @@
     </a>
 </p>
     
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{form.errors}}
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="name">name: </label>
-      <input class="form-control col-sm-10"
-         id="name" type="text"
-         name="name" value="{{ object.name }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="description">description: </label>
-      <input class="form-control col-sm-10"
-         id="description" type="text"
-         name="description" value="{{ object.description }}">
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="created">created: </label>
-      <input class="form-control col-sm-10"
-         id="created" type="datetime-local"
-         name="created" value="{{ object.created }}" disabled>
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="last_updated">last_updated: </label>
-      <input class="form-control col-sm-10"
-         id="last_updated" type="datetime-local"
-         name="last_updated" value="{{ object.last_updated }}" disabled>
-  </div>
-  <div class="form-group row">
-      <label class="col-sm-2 col-form-label" for="type">type: </label>
-      {{ form.type }}
-  </div>
-  <input type="submit" value="Save" class="btn btn-primary">
+<form id="form" role="form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {{ form.non_field_errors }}
+    
+    <div class="mb-3">
+        {{ form.item_type.label_tag }}
+        {{ form.item_type }}
+        {{ form.item_type.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.location.label_tag }}
+        {{ form.location }}
+        {{ form.location.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        {{ form.name.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+        {{ form.description.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.quantity_lager.label_tag }}
+        {{ form.quantity_lager }}
+        {{ form.quantity_lager.errors }}
+    </div>
+    
+    <div class="mb-3">
+        {{ form.image.label_tag }}
+        {{ form.image }}
+        {{ form.image.errors }}
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12">
+            <input type="submit" value="Indsend" class="btn btn-primary btn-block">
+        </div>
+    </div>
 </form>
 
 {% endblock %}

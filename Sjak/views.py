@@ -96,6 +96,7 @@ class SjakBookingCreateView(LoginRequiredMixin, generic.CreateView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         event = Event.objects.filter(is_active=True).first()
+        self.item_id = kwargs.get('item_id')
         if event and event.deadline_sjak < timezone.now().date():
             messages.error(request, 'Booking is closed.')
             return redirect('Sjak_SjakBooking_list')  # replace with the name of your list view url
@@ -104,6 +105,9 @@ class SjakBookingCreateView(LoginRequiredMixin, generic.CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
+        if self.item_id:
+            item = get_object_or_404(models.SjakItem, id=self.item_id)
+            kwargs['initial'] = {'item': item}
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -207,16 +211,26 @@ class SjakItemCreateView(generic.CreateView):
     model = models.SjakItem
     form_class = forms.SjakItemForm
 
+    def form_valid(self, form):
+        # Handle the form submission and file upload
+        return super().form_valid(form)
+
 
 class SjakItemDetailView(generic.DetailView):
     model = models.SjakItem
     form_class = forms.SjakItemForm
 
 
+
+
 class SjakItemUpdateView(generic.UpdateView):
     model = models.SjakItem
     form_class = forms.SjakItemForm
     pk_url_kwarg = "pk"
+
+    def form_valid(self, form):
+        # Handle the form submission and file upload
+        return super().form_valid(form)
 
 
 class SjakItemDeleteView(generic.DeleteView):

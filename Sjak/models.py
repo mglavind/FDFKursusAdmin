@@ -24,21 +24,40 @@ class SjakItemType(models.Model):
     def get_update_url(self):
         return reverse("Sjak_SjakItemType_update", args=(self.pk,))
 
+class SjakItemLocation(models.Model):
+
+    # Fields
+    name = models.CharField(max_length=30)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return str(self.name)
+
+    def get_absolute_url(self):
+        return reverse("Sjak_SjakItemType_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("Sjak_SjakItemType_update", args=(self.pk,))
 
 class SjakItem(models.Model):
 
     # Relationships
     #type = models.CharField(max_length=100, blank=True)
-    item_type = models.ForeignKey("Sjak.SjakItemType", default=1, blank=True, on_delete=models.CASCADE)
+    item_type = models.ForeignKey("Sjak.SjakItemType", blank=True, on_delete=models.CASCADE)
+    location = models.ForeignKey("Sjak.SjakItemLocation", default=None,  blank=True, null=True, on_delete=models.CASCADE)
 
 
-   
     # Fields
     name = models.CharField(max_length=100, db_index=True)
     description = models.TextField(max_length=500, blank=True, db_index=True)
     quantity_lager = models.CharField(max_length=100, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
+    image = models.ImageField(upload_to='SjakItem/', blank=True, null=True)
 
     class Meta:
         pass

@@ -44,7 +44,9 @@ urlpatterns = [
     path(r'comments/', include('django_comments_xtd.urls')),
 
 ]
-
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    
 # Configure Admin Titles
 admin.site.site_header = "Sletten admin"
 admin.site.site_title = "Sletten admin"
