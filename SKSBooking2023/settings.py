@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'Depot',
     'SOS',
     'Support',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 
