@@ -1,15 +1,14 @@
-
 {% extends "base.html" %}
 {% block content %}
 {% load bootstrap_icons %}
 {% load comments %}
 <br>
 {% if request.user.is_authenticated %}
-      <h5>Booking oversigt for team: {% with volunteer_team_memberships=request.user.teammembership_set.all %}
-          {% if volunteer_team_memberships %}
-              {{ volunteer_team_memberships.first.team.name }}
+      <h5>Booking oversigt for team: 
+          {% if user_team_membership %}
+              {{ user_team_membership.team.name }}
           {% endif %}
-          {% endwith %}</h5>
+      </h5>
   {% endif %}
 <table class="table">
   <thead>
@@ -26,8 +25,7 @@
     </tr>
   </thead>
   <tbody>
-    {% with user_team_membership=request.user.teammembership_set.first %}
-      {% if user_team_membership %}
+    {% if user_team_membership %}
         {% for object in object_list %}
           {% if not user.is_staff %}
             {% if user_team_membership.team.name and object.team == user_team_membership.team %}
@@ -76,22 +74,16 @@
               <td>{{object.team_contact}}</td>
               <td>
                 {% if object.status == 'Pending' %}
-                    <span class="badge bg-warning text-dark">
-                        <small>Afventer</small>
-                    </span>
+                    <button class="btn btn-warning btn-sm d-flex">Afventer</button>
                 {% elif object.status == 'Approved' %}
-                    <span class="badge bg-success">
-                        <small>Godkendt</small>
-                    </span>
+                  <button class="btn btn-success btn-sm d-flex">Godkendt</button>
                 {% elif object.status == 'Rejected' %}
-                    <span class="badge bg-danger">
-                        <small>Afvist</small>
-                    </span>
+                    <button class="btn btn-danger btn-sm d-flex">Afvist</button>
                 {% endif %}
             </td>
             <td>
                 <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_detail' object.pk %}" class="btn btn-primary btn-sm">
-                    {% bs_icon 'eye-fill' %}
+                    {% bs_icon 'info-circle' %}
                 </a>
                 <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_delete' object.pk %}" class="btn btn-outline-danger btn-sm">
                     {% bs_icon 'trash' %}
@@ -99,30 +91,30 @@
             </td>
             <td>
               <div class="d-flex gap-2 align-items-center">
-                  <form method="post" action="{% url 'AktivitetsTeam_AktivitetsTeamBooking_reject' object.pk %}?next=AktivitetsTeam_AktivitetsTeamBooking_list" class="d-inline">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center">{% bs_icon 'x-lg' %}</button>
-                  </form>
-                  <form method="post" action="{% url 'AktivitetsTeam_AktivitetsTeamBooking_approve' object.pk %}?next=AktivitetsTeam_AktivitetsTeamBooking_list" class="d-inline">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-success btn-sm d-flex align-items-center">{% bs_icon 'check-circle-fill' %}</button>
-                  </form>
+                <form method="post" action="{% url 'AktivitetsTeam_AktivitetsTeamBooking_reject' object.pk %}?next=AktivitetsTeam_AktivitetsTeamBooking_list" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm d-flex">{% bs_icon 'hand-thumbs-down' %}</button>
+                </form>
+                <form method="post" action="{% url 'AktivitetsTeam_AktivitetsTeamBooking_approve' object.pk %}?next=AktivitetsTeam_AktivitetsTeamBooking_list" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-success btn-sm d-flex">{% bs_icon 'hand-thumbs-up' %}</button>
+                </form>
               </div>
           </td>    
           <td>
-            {% get_comment_count for object as comment_count %}
-            {% if comment_count %}
-                <a href="{{object.get_absolute_url}}" class="btn btn-outline-secondary btn-sm">
-                    {{ comment_count }} {% bs_icon 'chat-left-dots' %}
-                </a>
-            {% endif %}
+            {% with comments=object.comments.all %}
+                {% if comments %}
+                    <a href="{{object.get_absolute_url}}" class="btn btn-outline-secondary btn-sm">
+                        {{ comments.count }} {% bs_icon 'chat-left-dots' %}
+                    </a>
+                {% endif %}
+            {% endwith %}
           </td>
 
             </tr>
           {% endif %}
         {% endfor %}
-      {% endif %}
-    {% endwith %}
+    {% endif %}
   </tbody>
 </table>
 
