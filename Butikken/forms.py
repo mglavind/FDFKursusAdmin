@@ -134,6 +134,7 @@ class ButikkenBookingForm(forms.ModelForm):
             "unit",
             "for_meal",
             "remarks",
+            "date_used",
         ]
         widgets = {
             "item": forms.Select(attrs={"class": "form-control"}),
@@ -152,6 +153,10 @@ class ButikkenBookingForm(forms.ModelForm):
             "unit": "Enhed",
             "for_meal": "Måltid",
             "remarks": "Bemærkninger",
+            "start": "Afhentning Dato",
+            "start_time": "Afhentning Tidspunkt",
+            "date_used": "Anvendelsesdato",
+
         }
 
     def save(self, commit=True):

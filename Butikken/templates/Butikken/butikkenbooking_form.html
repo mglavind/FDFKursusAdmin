@@ -103,6 +103,20 @@
     </div>
     </br>
 
+    
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="date_used"> {{form.date_used.label}} </label>
+        <div class="col-sm-10">
+            <!-- Start time -->
+            {% bootstrap_field form.date_used show_label=False %}
+            {{ form.date_used.errors }}
+        </div>
+    </div>
+    </br>
+
+
+
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="{{ form.remarks.id_for_label }}">{{ form.remarks.label }}</label>
         <div class="col-sm-10">
