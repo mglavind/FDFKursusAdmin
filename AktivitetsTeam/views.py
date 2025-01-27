@@ -1,4 +1,5 @@
 from django.views import generic
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -13,6 +14,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from geopy.geocoders import Nominatim
+import logging
+logger = logging.getLogger(__name__)
 
 
 class AktivitetsTeamItemListView(LoginRequiredMixin, generic.ListView):
@@ -65,20 +68,67 @@ def reject_booking(request, pk):
     return redirect(next_url)
 
 
-
+def gantt_chart_view(request):
+    bookings = models.AktivitetsTeamBooking.objects.all()
+    tasks = [
+        {
+            'id': booking.id,
+            'label': booking.item.name,
+            'from': booking.start_date.isoformat(),
+            'to': booking.end_date.isoformat()
+        }
+        for booking in bookings
+    ]
+    time_ranges = []  # Add your time ranges if needed
+    return render(request, 'gantt_chart.html', {'tasks': tasks, 'time_ranges': time_ranges})
 
 
 class AktivitetsTeamBookingListView(LoginRequiredMixin, generic.ListView):
     model = models.AktivitetsTeamBooking
     form_class = forms.AktivitetsTeamBookingForm
-    template_name = 'aktivitetsteambooking_list.html.html' 
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    context_object_name = 'object_list'
+    template_name = 'AktivitetsTeam/AktivitetsTeamBooking_list.html'
+    paginate_by = 16  # Display 15 items per page
 
     def get_queryset(self):
-        return models.AktivitetsTeamBooking.objects.order_by(F('item'),F('start_date') )
+        user = self.request.user
+        if user.is_staff:
+            queryset = models.AktivitetsTeamBooking.objects.all()
+        else:
+            queryset = models.AktivitetsTeamBooking.objects.filter(
+                team__in=user.teammembership_set.values('team')
+            )
+        
+        queryset = queryset.select_related(
+            'team', 'team_contact', 'item'
+        ).only(
+            'id', 'team_id', 'team_contact_id', 'start_date', 'start_time', 'end_date', 'end_time', 'item_id', 'status'
+        ).order_by('id')
+        
+        logger.info(f"Fetched {queryset.count()} bookings for user {user.id}")
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        # Fetch the user's team membership once and reuse it
+        user_team_membership = user.teammembership_set.select_related('team').first()
+        context['user_team_membership'] = user_team_membership
+
+        # Fetch the user's events once and reuse them
+        user_events = list(user.events.filter(is_active=True).values('name', 'deadline_aktivitetsteam'))
+        context['user_events'] = user_events
+
+        # Fetch the volunteer team memberships once and reuse them
+        volunteer_team_memberships = list(user.teammembership_set.select_related('team').values('team__name'))
+        context['volunteer_team_memberships'] = volunteer_team_memberships
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        logger.info(f"Handling GET request for user {request.user.id} on page {self.request.GET.get('page', 1)}")
+        return super().get(request, *args, **kwargs)
 
 
 class AktivitetsTeamBookingCreateView(LoginRequiredMixin, generic.CreateView):
