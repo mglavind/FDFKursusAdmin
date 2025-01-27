@@ -57,233 +57,175 @@
  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="pt-0">
     {% load bootstrap_icons %}
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary " data-bs-theme="dark">
-      <div class="container-fluid justify-content-start">
-        <a class="navbar-brand" href="{% url 'index'%}">Hjem</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary " data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Hjem</a>
+        {% if user.is_authenticated %}
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        {% if user.is_authenticated %}
-          <div class="collapse navbar-collapse text-light" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-              <!-- A-Team -->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  A-Team
-                </a>
-                <ul class="dropdown-menu">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li>
-                      <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Alle bookinger</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'AktivitetsTeam_AktivitetsTeamItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Katalog</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Booking</a>
-                    </li>
-                  </ul>
-                </ul>
-              </li>
-
-              <!-- Teknik -->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Teknik
-                </a>
-                <ul class="dropdown-menu">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li>
-                        <a href="{% url 'Teknik_TeknikBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Teknik_TeknikItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ting</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Teknik_TeknikBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny booking</a>
-                    </li>
-                  </ul>
-                </ul>
-              </li>
-
-              <!-- Sjak -->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Sjak
-                </a>
-                <ul class="dropdown-menu">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                      <li>
-                          <a href="{% url 'Sjak_SjakBooking_list' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
-                      </li>
-                      <li>
-                          <a href="{% url 'Sjak_SjakItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sager</a>
-                      </li>
-                      <li>
-                          <a href="{% url 'Sjak_SjakBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Sjak booking</a>
-                      </li>
-                    </ul>
-                  </ul>
-              </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                A-Team
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_list' %}">Alle bookinger</a></li>
+                <li><a class="dropdown-item" href="{% url 'AktivitetsTeam_AktivitetsTeamItem_list' %}">Katalog</a></li>
+                <li><a class="dropdown-item" href="{% url 'AktivitetsTeam_AktivitetsTeamBooking_create' %}">Ny booking</a></li>
+              </ul>
+            </li>
 
 
-              <!-- Butik -->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Butik
-                </a>
-                <ul class="dropdown-menu">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li>
-                        <a href="{% url 'Butikken_ButikkenBooking_list' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Vare bestillinger</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Butikken_ButikkenItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Tilgængelige varer</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Butikken_TeamMealPlan_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Måltider</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Butikken_ButikkenBooking_create' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny vare bestilling</a>
-                    </li>
-                    </ul>
-                </ul>
-              </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Teknik
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'Teknik_TeknikBooking_list' %}" >bookinger</a></li>
+                <li><a class="dropdown-item" href="{% url 'Teknik_TeknikItem_list' %}">Ting</a></li>
+                <li><a class="dropdown-item" href="{% url 'Teknik_TeknikBooking_create' %}">Ny booking</a></li>
+              </ul>
+            </li>
 
 
-              <!-- Support -->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Support
-                </a>
-                <ul class="dropdown-menu">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <!-- SOS -->
-                    <li><h6 class="dropdown-header">SOS</h6></li>
-                    <li>
-                        <a href="{% url 'SOS_SOSBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Alle bookinger</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'SOS_SOSItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Katalog</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'SOS_SOSBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Booking</a>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-
-                    <!-- Support -->
-                    <li><h6 class="dropdown-header">Supportsjak</h6></li>
-                    <li>
-                        <a href="{% url 'Support_SupportBooking_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Support_SupportItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Katalog</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Support_SupportBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny Booking</a>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-
-                    <!-- Foto -->
-                    <li><h6 class="dropdown-header">Foto</h6></li>
-                    <li>
-                      <a href="{% url 'Foto_FotoBooking_list' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bookinger</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Foto_FotoItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ting</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Foto_FotoBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny booking</a>
-                    </li>
-
-                  </ul>
-                </ul>
-              </li>
-              <!-- Organisation -->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle test-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Organisation
-                </a>
-                <ul class="dropdown-menu">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <!-- SOS -->
-                    <li>
-                      <a href="{% url 'organization_Volunteer_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Medarbejdere</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'organization_Key_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Nøgler</a>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-
-                    <!-- Æblegården -->
-                    <li><h6 class="dropdown-header">Æblegården</h6></li>
-                    <li>
-                      <a href="{% url 'Depot_DepotBooking_list' %}"class="link-body-emphasis d-inline-flex text-decoration-none rounded">Alle bookinger</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Depot_DepotItem_list' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ting</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'Depot_DepotBooking_create' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ny booking</a>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-
-                    <!-- Områder -->
-                    <li><h6 class="dropdown-header">Områder</h6></li>
-                    <li>
-                      <a href="https://docs.google.com/spreadsheets/d/1TzMOE_wE11p_s2DtMjzeDxNnXa9ENRDQZDnkm5bcqt0/edit?fbclid=IwZXh0bgNhZW0CMTEAAR0oFgjAnPyHgZL5Ih9776_dgUcJUg2OSF1OgSnp_3b3_iAWaYduEshS8_w_aem_ndrq5OdVZuB5VszPzTiydQ&gid=0#gid=0" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Alle bookinger</a>
-                    </li>
-                    
-                  </ul>
-                  
-
-                </ul>
-              </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Sjak
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'Sjak_SjakBooking_list' %}" >Bookinger</a></li>
+                <li><a class="dropdown-item" href="{% url 'Sjak_SjakItem_list' %}">Sager</a></li>
+                <li><a class="dropdown-item" href="{% url 'Sjak_SjakBooking_create' %}">Ny booking</a></li>
+              </ul>
+            </li>
 
 
 
-            </ul>
-        
-          </div>
-        {% endif %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Butik
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'Butikken_ButikkenBooking_list' %}" >Vare bestillinger</a></li>
+                <li><a class="dropdown-item" href="{% url 'Butikken_ButikkenItem_list' %}">Tilgængelige varer</a></li>
+                <li><a class="dropdown-item" href="{% url 'Butikken_TeamMealPlan_list' %}">Måltider</a></li>
+                <li><a class="dropdown-item" href="{% url 'Butikken_ButikkenBooking_create' %}">Ny vare bestilling</a></li>
+              </ul>
+            </li>
 
 
-      </div>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Support
+              </a>
+              <ul class="dropdown-menu">
+                <!-- SOS -->
+                <li><h6 class="dropdown-header">SOS</h6></li>
+                <li><a href="{% url 'SOS_SOSBooking_list' %}" class="dropdown-item">Alle bookinger</a></li>
+                <li><a href="{% url 'SOS_SOSItem_list' %}" class="dropdown-item">Katalog</a></li>
+                <li><a href="{% url 'SOS_SOSBooking_create' %}" class="dropdown-item">Ny Booking</a></li>
+                <li><hr class="dropdown-divider"></li>
 
-      <div class="container-fluid justify-content-end">
+                <!-- Support -->
+                <li><h6 class="dropdown-header">Supportsjak</h6></li>
+                <li><a href="{% url 'Support_SupportBooking_list' %}" class="dropdown-item">Bookinger</a></li>
+                <li><a href="{% url 'Support_SupportItem_list' %}" class="dropdown-item">Katalog</a></li>
+                <li><a href="{% url 'Support_SupportBooking_create' %}" class="dropdown-item">Ny Booking</a></li>
+                <li><hr class="dropdown-divider"></li>
 
-        {% if user.is_authenticated %}
-          
+                <!-- Foto -->
+                <li><h6 class="dropdown-header">Foto</h6></li>
+                <li><a href="{% url 'Foto_FotoBooking_list' %}"class="dropdown-item">Bookinger</a></li>
+                <li><a href="{% url 'Foto_FotoItem_list' %}" class="dropdown-item">Ting</a></li>
+                <li><a href="{% url 'Foto_FotoBooking_create' %}" class="dropdown-item">Ny booking</a></li>
+              </ul>
+            </li>
 
-        <div class="dropdown">
-            <a class="nav-link d-flex align-items-center text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {% load bootstrap_icons %}
-                <span class="me-2">Hej {{ user.first_name }}!</span>
-                {% bs_icon 'person-circle' %} 
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                {% if request.user.is_authenticated %}
-                    <a class="dropdown-item" href="{% url 'organization_Volunteer_detail' request.user.pk %}">Min profil</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'logout_user' %}">Log ud</a>
-                {% endif %}
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Organisation
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'organization_Volunteer_list' %}" class="dropdown-item">Medarbejdere</a></li>
+                <li><a href="{% url 'organization_Key_list' %}" class="dropdown-item">Nøgler</a></li>
+                <li><hr class="dropdown-divider"></li>
+
+                <!-- Æblegården -->
+                <li><h6 class="dropdown-header">Æblegården</h6></li>
+                <li><a href="{% url 'Depot_DepotBooking_list' %}"class="dropdown-item">Alle bookinger</a></li>
+                <li><a href="{% url 'Depot_DepotItem_list' %}" class="dropdown-item">Ting</a> </li>
+                <li><a href="{% url 'Depot_DepotBooking_create' %}" class="dropdown-item">Ny booking</a> </li>
+                <li><hr class="dropdown-divider"></li>
+
+                <!-- Områder -->
+                <li><h6 class="dropdown-header">Områder</h6></li>
+                <li>
+                  <a href="https://docs.google.com/spreadsheets/d/1TzMOE_wE11p_s2DtMjzeDxNnXa9ENRDQZDnkm5bcqt0/edit?fbclid=IwZXh0bgNhZW0CMTEAAR0oFgjAnPyHgZL5Ih9776_dgUcJUg2OSF1OgSnp_3b3_iAWaYduEshS8_w_aem_ndrq5OdVZuB5VszPzTiydQ&gid=0#gid=0" class="dropdown-item">Alle bookinger</a>
+                </li>
+                
+
+              </ul>
+            </li>
+
+
+            <!-- Ekstern -->
+            <li class="nav-item">
+              <a class="nav-link" href="https://markusglavind.notion.site/Guides-18236610fdee80cbad57f98d47474316?pvs=4">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://markusglavind.notion.site/SKS-Booking-system-roadmap-18236610fdee80529cf5e152626d3e14?pvs=4">Nyheder</a>
+            </li>
+
+
             
-                {% if request.user.is_authenticated and request.user.is_staff %}
-                    <a class="dropdown-item" href="{% url 'admin:index' %}">Adminstrator</a>
-                {% endif %}
+
+
+        
+
+
+          </ul>
+          <span class="navbar-text">
+            {% if user.is_authenticated %}
+              {% if request.user.is_authenticated and request.user.is_staff %}
+                <div class="nav-item">
+                  <a class="btn btn-outline-light" href="{% url 'admin:index' %}">Admin</a>
+                </div>
+              {% endif %}
+            {% endif %}
+          </span>
+
+          <span>
+
+            <div class="nav-item dropdown">
+              <a class="nav-link d-flex align-items-center text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {% load bootstrap_icons %}
+                  <span class="me-2">Hej {{ user.first_name }}!</span>
+                  {% bs_icon 'person-circle' %} 
+              </a>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                  {% if request.user.is_authenticated %}
+                      <a class="dropdown-item" href="{% url 'organization_Volunteer_detail' request.user.pk %}">Min profil</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'logout_user' %}">Log ud</a>
+                  {% endif %}
+              
+                  {% if request.user.is_authenticated and request.user.is_staff %}
+                      <a class="dropdown-item" href="{% url 'admin:index' %}">Adminstrator</a>
+                  {% endif %}
+              </div>
             </div>
-        </div>
+          </span>
+        </div
+
         {% endif %}
-    </div>
-
-
-
-
-
+      </div>
     </nav>
-
 
 
 
