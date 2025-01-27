@@ -258,9 +258,27 @@ class SjakItemTypeAdmin(admin.ModelAdmin):
         "last_updated",
     ]
 
+class SjakItemLocationAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.SjakItemLocation
+        fields = "__all__"
 
 
+class SjakItemLocationAdmin(admin.ModelAdmin):
+    form = SjakItemLocationAdminForm
+    list_display = [
+        "name",
+        "created",
+        "last_updated",
+    ]
+    readonly_fields = [
+        "created",
+        "last_updated",
+    ]
 
-admin.site.register(models.SjakItem, SjakItemAdmin)
+
 admin.site.register(models.SjakBooking, SjakBookingAdmin)
+admin.site.register(models.SjakItem, SjakItemAdmin)
 admin.site.register(models.SjakItemType, SjakItemTypeAdmin)
+admin.site.register(models.SjakItemLocation, SjakItemLocationAdmin)

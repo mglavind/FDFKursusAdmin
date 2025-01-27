@@ -3,19 +3,48 @@
 {% load static %}
 {% block content %}
     
-<p>
-    <a class="btn btn-light" href="{% url 'Sjak_SjakItem_list' %}">
-    SjakItem Listing
-    </a>
-</p>
     
-<table class="table">
-    <tr><td>name</td><td>{{ object.name }}</td></tr>
-    <tr><td>description</td><td>{{ object.description }}</td></tr>
-    <tr><td>created</td><td>{{ object.created }}</td></tr>
-    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
-    <tr><td>type</td><td>{{ object.type }}</td></tr>
-</table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'Sjak_SjakItem_list' %}"> Sjak Katalog</a></li>
+      <li class="breadcrumb-item active" aria-current="page"> {{ object.name }}</li>
+    </ol>
+</nav>
+<br>
+    
+
+<div class="card mb-3">
+    {% if object.image %}
+        <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.name }}">
+    {% endif %}
+    <div class="card-body">
+      <h5 class="card-title">{{ object.name }}</h5>
+      <p class="card-text">
+        {{ object.description }}
+      </p>
+      <p> Sjak har {{ object.quantity }} stk. af denne vare</p>
+      
+      {% if object.location %}
+        <p> Sjak har denne vare i {{ object.location }}</p>
+      {% endif %}
+
+    </div>
+
+    <div class="card-footer">
+        <small class="text-body-secondary">Sidst opdateret {{ object.last_updated }}</small>
+
+        {% if user.is_staff %}
+        <a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+        {% endif %}
+    </div>
+
+</div>
+
+
+
+
+
 
 {% endblock %}

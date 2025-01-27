@@ -7,6 +7,7 @@ from django.forms import BaseFormSet, TextInput, formset_factory
 import datetime
 from datetime import time
 from django.utils import timezone
+from utils.image_utils import process_image
 
 from . import models
 from django.contrib.auth import get_user_model
@@ -163,35 +164,12 @@ class SjakItemForm(forms.ModelForm):
         image_field = self.cleaned_data.get('image')  # Replace 'image' with the actual field name
 
         if image_field:
-            # Rename the image
-            new_filename = f"{instance.id}-{instance.name}-{uuid.uuid4()}.jpg"
-            image_field.name = new_filename
-
-            # Resize the image
-            image = Image.open(image_field)
-
-            # Convert image to RGB if it's not already (to handle PNG, etc.)
-            if image.mode != 'RGB':
-                image = image.convert('RGB')
-
-            # Define the maximum size
-            max_size = (800, 800)
-
-            # Resize the image while maintaining the aspect ratio
-            image.thumbnail(max_size, Image.ANTIALIAS)
-
-            # Save the resized image to a BytesIO object
-            image_io = io.BytesIO()
-            image.save(image_io, format='JPEG')
-            image_content = ContentFile(image_io.getvalue(), new_filename)
-
-            # Replace the image field with the new image
+            new_filename, image_content = process_image(image_field, instance)
             instance.image.save(new_filename, image_content, save=False)  # Replace 'image' with the actual field name
 
         if commit:
             instance.save()
         return instance
-
 
 
 class SjakItemTypeForm(forms.ModelForm):
