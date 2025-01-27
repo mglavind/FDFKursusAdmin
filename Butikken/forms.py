@@ -122,6 +122,11 @@ class ButikkenBookingForm(forms.ModelForm):
         initial=Event.objects.filter(is_active=True).first().start_date,
         label="Afhentning tidspunk:"
     )
+    date_used = forms.DateField(
+        widget=TextInput(attrs={"type": "date"}),
+        initial=Event.objects.filter(is_active=True).first().start_date,
+        label="Anvendelsesdato"
+    )
     class Meta:
         model = models.ButikkenBooking
         fields =[
