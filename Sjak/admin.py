@@ -100,7 +100,10 @@ class SjakBookingAdminForm(forms.ModelForm):
         model = models.SjakBooking
         fields = "__all__"
 
-    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['item'].queryset = SjakItem.objects.order_by('name')
+
 
 
 class SjakBookingAdmin(admin.ModelAdmin):
