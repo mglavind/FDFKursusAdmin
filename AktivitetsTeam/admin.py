@@ -232,12 +232,12 @@ class AktivitetsTeamBookingAdmin(admin.ModelAdmin):
     formatted_last_updated.short_description = "Last Updated"
 
     list_display = [
+        "start_date",
+        "start_time",
         "item",
         "team",
         "team_contact",
         "status",
-        "start_date",
-        "start_time",
         "end_date",
         "end_time",
     ]

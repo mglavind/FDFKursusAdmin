@@ -18,7 +18,14 @@ class AktivitetsTeamItemForm(forms.ModelForm):
             "description",
             "youtube_link",
             "short_description",
+            "image",
         ]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control"}),
+            "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
+        }
+
 
 
 class AktivitetsTeamBookingForm(forms.ModelForm):

@@ -46,7 +46,9 @@
                 
             </li>
         {% endif %}
-        <li class="list-group-item"><a class="btn btn-primary disabled" href="{{object.get_update_url}}">Rediger</a></li>
+        {% if user.is_staff %}
+            <li class="list-group-item"><a class="btn btn-primary" href="{{ object.get_update_url }}">Rediger</a></li>
+        {% endif %}
     </ul>
     <div class="card-footer">
         <small class="text-body-secondary">Sidst opdateret {{ object.last_updated }}</small>

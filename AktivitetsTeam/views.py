@@ -103,7 +103,7 @@ class AktivitetsTeamBookingListView(LoginRequiredMixin, generic.ListView):
             'team', 'team_contact', 'item'
         ).only(
             'id', 'team_id', 'team_contact_id', 'start_date', 'start_time', 'end_date', 'end_time', 'item_id', 'status'
-        ).order_by('id')
+        ).order_by('start_date', 'start_time')
         
         logger.info(f"Fetched {queryset.count()} bookings for user {user.id}")
         return queryset
