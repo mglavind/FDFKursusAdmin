@@ -5,7 +5,9 @@
     {% for object in object_list %}
     <div class="col">
       <div class="card h-100">
-        <!-- <img src="..." class="card-img-top" alt="..."> -->
+        {% if object.image %}
+        <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.name }}">
+        {% endif %}
         <div class="card-body"> 
           <h5 class="card-title">
             {{ object.name }}
