@@ -8,21 +8,21 @@ debugpy==1.6.0
 decorator==5.1.1
 distlib==0.3.7
 dj-database-url==2.1.0
-Django==3.2.25 # max for render.com
+Django==3.2.25  # max for Render.com
 django-admin-list-filter-dropdown==1.0.3
 django-bootstrap-icons==0.8.3
-django-bootstrap-v5==1.0.11 # max for render.com
-django-bootstrap5==23.3 # max for render.com
-django-cleanup==8.1.0 # max for render.com
-django-comments-xtd==2.9.13
+django-bootstrap-v5==1.0.11  # max for Render.com
+django-bootstrap5==23.3  # max for Render.com
+django-cleanup==8.1.0  # max for Render.com
+django-comments-xtd==2.9.13  # works with Django 3.2
 django-contrib-comments==2.2.0
 django-crispy-forms==2.0
 django-embed-video==1.4.10
-django-htmx==1.15.0 # max for render.com
+django-htmx==1.15.0  # max for Render.com
 django-phonenumber-field==7.0.2
-django-rosetta==0.10.0
+django-rosetta==0.9.6  # downgraded to be compatible with Django 3.2
 django-template-partials==23.4
-django-widget-tweaks==1.4.12 # max for render.com
+django-widget-tweaks==1.4.12  # max for Render.com
 django_debug_toolbar==3.8.1
 djangorestframework==3.14.0
 docutils==0.20.1
@@ -36,11 +36,11 @@ idna==3.4
 json5==0.9.6
 jsonschema==4.17.3
 packaging==23.1
-pillow==9.5.0 # max for render.com
+pillow==9.5.0  # max for Render.com
 pipenv==2022.4.8
 platformdirs==2.6.2
 polib==1.2.0
-#psycopg2==2.9.7 Needs to be excludedn, use binary instead for Render.com
+# psycopg2 needs to be binary for Render.com
 psycopg2-binary==2.9.9
 pyparsing==3.0.8
 pypng==0.0.19
