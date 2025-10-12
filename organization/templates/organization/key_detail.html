@@ -3,20 +3,24 @@
 {% load static %}
 {% block content %}
     
-<p>
-    <a class="btn btn-light" href="{% url 'organization_Key_list' %}">
-    Key Listing
-    </a>
-</p>
+<br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'index' %}">Hjem</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'organization_Key_list' %}">Nøgle oversigt</a></li>
+      <li class="breadcrumb-item active" aria-current="page"> {{ object.name }} nøgle </li>
+    </ol>
+</nav>
+
+<h1 class="display-3" > Nøgle {{ object.number }} til {{ object.name }} </h1>
+
     
 <table class="table">
-    <tr><td>description</td><td>{{ object.description }}</td></tr>
-    <tr><td>created</td><td>{{ object.created }}</td></tr>
-    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
-    <tr><td>name</td><td>{{ object.name }}</td></tr>
-    <tr><td>number</td><td>{{ object.number }}</td></tr>
-    <tr><td>current_user</td><td>{{ object.current_user }}</td></tr>
+    <tr><td>Nummer</td><td>{{ object.number }}</td></tr>
+    <tr><td>Navn</td><td>{{ object.name }}</td></tr>
+    <tr><td>Beskrivelse</td><td>{{ object.description }}</td></tr>
+    <tr><td>Nuværende bruger</td><td>{{ object.current_user }}</td></tr>
 </table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Rediger</a>
 
 {% endblock %}

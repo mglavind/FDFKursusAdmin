@@ -2,7 +2,7 @@
 {% block content %}
 {% load bootstrap_icons %}
 
-<table class="table table-hover" id="key-table">
+<table class="table table-hover table-striped" id="key-table">
   <thead>
     <tr>
       <th scope="col">
@@ -33,35 +33,61 @@
         <td>{{ key.number}}</td>
         <td>{{ key.name }}</td>
         <td>{{ key.current_user }}</td>
-        <td>{{ key.description }}</td>
+        <td>
+          {{ key.description }}
+          
+          {% if user.is_staff %}
+            <a href="{% url 'organization_Key_update' key.id %}" class="btn btn-sm btn-primary ms-2">
+              rediger
+            </a>
+          {% endif %}
+        </td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     const table = document.getElementById("key-table");
     const sortButtons = table.querySelectorAll(".sort-button");
     const tbody = table.querySelector("tbody");
-    const rows = [...tbody.querySelectorAll("tr")];
 
     sortButtons.forEach(button => {
-      button.addEventListener("click", function () {
-        const sortBy = button.getAttribute("data-sort");
-        const sortedRows = [...rows].sort((a, b) => {
-          const valueA = a.querySelector(`td:nth-child(${button.parentElement.cellIndex + 1})`).innerText;
-          const valueB = b.querySelector(`td:nth-child(${button.parentElement.cellIndex + 1})`).innerText;
-          return valueA.localeCompare(valueB);
-        });
+        let ascending = true; // track sort direction
 
-        tbody.innerHTML = "";
-        sortedRows.forEach(row => {
-          tbody.appendChild(row);
+        button.addEventListener("click", function () {
+            const sortBy = button.getAttribute("data-sort");
+            const columnIndex = button.parentElement.cellIndex;
+
+            // get rows as array
+            const rows = [...tbody.querySelectorAll("tr")];
+
+            const sortedRows = rows.sort((a, b) => {
+                const cellA = a.cells[columnIndex].innerText.trim();
+                const cellB = b.cells[columnIndex].innerText.trim();
+
+                // determine type of sorting
+                if (sortBy === "number") {
+                    return ascending 
+                        ? Number(cellA) - Number(cellB)
+                        : Number(cellB) - Number(cellA);
+                } else {
+                    return ascending
+                        ? cellA.localeCompare(cellB)
+                        : cellB.localeCompare(cellA);
+                }
+            });
+
+            // toggle ascending/descending for next click
+            ascending = !ascending;
+
+            // clear tbody and append sorted rows
+            tbody.innerHTML = "";
+            sortedRows.forEach(row => tbody.appendChild(row));
         });
-      });
     });
-  });
+});
 </script>
 
 {% endblock %}

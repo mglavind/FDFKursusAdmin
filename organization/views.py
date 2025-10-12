@@ -274,7 +274,14 @@ class KeyUpdateView(generic.UpdateView):
     model = models.Key
     form_class = forms.KeyForm
     pk_url_kwarg = "pk"
-
+    
+    def dispatch(self, request, *args, **kwargs):
+        # Only allow admins
+        if not request.user.is_staff:  # or use is_superuser if you prefer
+            messages.error(request, "Du har ikke tilladelse til at ændre denne nøgle.")
+            # Redirect back to the previous page, or fallback to a safe URL
+            return redirect(request.META.get('HTTP_REFERER', reverse_lazy('organization_Key_list')))
+        return super().dispatch(request, *args, **kwargs)
 
 class KeyDeleteView(generic.DeleteView):
     model = models.Key
