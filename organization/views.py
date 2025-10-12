@@ -17,6 +17,8 @@ from . import models
 from . import forms
 from django.db.models import F
 from .models import Team, TeamMembership
+from django.db.models import IntegerField
+from django.db.models.functions import Cast
 
 User = get_user_model()
 
@@ -258,6 +260,13 @@ class VolunteerDeleteView(generic.DeleteView):
 class KeyListView(generic.ListView):
     model = models.Key
     form_class = forms.KeyForm
+    context_object_name = "key_list"
+    ordering = ["number"]  # numeric order by 'number' field
+
+    def get_queryset(self):
+        return models.Key.objects.annotate(
+            number_int=Cast('number', IntegerField())
+        ).order_by('number_int')
 
 
 class KeyCreateView(generic.CreateView):
@@ -274,7 +283,7 @@ class KeyUpdateView(generic.UpdateView):
     model = models.Key
     form_class = forms.KeyForm
     pk_url_kwarg = "pk"
-    
+
     def dispatch(self, request, *args, **kwargs):
         # Only allow admins
         if not request.user.is_staff:  # or use is_superuser if you prefer

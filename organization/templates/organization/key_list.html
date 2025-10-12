@@ -32,15 +32,17 @@
       <tr>
         <td>{{ key.number}}</td>
         <td>{{ key.name }}</td>
-        <td>{{ key.current_user }}</td>
-        <td>
-          {{ key.description }}
+        <td class="d-flex justify-content-between align-items-center">
+          <span>{{ key.current_user }}</span>
           
           {% if user.is_staff %}
             <a href="{% url 'organization_Key_update' key.id %}" class="btn btn-sm btn-primary ms-2">
               rediger
             </a>
           {% endif %}
+        </td>
+        <td>
+          {{ key.description }}
         </td>
       </tr>
     {% endfor %}
